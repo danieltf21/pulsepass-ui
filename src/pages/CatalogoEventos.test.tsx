@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { MemoryRouter } from 'react-router'
+import { createMemoryRouter } from 'react-router'
+import { RouterProvider } from 'react-router/dom'
+import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
 import { eventosPublicadosDePrueba } from '../test/mocks/handlers'
@@ -12,16 +14,36 @@ function mostrarCatalogo(entrada = '/eventos') {
     defaultOptions: { queries: { retry: false } },
   })
 
-  return render(
+  const router = createMemoryRouter([
+    { path: '/eventos', element: <CatalogoEventos /> },
+  ], { initialEntries: [entrada] })
+
+  const vista = render(
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={[entrada]}>
-        <CatalogoEventos />
-      </MemoryRouter>
+      <RouterProvider router={router} />
     </QueryClientProvider>,
   )
+  return { ...vista, router }
 }
 
 describe('CatalogoEventos', () => {
+  it('actualiza q en la URL al buscar y lo elimina al limpiar', async () => {
+    const usuario = userEvent.setup()
+    const { router } = mostrarCatalogo('/eventos?origen=inicio')
+    await screen.findByRole('heading', { level: 2, name: 'Caribbean Music Fest 2026' })
+
+    await usuario.type(screen.getByRole('searchbox'), 'Caribbean')
+    await waitFor(() => {
+      const parametros = new URLSearchParams(router.state.location.search)
+      expect(parametros.get('q')).toBe('Caribbean')
+      expect(parametros.get('origen')).toBe('inicio')
+    })
+
+    await usuario.click(screen.getByRole('button', { name: 'Limpiar búsqueda' }))
+    await waitFor(() => expect(new URLSearchParams(router.state.location.search).has('q')).toBe(false))
+    expect(screen.getByRole('searchbox')).toHaveValue('')
+    expect(screen.getByRole('heading', { level: 2, name: 'Caribbean Music Fest 2026' })).toBeInTheDocument()
+  })
   it('muestra los eventos publicados que devuelve la API', async () => {
     mostrarCatalogo()
 
