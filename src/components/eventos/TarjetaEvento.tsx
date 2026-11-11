@@ -1,5 +1,6 @@
 import type { EstadoEvento, ResumenEvento } from '../../api/eventos.tipos'
 import { Link } from 'react-router'
+import { RUTAS } from '../../lib/rutas'
 
 const etiquetasEstado: Record<EstadoEvento, string> = {
   DRAFT: 'Borrador',
@@ -33,7 +34,7 @@ export default function TarjetaEvento({ evento }: TarjetaEventoProps) {
       </p>
       <p className="mt-2 text-slate-600">{evento.venueName}</p>
       <Link
-        to={`/eventos/${encodeURIComponent(evento.eventCode)}`}
+        to={RUTAS.evento(evento.eventCode)}
         aria-label={`Ver detalle de ${evento.name}`}
         className="mt-6 inline-flex rounded-lg bg-marca-600 px-4 py-2 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
       >

@@ -1,8 +1,9 @@
 import { Link, useParams } from 'react-router'
 import { z } from 'zod'
-import { ApiError } from '../../api/http'
-import type { CategoriaEvento, EstadoEvento } from '../../api/eventos.tipos'
-import { useEvento } from '../../hooks/useEventos'
+import { ApiError } from '../api/http'
+import type { CategoriaEvento, EstadoEvento } from '../api/eventos.tipos'
+import { useEvento } from '../hooks/useEventos'
+import { RUTAS } from '../lib/rutas'
 
 const parametrosSchema = z.object({ eventCode: z.string().trim().min(1).max(50) })
 const categorias: Record<CategoriaEvento, string> = {
@@ -33,9 +34,9 @@ export default function DetalleEvento() {
     || (isError && error instanceof ApiError && (error.status === 403 || error.status === 404))
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-10 font-cuerpo text-slate-900 sm:px-6">
+    <main className="px-4 py-10 sm:px-6">
       <div className="mx-auto max-w-4xl">
-        <Link to="/" className="rounded text-marca-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
+        <Link to={RUTAS.eventos} className="rounded text-marca-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
           Volver al catálogo
         </Link>
 
