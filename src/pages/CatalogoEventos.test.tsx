@@ -5,7 +5,7 @@ import { RouterProvider } from 'react-router/dom'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { describe, expect, it } from 'vitest'
-import { eventosPublicadosDePrueba } from '../test/mocks/handlers'
+import { eventoDePrueba } from '../test/mocks/handlers'
 import { server } from '../test/mocks/server'
 import CatalogoEventos from './CatalogoEventos'
 
@@ -53,7 +53,7 @@ describe('CatalogoEventos', () => {
     })).toBeInTheDocument()
     expect(await screen.findByRole('heading', {
       level: 2,
-      name: eventosPublicadosDePrueba[0].name,
+      name: eventoDePrueba.name,
     })).toBeInTheDocument()
   })
 
