@@ -7,7 +7,15 @@ import './index.css'
 import App from './App.tsx'
 
 const queryClient = new QueryClient()
-const router = createBrowserRouter([{ path: '/', Component: App }])
+const router = createBrowserRouter([
+  { path: '/', Component: App },
+  {
+    path: '/eventos/:eventCode',
+    lazy: async () => ({
+      Component: (await import('./components/eventos/DetalleEvento')).default,
+    }),
+  },
+])
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
