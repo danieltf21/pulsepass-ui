@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router'
-import App from './App'
+import Inicio from './pages/Inicio'
 import { RUTAS } from './lib/rutas'
 import Layout from './layouts/Layout'
 import ErrorPagina from './pages/ErrorPagina'
@@ -10,8 +10,13 @@ export const router = createBrowserRouter([
     Component: Layout,
     errorElement: <ErrorPagina />,
     children: [
-      { index: true, Component: App },
-      { path: RUTAS.eventos, Component: App },
+      { index: true, Component: Inicio },
+      {
+        path: RUTAS.eventos,
+        lazy: async () => ({
+          Component: (await import('./pages/CatalogoEventos')).default,
+        }),
+      },
       {
         path: RUTAS.detalleEvento,
         lazy: async () => ({
