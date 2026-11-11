@@ -1,19 +1,27 @@
-import { useEventos } from '../hooks/useEventos'
+import { useEventos, useEventosPorArtista } from '../hooks/useEventos'
 import TarjetaEvento from '../components/eventos/TarjetaEvento'
 import FiltrosEventos from '../components/eventos/FiltrosEventos'
 import { useSearchParams } from 'react-router'
 import { z } from 'zod'
 
-const filtrosSchema = z.object({ q: z.string().max(200).catch('') })
+const filtrosSchema = z.object({
+  q: z.string().max(200).catch(''),
+  artista: z.string().trim().max(150).catch(''),
+})
 
 function normalizar(texto: string) {
   return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es-CO')
 }
 
 export default function CatalogoEventos() {
-  const { data: eventos, isPending, isError, isFetching, refetch } = useEventos()
   const [parametros, setParametros] = useSearchParams()
-  const { q: busqueda } = filtrosSchema.parse({ q: parametros.get('q') ?? '' })
+  const { q: busqueda, artista } = filtrosSchema.parse({
+    q: parametros.get('q') ?? '',
+    artista: parametros.get('artista') ?? '',
+  })
+  const publicados = useEventos(!artista)
+  const porArtista = useEventosPorArtista(artista)
+  const { data: eventos, isPending, isError, isFetching, refetch } = artista ? porArtista : publicados
   const eventosFiltrados = eventos?.filter((evento) =>
     normalizar(evento.name).includes(normalizar(busqueda.trim())),
   ) ?? []
@@ -33,6 +41,22 @@ export default function CatalogoEventos() {
         <p className="mt-3 text-slate-600">Descubre tu próxima experiencia.</p>
 
         <FiltrosEventos busqueda={busqueda} onBusquedaChange={cambiarBusqueda} />
+        {artista && (
+          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
+            <p>Eventos de <strong>{artista}</strong></p>
+            <button
+              type="button"
+              onClick={() => setParametros((actuales) => {
+                const siguientes = new URLSearchParams(actuales)
+                siguientes.delete('artista')
+                return siguientes
+              }, { replace: true })}
+              className="rounded px-3 py-2 text-marca-700 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+            >
+              Quitar filtro de artista
+            </button>
+          </div>
+        )}
 
         <section aria-label="Eventos publicados" aria-busy={isFetching} className="mt-8">
           {isPending && (
@@ -57,7 +81,9 @@ export default function CatalogoEventos() {
 
           {!isPending && !isError && eventos.length === 0 && (
             <p role="status" className="rounded-xl border border-slate-200 bg-white p-6 text-slate-600">
-              Aún no hay eventos publicados. Vuelve pronto para descubrir novedades.
+              {artista
+                ? 'No hay eventos disponibles para este artista.'
+                : 'Aún no hay eventos publicados. Vuelve pronto para descubrir novedades.'}
             </p>
           )}
 

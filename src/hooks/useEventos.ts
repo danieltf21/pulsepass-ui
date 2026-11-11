@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { obtenerEvento, obtenerEventosPublicados } from '../api/eventos'
+import { obtenerEvento, obtenerEventosPorArtista, obtenerEventosPublicados } from '../api/eventos'
 import { ApiError } from '../api/http'
 
 function reintentarConsulta(intentosFallidos: number, error: Error): boolean {
@@ -11,10 +11,11 @@ function reintentarConsulta(intentosFallidos: number, error: Error): boolean {
   return intentosFallidos < 1 && (esErrorDeRed || esErrorDelServidor)
 }
 
-export function useEventos() {
+export function useEventos(habilitado = true) {
   return useQuery({
     queryKey: ['eventos', 'publicados'],
     queryFn: ({ signal }) => obtenerEventosPublicados(signal),
+    enabled: habilitado,
     retry: reintentarConsulta,
   })
 }
@@ -24,6 +25,15 @@ export function useEvento(eventCode: string) {
     queryKey: ['evento', eventCode],
     queryFn: ({ signal }) => obtenerEvento(eventCode, signal),
     enabled: eventCode.trim().length > 0,
+    retry: reintentarConsulta,
+  })
+}
+
+export function useEventosPorArtista(stageName: string) {
+  return useQuery({
+    queryKey: ['eventos', 'artista', stageName],
+    queryFn: ({ signal }) => obtenerEventosPorArtista(stageName, signal),
+    enabled: stageName.trim().length > 0,
     retry: reintentarConsulta,
   })
 }

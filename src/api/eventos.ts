@@ -22,3 +22,13 @@ export async function obtenerEvento(
 
   return detalleEventoSchema.parse(datos)
 }
+
+export async function obtenerEventosPorArtista(
+  stageName: string,
+  signal?: AbortSignal,
+): Promise<ResumenEvento[]> {
+  const parametros = new URLSearchParams({ stageName })
+  const datos = await http(`/events/by-artist?${parametros.toString()}`, { signal })
+
+  return eventosPublicadosSchema.parse(datos)
+}

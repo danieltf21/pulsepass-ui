@@ -27,6 +27,45 @@ function mostrarCatalogo(entrada = '/eventos') {
 }
 
 describe('CatalogoEventos', () => {
+  it('consulta por artista y restaura el catálogo al quitar el filtro', async () => {
+    let artistaConsultado: string | null = null
+    let consultasGenerales = 0
+    server.use(
+      http.get('*/api/events/by-artist', ({ request }) => {
+        artistaConsultado = new URL(request.url).searchParams.get('stageName')
+        return HttpResponse.json([{
+          eventCode: 'SOLAR-2026',
+          name: 'Concierto de Solar Beat',
+          status: 'PUBLISHED',
+          eventDate: '2026-12-12T18:00:00',
+          venueName: 'Marina Convention Center',
+        }])
+      }),
+      http.get('*/api/events/published', () => {
+        consultasGenerales += 1
+        return HttpResponse.json([eventoDePrueba])
+      }),
+    )
+    const usuario = userEvent.setup()
+    const { router } = mostrarCatalogo('/eventos?artista=Solar%20Beat')
+
+    expect(await screen.findByRole('heading', { name: 'Concierto de Solar Beat' })).toBeInTheDocument()
+    expect(artistaConsultado).toBe('Solar Beat')
+    expect(consultasGenerales).toBe(0)
+
+    await usuario.click(screen.getByRole('button', { name: 'Quitar filtro de artista' }))
+
+    expect(await screen.findByRole('heading', { name: eventoDePrueba.name })).toBeInTheDocument()
+    expect(new URLSearchParams(router.state.location.search).has('artista')).toBe(false)
+    expect(consultasGenerales).toBe(1)
+  })
+
+  it('muestra el estado vacío cuando el artista no tiene eventos', async () => {
+    server.use(http.get('*/api/events/by-artist', () => HttpResponse.json([])))
+    mostrarCatalogo('/eventos?artista=Solar%20Beat')
+
+    expect(await screen.findByText('No hay eventos disponibles para este artista.')).toBeInTheDocument()
+  })
   it('actualiza q en la URL al buscar y lo elimina al limpiar', async () => {
     const usuario = userEvent.setup()
     const { router } = mostrarCatalogo('/eventos?origen=inicio')
