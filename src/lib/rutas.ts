@@ -6,5 +6,8 @@ export const RUTAS = {
   artistas: '/artistas',
   detalleArtista: '/artistas/:id',
   artista: (id: number) => `/artistas/${id}`,
+  sedes: '/sedes',
+  detalleSede: '/sedes/:code',
+  sede: (code: string) => `/sedes/${encodeURIComponent(code)}`,
   noEncontrada: '*',
 } as const
