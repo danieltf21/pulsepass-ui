@@ -5,6 +5,7 @@ const enlaces = [
   { destino: RUTAS.inicio, texto: 'Inicio' },
   { destino: RUTAS.eventos, texto: 'Eventos' },
   { destino: RUTAS.artistas, texto: 'Artistas' },
+  { destino: RUTAS.sedes, texto: 'Sedes' },
 ]
 
 export default function Layout() {

@@ -1,6 +1,17 @@
 import { http, HttpResponse } from 'msw'
 import type { DetalleEvento, ResumenEvento } from '../../api/eventos.tipos'
 import type { Artista } from '../../api/artistas.tipos'
+import type { Sede } from '../../api/sedes.tipos'
+
+export const sedeDePrueba: Sede = {
+  id: 1,
+  code: 'VEN-SMR-01',
+  name: 'Marina Convention Center',
+  city: 'Santa Marta',
+  address: 'Avenida del Puerto 10',
+  capacity: 3,
+  active: true,
+}
 
 export const artistaDePrueba: Artista = {
   id: 1,
@@ -54,6 +65,12 @@ export const eventosPublicadosDePrueba: ResumenEvento[] = [
 
 // Estos handlers se usarán solo en el entorno de pruebas.
 export const handlers = [
+  http.get('*/api/venues/active', () => HttpResponse.json([sedeDePrueba])),
+  http.get('*/api/venues/:code', ({ params }) =>
+    params.code === sedeDePrueba.code
+      ? HttpResponse.json(sedeDePrueba)
+      : respuestaNoEncontrada(),
+  ),
   http.get('*/api/artists/active', () => HttpResponse.json([artistaDePrueba])),
   http.get('*/api/artists/by-stage-name', ({ request }) => {
     const nombre = new URL(request.url).searchParams.get('stageName')

@@ -36,6 +36,18 @@ export const router = createBrowserRouter([
         }),
       },
       {
+        path: RUTAS.sedes,
+        lazy: async () => ({
+          Component: (await import('./pages/ListaSedes')).default,
+        }),
+      },
+      {
+        path: RUTAS.detalleSede,
+        lazy: async () => ({
+          Component: (await import('./pages/DetalleSede')).default,
+        }),
+      },
+      {
         path: RUTAS.noEncontrada,
         lazy: async () => ({
           Component: (await import('./pages/NoEncontrada')).default,
