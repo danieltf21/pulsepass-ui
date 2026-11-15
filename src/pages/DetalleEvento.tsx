@@ -4,6 +4,7 @@ import { ApiError } from '../api/http'
 import type { CategoriaEvento, EstadoEvento } from '../api/eventos.tipos'
 import { useEvento } from '../hooks/useEventos'
 import { RUTAS } from '../lib/rutas'
+import { formatearFecha } from '../lib/formato'
 
 const parametrosSchema = z.object({ eventCode: z.string().trim().min(1).max(50) })
 const categorias: Record<CategoriaEvento, string> = {
@@ -21,11 +22,6 @@ const estados: Record<EstadoEvento, string> = {
   CANCELLED: 'Cancelado',
   FINISHED: 'Finalizado',
 }
-const formatoFecha = new Intl.DateTimeFormat('es-CO', {
-  dateStyle: 'long',
-  timeStyle: 'short',
-})
-
 export default function DetalleEvento() {
   const parametros = parametrosSchema.safeParse(useParams())
   const codigo = parametros.success ? parametros.data.eventCode : ''
@@ -78,7 +74,7 @@ export default function DetalleEvento() {
               <div>
                 <dt className="font-semibold">Fecha y hora</dt>
                 <dd className="mt-1 text-slate-600">
-                  <time dateTime={evento.eventDate}>{formatoFecha.format(new Date(evento.eventDate))}</time>
+                  <time dateTime={evento.eventDate}>{formatearFecha(evento.eventDate)}</time>
                 </dd>
               </div>
               <div>

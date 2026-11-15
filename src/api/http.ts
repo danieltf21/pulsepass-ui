@@ -22,6 +22,21 @@ export class ApiError extends Error {
   }
 }
 
+// Conserva el estado HTTP recibido, aunque el JSON incumpla su contrato.
+export function validarRespuesta<T>(
+  esquema: z.ZodType<T>,
+  datos: unknown,
+  status = 200,
+): T {
+  const resultado = esquema.safeParse(datos)
+
+  if (!resultado.success) {
+    throw new ApiError(status, 'La información recibida no tiene el formato esperado.')
+  }
+
+  return resultado.data
+}
+
 function mensajePorEstado(status: number): string {
   switch (status) {
     case 400: return 'Revisa los datos enviados.'

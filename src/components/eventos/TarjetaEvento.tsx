@@ -1,6 +1,7 @@
 import type { EstadoEvento, ResumenEvento } from '../../api/eventos.tipos'
 import { Link } from 'react-router'
 import { RUTAS } from '../../lib/rutas'
+import { formatearFecha } from '../../lib/formato'
 
 const etiquetasEstado: Record<EstadoEvento, string> = {
   DRAFT: 'Borrador',
@@ -9,11 +10,6 @@ const etiquetasEstado: Record<EstadoEvento, string> = {
   CANCELLED: 'Cancelado',
   FINISHED: 'Finalizado',
 }
-
-const formatoFecha = new Intl.DateTimeFormat('es-CO', {
-  dateStyle: 'long',
-  timeStyle: 'short',
-})
 
 interface TarjetaEventoProps {
   evento: ResumenEvento
@@ -29,7 +25,7 @@ export default function TarjetaEvento({ evento }: TarjetaEventoProps) {
       <p className="mt-2 text-sm text-slate-500">{evento.eventCode}</p>
       <p className="mt-4 text-slate-600">
         <time dateTime={evento.eventDate}>
-          {formatoFecha.format(new Date(evento.eventDate))}
+          {formatearFecha(evento.eventDate)}
         </time>
       </p>
       <p className="mt-2 text-slate-600">{evento.venueName}</p>
