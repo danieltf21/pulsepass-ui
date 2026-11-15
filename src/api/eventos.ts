@@ -4,14 +4,14 @@ import {
   type DetalleEvento,
   type ResumenEvento,
 } from './eventos.tipos'
-import { http } from './http'
+import { http, validarRespuesta } from './http'
 
 export async function obtenerEventosPublicados(
   signal?: AbortSignal,
 ): Promise<ResumenEvento[]> {
   const datos = await http('/events/published', { signal })
 
-  return eventosPublicadosSchema.parse(datos)
+  return validarRespuesta(eventosPublicadosSchema, datos)
 }
 
 export async function obtenerEvento(
@@ -20,7 +20,7 @@ export async function obtenerEvento(
 ): Promise<DetalleEvento> {
   const datos = await http(`/events/${encodeURIComponent(eventCode)}`, { signal })
 
-  return detalleEventoSchema.parse(datos)
+  return validarRespuesta(detalleEventoSchema, datos)
 }
 
 export async function obtenerEventosPorArtista(
@@ -30,5 +30,5 @@ export async function obtenerEventosPorArtista(
   const parametros = new URLSearchParams({ stageName })
   const datos = await http(`/events/by-artist?${parametros.toString()}`, { signal })
 
-  return eventosPublicadosSchema.parse(datos)
+  return validarRespuesta(eventosPublicadosSchema, datos)
 }
