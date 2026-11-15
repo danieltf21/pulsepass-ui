@@ -24,6 +24,18 @@ export const router = createBrowserRouter([
         }),
       },
       {
+        path: RUTAS.artistas,
+        lazy: async () => ({
+          Component: (await import('./pages/ListaArtistas')).default,
+        }),
+      },
+      {
+        path: RUTAS.detalleArtista,
+        lazy: async () => ({
+          Component: (await import('./pages/DetalleArtista')).default,
+        }),
+      },
+      {
         path: RUTAS.noEncontrada,
         lazy: async () => ({
           Component: (await import('./pages/NoEncontrada')).default,

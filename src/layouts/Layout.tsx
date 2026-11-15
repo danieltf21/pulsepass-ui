@@ -4,6 +4,7 @@ import { RUTAS } from '../lib/rutas'
 const enlaces = [
   { destino: RUTAS.inicio, texto: 'Inicio' },
   { destino: RUTAS.eventos, texto: 'Eventos' },
+  { destino: RUTAS.artistas, texto: 'Artistas' },
 ]
 
 export default function Layout() {

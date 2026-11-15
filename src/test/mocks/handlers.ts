@@ -1,5 +1,24 @@
 import { http, HttpResponse } from 'msw'
 import type { DetalleEvento, ResumenEvento } from '../../api/eventos.tipos'
+import type { Artista } from '../../api/artistas.tipos'
+
+export const artistaDePrueba: Artista = {
+  id: 1,
+  stageName: 'Solar Beat',
+  country: 'Colombia',
+  genre: 'Electrónica',
+  active: true,
+}
+
+function respuestaNoEncontrada() {
+  return HttpResponse.json({
+    timestamp: '2026-11-11T10:00:00',
+    status: 404,
+    error: 'Not Found',
+    message: 'Resource not found',
+    details: {},
+  }, { status: 404 })
+}
 
 export const eventoDePrueba: DetalleEvento = {
   id: 1,
@@ -35,6 +54,22 @@ export const eventosPublicadosDePrueba: ResumenEvento[] = [
 
 // Estos handlers se usarán solo en el entorno de pruebas.
 export const handlers = [
+  http.get('*/api/artists/active', () => HttpResponse.json([artistaDePrueba])),
+  http.get('*/api/artists/by-stage-name', ({ request }) => {
+    const nombre = new URL(request.url).searchParams.get('stageName')
+    return nombre === artistaDePrueba.stageName
+      ? HttpResponse.json(artistaDePrueba)
+      : respuestaNoEncontrada()
+  }),
+  http.get('*/api/artists/:id', ({ params }) =>
+    params.id === String(artistaDePrueba.id)
+      ? HttpResponse.json(artistaDePrueba)
+      : respuestaNoEncontrada(),
+  ),
+  http.get('*/api/events/by-artist', ({ request }) => {
+    const nombre = new URL(request.url).searchParams.get('stageName')
+    return HttpResponse.json(nombre === artistaDePrueba.stageName ? eventosPublicadosDePrueba : [])
+  }),
   http.get('*/api/events/published', () =>
     HttpResponse.json(eventosPublicadosDePrueba),
   ),

@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { http, HttpResponse } from 'msw'
@@ -72,6 +72,14 @@ describe('Inicio', () => {
   it('muestra el estado de carga mientras espera la cartelera', () => {
     mostrarInicio()
 
-    expect(screen.getByRole('status')).toHaveTextContent('Cargando eventos')
+    expect(within(screen.getByRole('region', { name: 'Próximos eventos' })).getByRole('status'))
+      .toHaveTextContent('Cargando eventos')
+  })
+
+  it('muestra artistas destacados y permite abrir su perfil o el listado', async () => {
+    mostrarInicio()
+
+    expect(await screen.findByRole('link', { name: 'Ver perfil de Solar Beat' })).toHaveAttribute('href', '/artistas/1')
+    expect(screen.getByRole('link', { name: 'Ver todos los artistas' })).toHaveAttribute('href', '/artistas')
   })
 })
