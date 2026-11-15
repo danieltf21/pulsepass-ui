@@ -9,5 +9,9 @@ export const RUTAS = {
   sedes: '/sedes',
   detalleSede: '/sedes/:code',
   sede: (code: string) => `/sedes/${encodeURIComponent(code)}`,
+  login: '/login',
+  registro: '/registro',
+  cuenta: '/cuenta',
+  sinPermisos: '/403',
   noEncontrada: '*',
 } as const

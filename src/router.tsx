@@ -12,6 +12,12 @@ export const router = createBrowserRouter([
     children: [
       { index: true, Component: Inicio },
       {
+        path: RUTAS.login,
+        lazy: async () => ({
+          Component: (await import('./pages/Login')).default,
+        }),
+      },
+      {
         path: RUTAS.eventos,
         lazy: async () => ({
           Component: (await import('./pages/CatalogoEventos')).default,
@@ -51,6 +57,12 @@ export const router = createBrowserRouter([
         path: RUTAS.noEncontrada,
         lazy: async () => ({
           Component: (await import('./pages/NoEncontrada')).default,
+        }),
+      },
+      {
+        path: RUTAS.sinPermisos,
+        lazy: async () => ({
+          Component: (await import('./pages/SinPermisos')).default,
         }),
       },
     ],
