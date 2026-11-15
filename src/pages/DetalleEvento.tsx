@@ -87,7 +87,14 @@ export default function DetalleEvento() {
               </div>
               <div>
                 <dt className="font-semibold">Sede</dt>
-                <dd className="mt-1 text-slate-600">{evento.venueName} ({evento.venueCode})</dd>
+                <dd className="mt-1 text-slate-600">
+                  <Link
+                    to={RUTAS.sede(evento.venueCode)}
+                    className="rounded text-marca-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+                  >
+                    {evento.venueName} ({evento.venueCode})
+                  </Link>
+                </dd>
               </div>
             </dl>
 
