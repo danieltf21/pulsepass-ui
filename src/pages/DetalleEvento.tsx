@@ -1,10 +1,13 @@
-import { Link, useParams } from 'react-router'
+import { useState } from 'react'
+import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { z } from 'zod'
 import { ApiError } from '../api/http'
 import type { CategoriaEvento, EstadoEvento } from '../api/eventos.tipos'
 import { useEvento } from '../hooks/useEventos'
 import { RUTAS } from '../lib/rutas'
 import { formatearFecha } from '../lib/formato'
+import { useAuth } from '../hooks/useAuth'
+import ModalCompra from '../components/tickets/ModalCompra'
 
 const parametrosSchema = z.object({ eventCode: z.string().trim().min(1).max(50) })
 const categorias: Record<CategoriaEvento, string> = {
@@ -23,6 +26,10 @@ const estados: Record<EstadoEvento, string> = {
   FINISHED: 'Finalizado',
 }
 export default function DetalleEvento() {
+  const { sesion } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [compraAbierta, setCompraAbierta] = useState(false)
   const parametros = parametrosSchema.safeParse(useParams())
   const codigo = parametros.success ? parametros.data.eventCode : ''
   const { data: evento, isPending, isError, error, isFetching, refetch } = useEvento(codigo)
@@ -93,6 +100,44 @@ export default function DetalleEvento() {
                 </dd>
               </div>
             </dl>
+
+            <div className="mt-8">
+              <button
+                type="button"
+                disabled={evento.status !== 'PUBLISHED' || sesion.estado === 'cargando'
+                  || (sesion.estado === 'autenticada' && !sesion.usuario.roles.includes('USER'))}
+                onClick={() => {
+                  if (sesion.estado === 'anonima') {
+                    void navigate(RUTAS.login, {
+                      state: { desde: location.pathname + location.search + location.hash },
+                    })
+                  } else if (sesion.estado === 'autenticada' && sesion.usuario.roles.includes('USER')) {
+                    setCompraAbierta(true)
+                  }
+                }}
+                className="rounded-lg bg-marca-600 px-5 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Comprar entrada
+              </button>
+              {evento.status !== 'PUBLISHED' && (
+                <p className="mt-2 text-sm text-slate-600">Este evento no tiene entradas disponibles para comprar.</p>
+              )}
+              {sesion.estado === 'autenticada' && !sesion.usuario.roles.includes('USER') && (
+                <p className="mt-2 text-sm text-slate-600">La compra de entradas requiere una cuenta con rol de usuario.</p>
+              )}
+            </div>
+            {compraAbierta && sesion.estado === 'autenticada' && sesion.usuario.roles.includes('USER') && (
+              <ModalCompra
+                abierto
+                eventCode={evento.eventCode}
+                nombreEvento={evento.name}
+                onCerrar={() => setCompraAbierta(false)}
+                onComprado={(ticket) => {
+                  setCompraAbierta(false)
+                  void navigate(RUTAS.compraConfirmada(ticket.ticketCode))
+                }}
+              />
+            )}
 
             <section aria-labelledby="titulo-artistas" className="mt-8 border-t border-slate-200 pt-6">
               <h2 id="titulo-artistas" className="font-titulo text-xl font-bold">Artistas</h2>
