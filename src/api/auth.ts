@@ -1,12 +1,40 @@
 import {
   loginSchema,
+  registroSchema,
   respuestaLoginSchema,
   usuarioAutenticadoSchema,
+  usuarioRegistradoSchema,
   type Login,
+  type Registro,
   type RespuestaLogin,
   type UsuarioAutenticado,
+  type UsuarioRegistrado,
 } from './auth.tipos'
 import { ApiError, http, validarRespuesta } from './http'
+
+export async function registrarUsuario(
+  datos: Registro,
+  signal?: AbortSignal,
+): Promise<UsuarioRegistrado> {
+  const registro = registroSchema.parse(datos)
+  let respuesta: unknown
+
+  try {
+    respuesta = await http('/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(registro),
+      signal,
+    })
+  } catch (error: unknown) {
+    if (error instanceof ApiError && error.status === 409) {
+      throw new ApiError(409, 'No se pudo crear la cuenta. El usuario o correo ya está registrado.')
+    }
+    throw error
+  }
+
+  return validarRespuesta(usuarioRegistradoSchema, respuesta, 201)
+}
 
 export async function iniciarSesion(datos: Login, signal?: AbortSignal): Promise<RespuestaLogin> {
   const credenciales = loginSchema.parse(datos)

@@ -2,6 +2,20 @@ import { z } from 'zod'
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? '/api').replace(/\/$/, '')
 
+interface SesionHttp {
+  obtenerToken: () => string | null
+  alExpirar: () => void
+}
+
+let sesionHttp: SesionHttp | null = null
+
+export function conectarSesionHttp(configuracion: SesionHttp): () => void {
+  sesionHttp = configuracion
+  return () => {
+    if (sesionHttp === configuracion) sesionHttp = null
+  }
+}
+
 const errorResponseSchema = z.object({
   timestamp: z.iso.datetime({ local: true }),
   status: z.number().int(),
@@ -52,6 +66,12 @@ function mensajePorEstado(status: number): string {
 export async function http(ruta: string, opciones: RequestInit = {}): Promise<unknown> {
   const headers = new Headers(opciones.headers)
   if (!headers.has('Accept')) headers.set('Accept', 'application/json')
+  const configuracion = sesionHttp
+  const token = configuracion?.obtenerToken()
+  const esAccesoPublico = ruta.split('?')[0] === '/auth/login' || ruta.split('?')[0] === '/users'
+  if (token && !esAccesoPublico && !headers.has('Authorization')) {
+    headers.set('Authorization', `Bearer ${token}`)
+  }
 
   let respuesta: Response
   try {
@@ -66,6 +86,12 @@ export async function http(ruta: string, opciones: RequestInit = {}): Promise<un
   }
 
   if (!respuesta.ok) {
+    // No permite que una respuesta tardía de una sesión anterior cierre la actual.
+    if (respuesta.status === 401 && token && !esAccesoPublico
+      && headers.get('Authorization') === `Bearer ${token}`
+      && sesionHttp === configuracion && configuracion?.obtenerToken() === token) {
+      configuracion.alExpirar()
+    }
     let datos: unknown
     try {
       datos = await respuesta.json()

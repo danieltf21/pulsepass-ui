@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { iniciarSesion as solicitarLogin, obtenerUsuarioAutenticado } from '../api/auth'
 import type { Login, Sesion } from '../api/auth.tipos'
-import { ApiError } from '../api/http'
+import { ApiError, conectarSesionHttp } from '../api/http'
 import { borrarSesionGuardada, guardarSesion, leerSesionGuardada } from '../lib/sesion'
 import { AuthContext } from './AuthContext'
 
@@ -14,13 +14,20 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   const queryClient = useQueryClient()
   const [sesion, setSesion] = useState<Sesion>({ estado: 'cargando' })
   const operacion = useRef(0)
+  const tokenActual = useRef<string | null>(null)
 
   const cerrarSesion = useCallback((motivo?: 'expirada') => {
     operacion.current += 1
+    tokenActual.current = null
     borrarSesionGuardada()
     queryClient.clear()
     setSesion({ estado: 'anonima', motivo })
   }, [queryClient])
+
+  useEffect(() => conectarSesionHttp({
+    obtenerToken: () => tokenActual.current,
+    alExpirar: () => cerrarSesion('expirada'),
+  }), [cerrarSesion])
 
   useEffect(() => {
     const actual = ++operacion.current
@@ -47,6 +54,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
           cerrarSesion('expirada')
           return
         }
+        tokenActual.current = guardada.datos.accessToken
         setSesion({ estado: 'autenticada', usuario, ...guardada.datos })
       } catch (error: unknown) {
         if (actual !== operacion.current) return
@@ -97,6 +105,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
       const expiraEn = inicio + respuesta.expiresIn * 1000
       if (expiraEn <= Date.now()) throw new ApiError(401, 'Tu sesión expiró. Inicia sesión de nuevo.')
       guardarSesion({ accessToken: respuesta.accessToken, expiraEn })
+      tokenActual.current = respuesta.accessToken
       setSesion({ estado: 'autenticada', usuario, accessToken: respuesta.accessToken, expiraEn })
     } catch (error: unknown) {
       if (actual === operacion.current) cerrarSesion()

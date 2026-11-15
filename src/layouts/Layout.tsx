@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet, useNavigate } from 'react-router'
+import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router'
 import { RUTAS } from '../lib/rutas'
 import { useAuth } from '../hooks/useAuth'
 
@@ -12,10 +12,25 @@ const enlaces = [
 export default function Layout() {
   const { sesion, cerrarSesion } = useAuth()
   const navegar = useNavigate()
+  const ubicacion = useLocation()
 
   function salir() {
     cerrarSesion()
     void navegar(RUTAS.inicio, { replace: true })
+  }
+
+  if (sesion.estado === 'anonima' && sesion.motivo === 'expirada'
+    && ubicacion.pathname !== RUTAS.login) {
+    return (
+      <Navigate
+        to={RUTAS.login}
+        replace
+        state={{
+          desde: ubicacion.pathname + ubicacion.search + ubicacion.hash,
+          motivo: 'expirada',
+        }}
+      />
+    )
   }
 
   return (
@@ -52,6 +67,14 @@ export default function Layout() {
             ) : sesion.estado === 'autenticada' ? (
               <>
                 <span className="px-4 py-3 text-sm text-slate-700">{sesion.usuario.username}</span>
+                <NavLink
+                  to={RUTAS.cuenta}
+                  className={({ isActive }) =>
+                    `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                  }
+                >
+                  Mi cuenta
+                </NavLink>
                 <button
                   type="button"
                   onClick={salir}
@@ -61,7 +84,8 @@ export default function Layout() {
                 </button>
               </>
             ) : (
-              <NavLink
+              <>
+                <NavLink
                 to={RUTAS.login}
                 className={({ isActive }) =>
                   `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
@@ -69,6 +93,15 @@ export default function Layout() {
               >
                 Iniciar sesión
               </NavLink>
+                <NavLink
+                  to={RUTAS.registro}
+                  className={({ isActive }) =>
+                    `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                  }
+                >
+                  Registrarse
+                </NavLink>
+              </>
             )}
           </nav>
         </div>

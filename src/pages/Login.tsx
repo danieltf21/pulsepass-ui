@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Navigate, useLocation, useNavigate } from 'react-router'
+import { Link, Navigate, useLocation, useNavigate } from 'react-router'
 import { z } from 'zod'
 import { loginSchema, type Login as DatosLogin } from '../api/auth.tipos'
 import { ApiError } from '../api/http'
@@ -14,6 +14,7 @@ const destinoSchema = z.string().refine(
 const estadoRutaSchema = z.object({
   desde: destinoSchema.optional(),
   motivo: z.literal('expirada').optional(),
+  registroExitoso: z.boolean().optional(),
 })
 
 export default function Login() {
@@ -52,6 +53,11 @@ export default function Login() {
     <main className="mx-auto max-w-md px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Iniciar sesión</h1>
       <p className="mt-3 text-slate-600">Accede a tu cuenta de PulsePass.</p>
+      {estado.success && estado.data.registroExitoso && (
+        <p role="status" className="mt-4 rounded-lg bg-emerald-50 p-4 text-emerald-900">
+          Cuenta creada. Inicia sesión.
+        </p>
+      )}
       {expirada && <p role="status" className="mt-4 rounded-lg bg-amber-50 p-4 text-amber-900">Tu sesión expiró. Inicia sesión de nuevo.</p>}
 
       <form noValidate onSubmit={handleSubmit(enviar)} aria-busy={isSubmitting} className="mt-6 space-y-5">
@@ -89,6 +95,15 @@ export default function Login() {
           {isSubmitting ? 'Ingresando…' : 'Ingresar'}
         </button>
       </form>
+      <p className="mt-6 text-sm text-slate-600">
+        ¿No tienes cuenta?{' '}
+        <Link
+          to={RUTAS.registro}
+          className="rounded text-marca-700 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+        >
+          Crear cuenta
+        </Link>
+      </p>
     </main>
   )
 }
