@@ -1,5 +1,6 @@
-import { Link, NavLink, Outlet } from 'react-router'
+import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router'
 import { RUTAS } from '../lib/rutas'
+import { useAuth } from '../hooks/useAuth'
 
 const enlaces = [
   { destino: RUTAS.inicio, texto: 'Inicio' },
@@ -9,6 +10,29 @@ const enlaces = [
 ]
 
 export default function Layout() {
+  const { sesion, cerrarSesion } = useAuth()
+  const navegar = useNavigate()
+  const ubicacion = useLocation()
+
+  function salir() {
+    cerrarSesion()
+    void navegar(RUTAS.inicio, { replace: true })
+  }
+
+  if (sesion.estado === 'anonima' && sesion.motivo === 'expirada'
+    && ubicacion.pathname !== RUTAS.login) {
+    return (
+      <Navigate
+        to={RUTAS.login}
+        replace
+        state={{
+          desde: ubicacion.pathname + ubicacion.search + ubicacion.hash,
+          motivo: 'expirada',
+        }}
+      />
+    )
+  }
+
   return (
     <div className="flex min-h-screen flex-col bg-slate-50 font-cuerpo text-slate-900">
       <a
@@ -38,6 +62,47 @@ export default function Layout() {
                 {texto}
               </NavLink>
             ))}
+            {sesion.estado === 'cargando' ? (
+              <span role="status" className="px-4 py-3 text-sm text-slate-600">Comprobando sesión…</span>
+            ) : sesion.estado === 'autenticada' ? (
+              <>
+                <span className="px-4 py-3 text-sm text-slate-700">{sesion.usuario.username}</span>
+                <NavLink
+                  to={RUTAS.cuenta}
+                  className={({ isActive }) =>
+                    `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                  }
+                >
+                  Mi cuenta
+                </NavLink>
+                <button
+                  type="button"
+                  onClick={salir}
+                  className="rounded-lg px-4 py-3 text-sm font-medium text-marca-700 hover:bg-marca-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+                >
+                  Salir
+                </button>
+              </>
+            ) : (
+              <>
+                <NavLink
+                to={RUTAS.login}
+                className={({ isActive }) =>
+                  `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                }
+              >
+                Iniciar sesión
+              </NavLink>
+                <NavLink
+                  to={RUTAS.registro}
+                  className={({ isActive }) =>
+                    `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                  }
+                >
+                  Registrarse
+                </NavLink>
+              </>
+            )}
           </nav>
         </div>
       </header>

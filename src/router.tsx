@@ -3,6 +3,8 @@ import Inicio from './pages/Inicio'
 import { RUTAS } from './lib/rutas'
 import Layout from './layouts/Layout'
 import ErrorPagina from './pages/ErrorPagina'
+import SoloAnonimo from './layouts/SoloAnonimo'
+import RutaProtegida from './layouts/RutaProtegida'
 
 export const router = createBrowserRouter([
   {
@@ -11,6 +13,34 @@ export const router = createBrowserRouter([
     errorElement: <ErrorPagina />,
     children: [
       { index: true, Component: Inicio },
+      {
+        Component: RutaProtegida,
+        children: [
+          {
+            path: RUTAS.cuenta,
+            lazy: async () => ({
+              Component: (await import('./pages/Cuenta')).default,
+            }),
+          },
+        ],
+      },
+      {
+        Component: SoloAnonimo,
+        children: [
+          {
+            path: RUTAS.login,
+            lazy: async () => ({
+              Component: (await import('./pages/Login')).default,
+            }),
+          },
+          {
+            path: RUTAS.registro,
+            lazy: async () => ({
+              Component: (await import('./pages/Registro')).default,
+            }),
+          },
+        ],
+      },
       {
         path: RUTAS.eventos,
         lazy: async () => ({
@@ -51,6 +81,12 @@ export const router = createBrowserRouter([
         path: RUTAS.noEncontrada,
         lazy: async () => ({
           Component: (await import('./pages/NoEncontrada')).default,
+        }),
+      },
+      {
+        path: RUTAS.sinPermisos,
+        lazy: async () => ({
+          Component: (await import('./pages/SinPermisos')).default,
         }),
       },
     ],
