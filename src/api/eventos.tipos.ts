@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { artistaSchema } from './artistas.tipos'
 
 export const estadoEventoSchema = z.enum([
   'DRAFT',
@@ -28,14 +29,8 @@ export const categoriaEventoSchema = z.enum([
   'ENTERTAINMENT',
 ])
 
-// ArtistResponse: país y género pueden ser null en el backend.
-export const artistaEventoSchema = z.object({
-  id: z.number().int().positive(),
-  stageName: z.string(),
-  country: z.string().nullable(),
-  genre: z.string().nullable(),
-  active: z.boolean(),
-})
+// Los artistas del evento usan el mismo contrato ArtistResponse.
+export const artistaEventoSchema = artistaSchema
 
 // EventResponse comparte los campos del resumen y añade el detalle.
 export const detalleEventoSchema = resumenEventoSchema.extend({

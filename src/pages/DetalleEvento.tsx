@@ -99,7 +99,14 @@ export default function DetalleEvento() {
                 <ul className="mt-4 grid gap-4 sm:grid-cols-2">
                   {evento.artists.map((artista) => (
                     <li key={artista.id} className="rounded-lg bg-slate-50 p-4">
-                      <h3 className="font-semibold">{artista.stageName}</h3>
+                      <h3 className="font-semibold">
+                        <Link
+                          to={RUTAS.artista(artista.id)}
+                          className="rounded text-marca-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+                        >
+                          {artista.stageName}
+                        </Link>
+                      </h3>
                       {artista.genre && <p className="mt-1 text-sm text-slate-600">{artista.genre}</p>}
                       {artista.country && <p className="mt-1 text-sm text-slate-600">{artista.country}</p>}
                     </li>
