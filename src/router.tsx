@@ -5,6 +5,7 @@ import Layout from './layouts/Layout'
 import ErrorPagina from './pages/ErrorPagina'
 import SoloAnonimo from './layouts/SoloAnonimo'
 import RutaProtegida from './layouts/RutaProtegida'
+import RutaPorRol from './layouts/RutaPorRol'
 
 export const router = createBrowserRouter([
   {
@@ -21,6 +22,17 @@ export const router = createBrowserRouter([
             lazy: async () => ({
               Component: (await import('./pages/Cuenta')).default,
             }),
+          },
+          {
+            element: <RutaPorRol roles={['USER']} />,
+            children: [
+              {
+                path: RUTAS.confirmacionCompra,
+                lazy: async () => ({
+                  Component: (await import('./pages/ConfirmacionCompra')).default,
+                }),
+              },
+            ],
           },
         ],
       },

@@ -1,11 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { http, HttpResponse } from 'msw'
 import { server } from '../test/mocks/server'
 import { eventoDePrueba } from '../test/mocks/handlers'
 import DetalleEvento from './DetalleEvento'
+import { AuthContext } from '../context/AuthContext'
 
 function mostrarDetalle(codigo: string) {
   const queryClient = new QueryClient({
@@ -14,16 +15,33 @@ function mostrarDetalle(codigo: string) {
 
   return render(
     <QueryClientProvider client={queryClient}>
+      <AuthContext.Provider value={{ sesion: { estado: 'anonima' }, iniciarSesion: async () => {}, cerrarSesion: () => {} }}>
       <MemoryRouter initialEntries={[`/eventos/${codigo}`]}>
         <Routes>
           <Route path="/eventos/:eventCode" element={<DetalleEvento />} />
+          <Route path="/login" element={<h1>Iniciar sesión para comprar</h1>} />
         </Routes>
       </MemoryRouter>
+      </AuthContext.Provider>
     </QueryClientProvider>,
   )
 }
 
 describe('DetalleEvento', () => {
+  it('envía al visitante a iniciar sesión para comprar', async () => {
+    mostrarDetalle('CMF-2026')
+    fireEvent.click(await screen.findByRole('button', { name: 'Comprar entrada' }))
+    expect(await screen.findByRole('heading', { name: 'Iniciar sesión para comprar' })).toBeInTheDocument()
+  })
+
+  it('deshabilita la compra cuando el evento está agotado', async () => {
+    server.use(http.get('*/api/events/CMF-2026', () => HttpResponse.json({
+      ...eventoDePrueba, status: 'SOLD_OUT',
+    })))
+    mostrarDetalle('CMF-2026')
+    expect(await screen.findByRole('button', { name: 'Comprar entrada' })).toBeDisabled()
+  })
+
   it('muestra el estado de carga mientras espera los datos', () => {
     mostrarDetalle('CMF-2026')
 

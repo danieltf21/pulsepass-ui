@@ -12,6 +12,8 @@ export const RUTAS = {
   login: '/login',
   registro: '/registro',
   cuenta: '/cuenta',
+  confirmacionCompra: '/compra/confirmacion/:ticketCode',
+  compraConfirmada: (ticketCode: string) => `/compra/confirmacion/${encodeURIComponent(ticketCode)}`,
   sinPermisos: '/403',
   noEncontrada: '*',
 } as const
