@@ -1,15 +1,31 @@
 import TarjetaArtista from '../components/artistas/TarjetaArtista'
-import { useArtistasActivos } from '../hooks/useArtistas'
+import BuscadorArtista from '../components/artistas/BuscadorArtista'
+import { useArtistaPorNombre, useArtistasActivos } from '../hooks/useArtistas'
+import { useState } from 'react'
+import { ApiError } from '../api/http'
 
 export default function ListaArtistas() {
-  const { data: artistas, isPending, isError, isFetching, refetch } = useArtistasActivos()
+  const [nombreBuscado, setNombreBuscado] = useState('')
+  const listado = useArtistasActivos()
+  const busqueda = useArtistaPorNombre(nombreBuscado)
+  const consulta = nombreBuscado ? busqueda : listado
+  const { isPending, isError, isFetching, refetch } = consulta
+  const artistas = nombreBuscado
+    ? (busqueda.data ? [busqueda.data] : [])
+    : (listado.data ?? [])
+  const noEncontrado = Boolean(nombreBuscado)
+    && busqueda.error instanceof ApiError && busqueda.error.status === 404
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Artistas</h1>
       <p className="mt-3 text-slate-600">Conoce a los artistas de PulsePass.</p>
+      <BuscadorArtista onBuscar={setNombreBuscado} onLimpiar={() => setNombreBuscado('')} />
+      {nombreBuscado && (
+        <p className="mt-4 text-sm text-slate-600">Búsqueda: <strong>{nombreBuscado}</strong></p>
+      )}
 
-      <section aria-label="Artistas activos" aria-busy={isFetching} className="mt-8">
+      <section aria-label="Resultados de artistas" aria-busy={isFetching} className="mt-8">
         {isPending ? (
           <div role="status">
             <p className="sr-only">Cargando artistas…</p>
@@ -19,6 +35,10 @@ export default function ListaArtistas() {
               ))}
             </div>
           </div>
+        ) : noEncontrado ? (
+          <p role="status" className="rounded-xl border border-slate-200 bg-white p-6 text-slate-600">
+            No se encontró un artista con ese nombre artístico.
+          </p>
         ) : isError ? (
           <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-6">
             <h2 className="text-lg font-semibold text-red-900">No se pudieron cargar los artistas</h2>
