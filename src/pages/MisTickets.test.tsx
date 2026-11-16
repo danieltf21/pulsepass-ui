@@ -42,6 +42,17 @@ function mostrarMisTickets(conCacheSesion = true) {
 }
 
 describe('MisTickets', () => {
+  it('actualiza una entrada usada desde otra sesión sin recargar', async () => {
+    let entrada = { ...ticket }
+    server.use(http.get('*/api/tickets/by-user', () => HttpResponse.json([entrada])))
+    mostrarMisTickets()
+    expect(await screen.findByText('Pagado')).toBeInTheDocument()
+    // El operador modifica el servidor sin ejecutar una mutación en esta sesión.
+    entrada = { ...entrada, status: 'USED' }
+    expect(await screen.findByText('Usado', {}, { timeout: 8000 })).toBeInTheDocument()
+    expect(screen.queryByText('Pagado')).not.toBeInTheDocument()
+  }, 10000)
+
   const prototipo = HTMLDialogElement.prototype
   const metodos = ['showModal', 'close'] as const
   const originales = metodos.map((nombre) => Object.getOwnPropertyDescriptor(prototipo, nombre))

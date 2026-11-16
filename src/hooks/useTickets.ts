@@ -2,7 +2,10 @@ import { useEffect, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { UsuarioAutenticado } from '../api/auth.tipos'
 import { ApiError } from '../api/http'
-import { cancelarTicket, comprarTicket, obtenerTicket, obtenerTicketsPorUsuario } from '../api/tickets'
+import {
+  cancelarTicket, comprarTicket, marcarTicketUsado, obtenerTicket,
+  obtenerTicketsPorUsuario, obtenerTicketsPagadosPorEvento,
+} from '../api/tickets'
 import type { FormularioCompra, Ticket } from '../api/tickets.tipos'
 import { useAuth } from './useAuth'
 
@@ -44,6 +47,10 @@ export function useTicket(ticketCode: string) {
     queryKey: ['ticket', ticketCode],
     queryFn: ({ signal }) => obtenerTicket(ticketCode, signal),
     enabled: sesion.estado === 'autenticada' && ticketCode.trim().length > 0,
+    refetchInterval: (consulta) => sesion.estado === 'autenticada' && sesion.usuario.roles.includes('USER')
+      && consulta.state.status === 'success' ? 5000 : false,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: 'always',
     retry: (intentosFallidos, error) => error instanceof ApiError && intentosFallidos < 1
       && (error.status === 0 || (error.status >= 500 && error.status < 600)),
   })
@@ -66,6 +73,9 @@ export function useMisTickets() {
       return obtenerTicketsPorUsuario(email, signal)
     },
     enabled: sesion.estado === 'autenticada' && sesion.usuario.roles.includes('USER'),
+    refetchInterval: (consulta) => consulta.state.status === 'success' ? 5000 : false,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: 'always',
     retry: (intentosFallidos, error) => error instanceof ApiError && intentosFallidos < 1
       && (error.status === 0 || (error.status >= 500 && error.status < 600)),
   })
@@ -116,5 +126,83 @@ export function useCancelarTicket(ticketCode: string) {
         queryClient.invalidateQueries({ queryKey: ['eventos', 'publicados'] }),
       ])
     },
+  })
+}
+
+export function useMarcarTicketUsado(ticketCode: string) {
+  const { sesion } = useAuth()
+  const queryClient = useQueryClient()
+  const sesionActual = useRef(sesion)
+  useEffect(() => { sesionActual.current = sesion }, [sesion])
+
+  return useMutation({
+    mutationFn: () => {
+      if (sesion.estado !== 'autenticada') {
+        throw new ApiError(401, 'Debes iniciar sesión para registrar el ingreso.')
+      }
+      if (!sesion.usuario.roles.some((rol) => rol === 'STAFF' || rol === 'ADMIN')) {
+        throw new ApiError(403, 'Tu cuenta no tiene permisos para registrar el ingreso.')
+      }
+      if (!ticketCode.trim()) {
+        throw new ApiError(400, 'El código de la entrada no es válido.')
+      }
+      return marcarTicketUsado(ticketCode)
+    },
+    retry: false,
+    onSuccess: async (ticket) => {
+      const actual = sesionActual.current
+      if (sesion.estado !== 'autenticada' || actual.estado !== 'autenticada'
+        || actual.accessToken !== sesion.accessToken || actual.usuario.id !== sesion.usuario.id) return
+
+      const clavePropios = ['tickets', 'usuario', ticket.userEmail]
+      const clavePagados = ['tickets', 'pagados', ticket.eventCode]
+      await Promise.all([
+        queryClient.cancelQueries({ queryKey: ['ticket', ticketCode], exact: true }),
+        queryClient.cancelQueries({ queryKey: clavePropios, exact: true }),
+        queryClient.cancelQueries({ queryKey: clavePagados, exact: true }),
+      ])
+      const trasCancelarConsultas = sesionActual.current
+      if (trasCancelarConsultas.estado !== 'autenticada'
+        || trasCancelarConsultas.accessToken !== sesion.accessToken
+        || trasCancelarConsultas.usuario.id !== sesion.usuario.id) return
+
+      queryClient.setQueryData(['ticket', ticketCode], ticket)
+      queryClient.setQueryData<Ticket[]>(clavePropios, (entradas) =>
+        entradas?.map((entrada) => entrada.ticketCode === ticketCode ? ticket : entrada),
+      )
+      queryClient.setQueryData<Ticket[]>(clavePagados, (entradas) =>
+        entradas?.filter((entrada) => entrada.ticketCode !== ticketCode),
+      )
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: clavePropios }),
+        queryClient.invalidateQueries({ queryKey: clavePagados }),
+      ])
+    },
+  })
+}
+
+export function useTicketsPagadosPorEvento(eventCode: string) {
+  const { sesion } = useAuth()
+  const codigo = eventCode.trim()
+  const tienePermiso = sesion.estado === 'autenticada'
+    && sesion.usuario.roles.some((rol) => rol === 'STAFF' || rol === 'ADMIN')
+
+  return useQuery({
+    queryKey: ['tickets', 'pagados', codigo],
+    queryFn: ({ signal }) => {
+      if (sesion.estado !== 'autenticada') {
+        throw new ApiError(401, 'Debes iniciar sesión para consultar las entradas pagadas.')
+      }
+      if (!tienePermiso) {
+        throw new ApiError(403, 'Tu cuenta no tiene permisos para consultar las entradas pagadas.')
+      }
+      if (!codigo) {
+        throw new ApiError(400, 'El código del evento no es válido.')
+      }
+      return obtenerTicketsPagadosPorEvento(codigo, signal)
+    },
+    enabled: tienePermiso && codigo.length > 0,
+    retry: (intentosFallidos, error) => error instanceof ApiError && intentosFallidos < 1
+      && (error.status === 0 || (error.status >= 500 && error.status < 600)),
   })
 }

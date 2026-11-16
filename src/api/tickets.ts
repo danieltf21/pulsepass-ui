@@ -32,3 +32,17 @@ export async function cancelarTicket(ticketCode: string): Promise<Ticket> {
 
   return validarRespuesta(ticketSchema, respuesta)
 }
+
+export async function marcarTicketUsado(ticketCode: string): Promise<Ticket> {
+  const respuesta = await http(`/tickets/${encodeURIComponent(ticketCode)}/use`, {
+    method: 'PATCH',
+  })
+
+  return validarRespuesta(ticketSchema, respuesta)
+}
+
+export async function obtenerTicketsPagadosPorEvento(eventCode: string, signal?: AbortSignal): Promise<Ticket[]> {
+  const respuesta = await http(`/events/${encodeURIComponent(eventCode)}/tickets/paid`, { signal })
+
+  return validarRespuesta(ticketSchema.array(), respuesta)
+}

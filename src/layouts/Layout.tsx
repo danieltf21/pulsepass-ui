@@ -1,4 +1,4 @@
-import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router'
+import { Link, matchPath, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router'
 import { RUTAS } from '../lib/rutas'
 import { useAuth } from '../hooks/useAuth'
 
@@ -13,6 +13,8 @@ export default function Layout() {
   const { sesion, cerrarSesion } = useAuth()
   const navegar = useNavigate()
   const ubicacion = useLocation()
+  const enTicketsPagados = ubicacion.pathname === RUTAS.buscarTicketsPagados
+    || Boolean(matchPath(RUTAS.ticketsPagados, ubicacion.pathname))
 
   function salir() {
     cerrarSesion()
@@ -84,6 +86,25 @@ export default function Layout() {
                   >
                     Mis tickets
                   </NavLink>
+                )}
+                {sesion.usuario.roles.some((rol) => rol === 'STAFF' || rol === 'ADMIN') && (
+                  <>
+                  <NavLink
+                    to={RUTAS.validacionIngreso}
+                    className={({ isActive }) =>
+                      `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                    }
+                  >
+                    Validar ingreso
+                  </NavLink>
+                  <Link
+                    to={RUTAS.buscarTicketsPagados}
+                    aria-current={enTicketsPagados ? 'page' : undefined}
+                    className={`rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${enTicketsPagados ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`}
+                  >
+                    Tickets pagados
+                  </Link>
+                  </>
                 )}
                 <button
                   type="button"
