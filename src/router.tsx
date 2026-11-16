@@ -18,6 +18,29 @@ export const router = createBrowserRouter([
         Component: RutaProtegida,
         children: [
           {
+            element: <RutaPorRol roles={['STAFF', 'ADMIN']} />,
+            children: [
+              {
+                path: RUTAS.validacionIngreso,
+                lazy: async () => ({
+                  Component: (await import('./pages/ValidacionIngreso')).default,
+                }),
+              },
+              {
+                path: RUTAS.buscarTicketsPagados,
+                lazy: async () => ({
+                  Component: (await import('./pages/TicketsPagadosEvento')).default,
+                }),
+              },
+              {
+                path: RUTAS.ticketsPagados,
+                lazy: async () => ({
+                  Component: (await import('./pages/TicketsPagadosEvento')).default,
+                }),
+              },
+            ],
+          },
+          {
             path: RUTAS.cuenta,
             lazy: async () => ({
               Component: (await import('./pages/Cuenta')).default,
