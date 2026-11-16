@@ -2,55 +2,53 @@
 
 ## Git y acuerdos
 
-- Rama actual: feature/validacion-ingreso, desde develop en 80c0e16.
-- PR #8 de Mis tickets fusionado en develop.
-- El usuario autorizo commit y push de este bloque para pausar por hoy. Verificar git log y git status al retomar; futuras operaciones requieren permiso nuevo.
-- Avanzar paso a paso; anunciar archivos y finalidad antes de modificar.
-- Nuevas ramas desde develop; PR hacia develop. Main al finalizar el proyecto.
+- Rama actual: feature/admin-eventos, desde develop en 2ecd6b5.
+- PR #9 de STAFF fusionado en develop.
+- El usuario autorizo commit y push del bloque ADMIN. Verificar git status y git log al retomar; futuros commits requieren permiso nuevo.
+- Avanzar paso a paso y anunciar archivos y finalidad antes de modificar.
+- Nuevas ramas desde develop; PR hacia develop. Main al terminar el proyecto.
 
 ## Implementado en esta rama
 
-- API: marcar tickets usados y consultar tickets pagados por evento, con Zod.
-- Hooks: permisos STAFF/ADMIN, registro sin reintentos automaticos y listas actualizadas.
-- Vista ValidacionIngreso: buscar codigo, registrar ingreso, estados 403/404/409, foco y limpieza del campo.
-- Vista TicketsPagadosEvento: buscar evento con codigo en URL, total, accion Usar, carga, vacio y errores.
-- Tabla generica tipada, tabla de escritorio y tarjetas en movil.
-- Rutas protegidas y enlaces de menu STAFF/ADMIN; enlace activo corregido para eventos concretos.
-- Mis tickets y detalle USER refrescan cada 5 segundos mientras son visibles, para detectar usos hechos desde otra cuenta.
-- Prueba de regresion del refresco entre sesiones.
+- Esquema CrearEvento segun DTO: descripcion opcional de hasta 1000 caracteres; sin reglas de negocio de fechas en cliente.
+- API y hooks ADMIN para crear, publicar y asociar artistas.
+- Formulario con React Hook Form y Zod, sedes activas, errores 400 por campo, conflictos 409 y redireccion 403.
+- AdminEventos: buscar por codigo, Nuevo evento y Creados en esta sesion.
+- La lista de creados se guarda en memoria por usuario y se limpia al salir; no representa todos los eventos del backend.
+- AdminCrearEvento: creacion y redireccion a gestion con aviso.
+- AdminGestionEvento: datos, artistas, tickets pagados, publicacion confirmada y asociacion de artistas activos.
+- Publicar deshabilitado fuera de DRAFT. Artistas ya asociados bloqueados en el selector.
+- Cache del detalle, lista de sesion y consultas publicas actualizada tras las mutaciones.
+- Tres rutas protegidas ADMIN y enlace Administrar eventos en el menu.
 
-## Comprobaciones reales
+## Validacion
 
-- Se creo una cuenta local nueva ADMIN, admin_ui_prueba_1116, con permiso explicito.
-- Login y rol verificados mediante auth/login y auth/me. No guardar su clave ni tokens en archivos.
-- Usuario probo Usar desde ADMIN; informo que en la cuenta compradora no se actualizaba.
-- Se implemento el refresco periodico descrito arriba. Falta confirmacion del usuario sobre el resultado real tras el cambio.
-- Cuenta STAFF local creada con permiso: staff_ui_prueba_1116. Login, rol, consulta de ticket ajeno y lista de pagados verificados contra el backend con HTTP 200.
-- El usuario confirmo que la prueba real STAFF funciono. No almacenar contrasenas ni tokens en el repositorio.
-- Ultima suite frontend: 155 pruebas pasando; build y lint correctos.
-- Base Docker local: contenedor pulsepass-db, base pulsepass_e2e.
-- No modificar el usuario comprador ni las entradas sin autorizacion.
+- Ultima suite completa: 175 pruebas pasando en 28 archivos. Build y lint correctos.
+- Pruebas de creacion, errores 400/403/409, publicacion, asociacion, permisos y recorrido completo con MSW.
+- El usuario confirmo que todo funciono en la prueba real ADMIN: crear, asociar y publicar.
+- El usuario observo el error de edad minima en ingles. Se confirmo que procede del backend.
+- El usuario pidio expresamente NO modificar ese mensaje en el backend. No se modifico.
+- No confundir pruebas jsdom con verificacion visual completa ni con cumplimiento total del PRD.
 
-## Permiso del backend corregido
+## Estado previo
 
-El commit 0baa968 del backend permite a STAFF consultar entradas ajenas mediante GET /api/tickets/{code}.
-La excepcion se limita a ese endpoint; requireOwnerOrAdmin no se amplio globalmente.
-Se reviso el cambio y se ejecutaron TicketControllerSecurityTest: 13 pruebas pasando, sin fallos ni omisiones.
-El usuario reinicio el backend y confirmo que la prueba real con la nueva cuenta STAFF funciono.
+- Compras y Mis tickets implementados; STAFF incluye validacion de ingreso y tickets pagados.
+- Backend: commit 0baa968 permite consulta individual de tickets a STAFF; 13 pruebas de seguridad pasaron.
+- Cuentas locales de prueba: admin_ui_prueba_1116 y staff_ui_prueba_1116. No guardar claves ni tokens en archivos.
+- Base local Docker: pulsepass-db, base pulsepass_e2e. No modificar cuentas ni entradas sin autorizacion.
 
-## Pendientes
+## Siguiente paso
 
-- Confirmar en navegador que el comprador ve Usado sin recargar.
-- Comprobar en navegador foco, teclado, vista movil y aspecto visual; jsdom no verifica el diseno responsive.
-- Abrir/revisar PR de feature/validacion-ingreso hacia develop. No fusionar sin autorizacion del usuario.
-- Al retomar, comprobar fusion del PR, actualizar develop y preparar la rama ADMIN cuando corresponda.
+1. Revisar/abrir PR de feature/admin-eventos hacia develop; no fusionar sin autorizacion.
+2. Confirmar fusion y actualizar develop antes de preparar otra rama.
+3. Revisar los pendientes del PRD contra el codigo: fidelidad visual, responsive, menu movil, accesibilidad, modo oscuro y otros criterios no cerrados.
+4. Mantener la auditoria honesta: el numero de pruebas no equivale al porcentaje de cumplimiento.
 
 ## Referencias
 
 - PRD: C:/Users/WINDOWS 11/Desktop/PRD_PulsePass_Frontend_React_TypeScript_Tailwind.pdf
-- Backend de referencia: C:/Users/WINDOWS 11/IdeaProjects/pulsepass
+- Backend: C:/Users/WINDOWS 11/IdeaProjects/pulsepass
 - Mantener api, hooks y components con pages, layouts y lib auxiliares.
-- Las pruebas no equivalen a porcentaje de cumplimiento del PRD.
 
 ## Comandos
 

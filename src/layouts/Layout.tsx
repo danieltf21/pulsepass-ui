@@ -106,6 +106,16 @@ export default function Layout() {
                   </Link>
                   </>
                 )}
+                {sesion.usuario.roles.includes('ADMIN') && (
+                  <NavLink
+                    to={RUTAS.adminEventos}
+                    className={({ isActive }) =>
+                      `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                    }
+                  >
+                    Administrar eventos
+                  </NavLink>
+                )}
                 <button
                   type="button"
                   onClick={salir}

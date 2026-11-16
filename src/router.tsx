@@ -18,6 +18,29 @@ export const router = createBrowserRouter([
         Component: RutaProtegida,
         children: [
           {
+            element: <RutaPorRol roles={['ADMIN']} />,
+            children: [
+              {
+                path: RUTAS.adminEventos,
+                lazy: async () => ({
+                  Component: (await import('./pages/AdminEventos')).default,
+                }),
+              },
+              {
+                path: RUTAS.adminCrearEvento,
+                lazy: async () => ({
+                  Component: (await import('./pages/AdminCrearEvento')).default,
+                }),
+              },
+              {
+                path: RUTAS.adminGestionEvento,
+                lazy: async () => ({
+                  Component: (await import('./pages/AdminGestionEvento')).default,
+                }),
+              },
+            ],
+          },
+          {
             element: <RutaPorRol roles={['STAFF', 'ADMIN']} />,
             children: [
               {

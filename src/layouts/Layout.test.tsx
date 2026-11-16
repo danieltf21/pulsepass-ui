@@ -25,6 +25,15 @@ function mostrarLayout(sesion: Sesion, entrada: string = RUTAS.inicio) {
       {
         Component: RutaProtegida,
         children: [{
+          element: <RutaPorRol roles={['ADMIN']} />,
+          children: [RUTAS.adminEventos, RUTAS.adminCrearEvento, RUTAS.adminGestionEvento].map((path) => ({
+            path, element: <h1>Contenido ADMIN</h1>,
+          })),
+        }],
+      },
+      {
+        Component: RutaProtegida,
+        children: [{
           element: <RutaPorRol roles={['STAFF', 'ADMIN']} />,
           children: [
             { path: RUTAS.validacionIngreso, element: <h1>Vista de validación</h1> },
@@ -44,6 +53,18 @@ function mostrarLayout(sesion: Sesion, entrada: string = RUTAS.inicio) {
 }
 
 describe('Menú y acceso STAFF', () => {
+  it('permite navegar al módulo ADMIN desde el menú de ADMIN', async () => {
+    mostrarLayout(sesionConRol('ADMIN'))
+    fireEvent.click(screen.getByRole('link', { name: 'Administrar eventos' }))
+    expect(await screen.findByRole('heading', { name: 'Contenido ADMIN' })).toBeInTheDocument()
+  })
+
+  it.each(['USER', 'STAFF'] as const)('oculta administración y rechaza su acceso para %s', async (rol) => {
+    mostrarLayout(sesionConRol(rol), RUTAS.adminCrearEvento)
+    expect(await screen.findByRole('heading', { name: 'Acceso denegado' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Administrar eventos' })).not.toBeInTheDocument()
+  })
+
   it.each(['STAFF', 'ADMIN'] as const)('muestra enlaces de operación a %s y permite navegar desde el menú', async (rol) => {
     mostrarLayout(sesionConRol(rol))
     expect(screen.queryByRole('link', { name: 'Mis tickets' })).not.toBeInTheDocument()
