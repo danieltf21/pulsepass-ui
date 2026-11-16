@@ -27,6 +27,18 @@ export const router = createBrowserRouter([
             element: <RutaPorRol roles={['USER']} />,
             children: [
               {
+                path: RUTAS.misTickets,
+                lazy: async () => ({
+                  Component: (await import('./pages/MisTickets')).default,
+                }),
+              },
+              {
+                path: RUTAS.detalleTicket,
+                lazy: async () => ({
+                  Component: (await import('./pages/DetalleTicket')).default,
+                }),
+              },
+              {
                 path: RUTAS.confirmacionCompra,
                 lazy: async () => ({
                   Component: (await import('./pages/ConfirmacionCompra')).default,

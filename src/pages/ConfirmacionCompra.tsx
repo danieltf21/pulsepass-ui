@@ -77,12 +77,20 @@ export default function ConfirmacionCompra() {
               <dd className="mt-1 text-slate-600"><time dateTime={ticket.purchaseDate}>{formatearFecha(ticket.purchaseDate)}</time></dd>
             </div>
           </dl>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+          <Link
+            to={RUTAS.misTickets}
+            className="inline-flex rounded-lg bg-marca-600 px-4 py-3 text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+          >
+            Ver mis tickets
+          </Link>
           <Link
             to={RUTAS.evento(ticket.eventCode)}
-            className="mt-6 inline-flex rounded-lg bg-marca-600 px-4 py-3 text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+            className="inline-flex rounded text-marca-700 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
           >
             Volver al evento
           </Link>
+          </div>
         </>
       )}
     </main>

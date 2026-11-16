@@ -51,6 +51,7 @@ describe('ConfirmacionCompra', () => {
     expect(screen.getByText(formatearPrecioCOP(ticket.price), { normalizer: (texto) => texto })).toBeInTheDocument()
     expect(document.querySelector('time')).toHaveAttribute('dateTime', ticket.purchaseDate)
     expect(screen.getByRole('link', { name: 'Volver al evento' })).toHaveAttribute('href', '/eventos/CMF-2026')
+    expect(screen.getByRole('link', { name: 'Ver mis tickets' })).toHaveAttribute('href', '/mis-tickets')
   })
 
   it.each([403, 404])('no muestra datos del ticket cuando el servidor devuelve %s', async (status) => {
