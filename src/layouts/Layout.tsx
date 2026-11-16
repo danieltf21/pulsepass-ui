@@ -75,6 +75,16 @@ export default function Layout() {
                 >
                   Mi cuenta
                 </NavLink>
+                {sesion.usuario.roles.includes('USER') && (
+                  <NavLink
+                    to={RUTAS.misTickets}
+                    className={({ isActive }) =>
+                      `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                    }
+                  >
+                    Mis tickets
+                  </NavLink>
+                )}
                 <button
                   type="button"
                   onClick={salir}

@@ -1,59 +1,56 @@
 # Estado para retomar PulsePass
 
-Fecha de pausa: 11 de noviembre de 2026.
+## Git y acuerdos
 
-## Git
+- Rama actual: `feature/mis-tickets`, creada desde `develop` en `2c4ba6c`.
+- PR #7 de compra de tickets fusionado en `develop`; compra real y recarga de confirmaci?n verificadas por el usuario.
+- El usuario autoriz? el commit y push de este bloque. Consultar git status y git log para confirmar su publicaci?n; futuras operaciones requieren autorizaci?n nueva.
+- Avanzar paso a paso y anunciar los archivos y el prop?sito antes de editar.
+- Las ramas salen de develop y los PR apuntan a develop. Main se integra al finalizar.
 
-- Rama actual: `feature/artistas`, creada desde `develop` actualizado.
-- Último commit publicado: `9a4e10e` — perfil y artistas destacados con pruebas.
-- El catálogo ya se integró en `develop` mediante PR.
-- El módulo de artistas sigue en su rama; aún no se debe fusionar como terminado.
-- Pedir permiso al usuario antes de cada commit y push.
+## Implementado en esta rama
 
-## Implementado
+- API: consulta por correo y cancelaci?n PATCH, respuestas validadas con Zod.
+- Hooks: listado con correo de sesi?n y cancelaci?n para USER.
+- P?gina Mis tickets, ruta protegida y enlace del men? para USER.
+- Filtros en cliente: Todos, Pagados, Usados y Cancelados, con aria-pressed.
+- Detalle con c?digo, estado, tipo, precio, fecha, comprador y bot?n Copiar.
+- Cancelaci?n desde listado y detalle mediante un modal compartido; solo visible para PAID.
+- Conflictos mantienen abierto el modal; bloqueo de env?os duplicados.
+- Enlace Ver mis tickets desde la confirmaci?n de compra.
 
-- Catálogo, búsqueda por texto en URL, filtro por artista y detalle de evento.
-- Cliente HTTP con ApiError, validación Zod y reintentos con TanStack Query.
-- Router separado, layout, páginas 404 y error seguro.
-- Artistas: esquemas, tres consultas API y hooks, listado y perfil con eventos.
-- Inicio con hasta tres eventos y seis artistas destacados.
-- MSW y pruebas del catálogo, errores HTTP, Inicio, listado y perfil de artistas.
+## Correcci?n pendiente de confirmar en navegador
 
-## Cambio local pendiente
+El usuario inform? que al cancelar deb?a recargar para actualizar el listado.
+Se corrigi? useCancelarTicket: comprueba la sesi?n activa sin depender de la consulta auth/me en cach?, cancela consultas anteriores y actualiza el listado directamente con el ticket devuelto antes de invalidar consultas.
+Hay una prueba de regresi?n con y sin cach? auth/me.
+No afirmar que la correcci?n est? verificada en navegador: el usuario todav?a no lo confirm?.
 
-`src/components/artistas/BuscadorArtista.tsx` está guardado, sin commit.
-Usa React Hook Form y Zod para validar el nombre artístico exacto.
-Todavía no está conectado al listado ni tiene pruebas específicas.
-El último build y ESLint, ejecutados tras crearlo, pasaron.
-Esta nota también es un archivo local pendiente de commit.
+## Comprobaciones y pendientes
 
-## Próximo paso
+- Build y lint correctos tras los cambios de c?digo. ?ltima suite completa: 132 pruebas pasando en 23 archivos.
+- Pruebas cubren listado, filtros, vac?o, errores, detalle, cancelaci?n, conflictos, duplicados y actualizaci?n entre vistas.
+- Los di?logos usan simulaci?n de showModal/close en jsdom; esto no verifica foco, Escape ni bloqueo del fondo en navegador.
+- Verificar con backend: cancelar desde Pagados, desaparici?n inmediata, presencia en Cancelados/Todos y persistencia tras recargar.
+- Verificar copiar c?digo y pegarlo, adem?s del manejo de error del portapapeles.
+- Revisar fidelidad visual y requisitos pendientes antes de declarar cumplimiento completo del PRD.
+- Despu?s de validar: pedir autorizaci?n de commit y push; PR a develop. STAFF es el siguiente m?dulo, no est? implementado.
 
-1. Explicar los archivos que se modificarán antes de implementar.
-2. Conectar BuscadorArtista en `src/pages/ListaArtistas.tsx` con `useArtistaPorNombre`.
-3. Mostrar carga, resultado, artista no encontrado, error y restaurar el listado al limpiar.
-4. Añadir pruebas del formulario y de la búsqueda con MSW; una entrada inválida no debe disparar peticiones.
-5. Ejecutar `npm.cmd test`, `npm.cmd run build` y `npm.cmd run lint`.
-6. Solicitar permiso para commit y push del bloque.
-7. Revisar requisitos pendientes de artistas antes del PR hacia `develop`.
+## Referencias
 
-## Acuerdos de trabajo
+- PRD: `C:/Users/WINDOWS 11/Desktop/PRD_PulsePass_Frontend_React_TypeScript_Tailwind.pdf`.
+- Backend de referencia en lectura: `C:/Users/WINDOWS 11/IdeaProjects/pulsepass`.
+- Seguir la estructura acordada api, hooks y components con pages, layouts y lib auxiliares.
+- El n?mero de pruebas no representa el porcentaje de cumplimiento del PRD.
 
-- Seguir el PRD; avanzar archivo por archivo y anunciar cambios y propósito primero.
-- Mantener las capas `src/api`, `src/hooks` y `src/components`, con páginas y utilidades auxiliares.
-- Avisar antes de necesitar una nueva rama. Las ramas salen de `develop`; PR hacia `develop`.
-- Integrar `develop` en `main` cuando se termine el proyecto.
-- Backend de referencia (lectura): `C:\Users\WINDOWS 11\IdeaProjects\pulsepass`.
-- PRD: `C:\Users\WINDOWS 11\Desktop\PRD_PulsePass_Frontend_React_TypeScript_Tailwind.pdf`.
-- El número de pruebas ejecutables no equivale al número de criterios del PRD cubiertos.
-- Siguen pendientes otros módulos del PRD: sedes, autenticación, cuenta, tickets, STAFF y ADMIN, además de diseño final, modo oscuro y accesibilidad.
-
-## Comandos al retomar
+## Comandos
 
 ```powershell
 git status
-git branch --show-current
+npm.cmd test
+npm.cmd run build
+npm.cmd run lint
 npm.cmd run dev
 ```
 
-Leer esta nota y revisar los archivos actuales antes de continuar.
+Antes de levantar otro servidor, comprobar si Vite ya est? ejecut?ndose y usar la URL de la terminal.
