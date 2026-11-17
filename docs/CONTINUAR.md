@@ -2,7 +2,8 @@
 
 ## Git y acuerdos
 
-- Rama actual: feature/navegacion-movil, desde develop en 1aa28b2.
+- Rama actual: docs/auditoria-prd-actualizada, desde develop en df48af9.
+- PR #11 de navegacion movil fusionado en develop; confirmado contra GitHub al retomar. Develop local actualizado por fast-forward.
 - PR #10 de ADMIN fusionado en develop; confirmado contra GitHub el 2026-11-16. Develop local actualizado por fast-forward.
 - PR #9 de STAFF fusionado en develop.
 - El usuario autorizo commit y push del bloque ADMIN. Verificar git status y git log al retomar; futuros commits requieren permiso nuevo.
@@ -10,7 +11,15 @@
 - Avanzar paso a paso y anunciar archivos y finalidad antes de modificar.
 - Nuevas ramas desde develop; PR hacia develop. Main al terminar el proyecto.
 
-## Bloque actual: navegacion movil
+## Bloque actual: auditoria actualizada
+
+- AUDITORIA_PRD.md revisado contra las secciones 7 y 23 del PDF, con consultas de rutas, politica de tickets, errores y DoD.
+- Recuento conservador: 31 completos, 10 parciales y 2 pendientes de 43 IDs (72,09 %); funcionales completos: 29/33. No equivale a porcentaje de esfuerzo ni a cumplimiento total del PRD.
+- Existen las 20 paginas de la seccion 8. Siguen abiertos categoria en tarjetas/filtros, toast, modo oscuro y controles de calidad/documentacion.
+- Ticket no disponible para 403/404 SI coincide con seccion 9.12 y TEST-FE-TKT-009: no cambiarlo por una lectura aislada de la tabla general.
+- Cambios exclusivamente documentales; el usuario autorizo commit/push de este bloque. Verificar git status y git log al retomar para confirmar su ejecucion. No se repitieron pruebas: se referencia la ultima ejecucion de 179 casos sobre el mismo codigo integrado.
+
+## Bloque navegacion movil (ya integrado)
 
 - Layout incorpora boton Abrir/Cerrar menu por debajo de lg; navegacion visible en escritorio.
 - Conserva enlaces por rol y estados activos. Nombre de usuario con ajuste de palabras largas.
@@ -25,7 +34,7 @@
 - ADMIN revisado en Brave con admin_ui_prueba_1116 a 360 x 552 px y en escritorio: Administrar eventos navega y cierra el menu; estado activo visible; Escape cierra con foco visible en el boton. Opciones inferiores, incluida Salir, accesibles con desplazamiento vertical. En escritorio los enlaces se ajustan en filas, sin cortes visibles.
 - Revision visual del menu completada para visitante, USER, STAFF y ADMIN en Brave; no equivale a auditoria responsive de toda la aplicacion ni de todos los navegadores. Las pruebas jsdom no verifican CSS responsive. Brave quedo en /admin/eventos con sesion ADMIN y DevTools cerrado; no se crearon ni modificaron eventos.
 - Los problemas anteriores de geometria/interaccion se resolvieron al dejar Brave libre y maximizarlo por su control de ventana. Mantener Brave al frente sin interaccion durante la revision.
-- Commit y push de este bloque autorizados; verificar git status y git log al retomar para confirmar su ejecucion. Futuros bloques requieren permiso nuevo.
+- Commit 85bbdbe creado y subido; integrado mediante PR #11 en df48af9. Futuros bloques requieren permiso nuevo para commit/push.
 
 ## Implementado en el bloque ADMIN (ya integrado)
 
@@ -58,11 +67,11 @@
 
 ## Siguiente paso
 
-1. Bloque de navegacion movil listo para revision del usuario: 3 archivos modificados, 179 pruebas pasando, build/lint correctos y menu revisado visualmente en los cuatro perfiles.
-2. Ejecutar commit/push ya autorizados y preparar PR hacia develop; verificar primero el estado remoto. No fusionar sin autorizacion.
-3. Continuar la revision del PRD: fidelidad visual, responsive completo, menu de usuario, accesibilidad, modo oscuro y otros criterios no cerrados.
-4. Actualizar AUDITORIA_PRD.md con evidencia actual antes de comunicar otro porcentaje: su matriz corresponde al estado anterior a autenticacion, tickets, STAFF y ADMIN.
-5. Mantener la auditoria honesta: el numero de pruebas no equivale al porcentaje de cumplimiento.
+1. Ejecutar commit/push de la auditoria ya autorizados y preparar PR hacia develop; verificar primero el estado remoto. No fusionar sin autorizacion.
+2. Siguiente bloque funcional propuesto: categoria en tarjetas y filtro URL. Leer contrato real del backend; EventSummaryResponse actual no incluye category. No inventar ese campo ni decidir cambios de backend sin revisar el alcance.
+3. Seguir con toast, modo oscuro, fidelidad visual, responsive completo, accesibilidad, Lighthouse, compatibilidad y README del producto.
+4. Completar trazabilidad de los 50 tests minimos y de las operaciones del backend; la suite de 179 casos no demuestra esa cobertura por si sola.
+5. No fusionar sin autorizacion; mantener la misma regla de recuento al actualizar la auditoria.
 
 ## Referencias
 
