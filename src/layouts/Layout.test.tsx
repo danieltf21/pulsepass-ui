@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { describe, expect, it, vi } from 'vitest'
 import type { Rol, Sesion } from '../api/auth.tipos'
@@ -53,6 +54,61 @@ function mostrarLayout(sesion: Sesion, entrada: string = RUTAS.inicio) {
 }
 
 describe('Menú y acceso STAFF', () => {
+  it('mantiene el menú cerrado al navegar externamente y regresar con Atrás', async () => {
+    const usuario = userEvent.setup()
+    const router = mostrarLayout(sesionConRol('ADMIN'))
+    await usuario.click(screen.getByRole('button', { name: 'Abrir menú' }))
+    await act(async () => { await router.navigate(RUTAS.adminEventos) })
+    expect(screen.getByRole('button', { name: 'Abrir menú' })).toHaveAttribute('aria-expanded', 'false')
+    await act(async () => { await router.navigate(-1) })
+    expect(await screen.findByRole('heading', { name: 'Página inicial' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Abrir menú' })).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('abre y cierra el menú con teclado y devuelve el foco al pulsar Escape', async () => {
+    const usuario = userEvent.setup()
+    mostrarLayout(sesionConRol('ADMIN'))
+    const boton = screen.getByRole('button', { name: 'Abrir menú' })
+    const navegacion = screen.getByRole('navigation', { name: 'Navegación principal' })
+    expect(boton).toHaveAttribute('aria-expanded', 'false')
+    expect(boton).toHaveAttribute('aria-controls', navegacion.id)
+    expect(navegacion).toHaveClass('hidden')
+
+    boton.focus()
+    await usuario.keyboard('{Enter}')
+    expect(boton).toHaveAccessibleName('Cerrar menú')
+    expect(boton).toHaveAttribute('aria-expanded', 'true')
+    expect(navegacion).not.toHaveClass('hidden')
+    await usuario.tab()
+    expect(screen.getByRole('link', { name: 'Inicio' })).toHaveFocus()
+    await usuario.keyboard('{Escape}')
+    expect(boton).toHaveFocus()
+    expect(boton).toHaveAttribute('aria-expanded', 'false')
+    expect(navegacion).toHaveClass('hidden')
+  })
+
+  it('cierra el menú al elegir un enlace incluso hacia la página actual', async () => {
+    const usuario = userEvent.setup()
+    mostrarLayout(sesionConRol('ADMIN'))
+    await usuario.click(screen.getByRole('button', { name: 'Abrir menú' }))
+    await usuario.click(screen.getByRole('link', { name: 'Inicio' }))
+    expect(screen.getByRole('button', { name: 'Abrir menú' })).toHaveAttribute('aria-expanded', 'false')
+
+    await usuario.click(screen.getByRole('button', { name: 'Abrir menú' }))
+    await usuario.click(screen.getByRole('link', { name: 'Administrar eventos' }))
+    expect(await screen.findByRole('heading', { name: 'Contenido ADMIN' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Abrir menú' })).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('permite cerrar el menú desde su botón', async () => {
+    const usuario = userEvent.setup()
+    mostrarLayout({ estado: 'anonima' })
+    await usuario.click(screen.getByRole('button', { name: 'Abrir menú' }))
+    expect(screen.getByRole('link', { name: 'Iniciar sesión' })).toBeInTheDocument()
+    await usuario.click(screen.getByRole('button', { name: 'Cerrar menú' }))
+    expect(screen.getByRole('button', { name: 'Abrir menú' })).toHaveAttribute('aria-expanded', 'false')
+  })
+
   it('permite navegar al módulo ADMIN desde el menú de ADMIN', async () => {
     mostrarLayout(sesionConRol('ADMIN'))
     fireEvent.click(screen.getByRole('link', { name: 'Administrar eventos' }))
