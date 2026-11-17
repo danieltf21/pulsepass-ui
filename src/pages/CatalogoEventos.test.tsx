@@ -27,6 +27,73 @@ function mostrarCatalogo(entrada = '/eventos') {
 }
 
 describe('CatalogoEventos', () => {
+  it('combina categoría, texto y artista en cliente conservando los otros parámetros', async () => {
+    let consultas = 0
+    server.use(http.get('*/api/events/by-artist', () => {
+      consultas += 1
+      return HttpResponse.json([
+        { ...eventoDePrueba, name: 'Festival musical' },
+        { ...eventoDePrueba, eventCode: 'SPORT-1', name: 'Festival deportivo', category: 'SPORTS' },
+        { ...eventoDePrueba, eventCode: 'SPORT-2', name: 'Torneo local', category: 'SPORTS' },
+      ])
+    }))
+    const usuario = userEvent.setup()
+    const { router } = mostrarCatalogo('/eventos?artista=Solar%20Beat&q=festival&origen=inicio')
+    await screen.findByRole('heading', { name: 'Festival musical' })
+    await usuario.selectOptions(screen.getByRole('combobox', { name: 'Categoría' }), 'SPORTS')
+
+    expect(screen.getByRole('heading', { name: 'Festival deportivo' })).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Festival musical' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'Torneo local' })).not.toBeInTheDocument()
+    expect(screen.getByText('1 resultado')).toBeInTheDocument()
+    const parametros = new URLSearchParams(router.state.location.search)
+    expect(parametros.get('categoria')).toBe('SPORTS')
+    expect(parametros.get('artista')).toBe('Solar Beat')
+    expect(parametros.get('q')).toBe('festival')
+    expect(parametros.get('origen')).toBe('inicio')
+
+    await usuario.selectOptions(screen.getByRole('combobox', { name: 'Categoría' }), '')
+    expect(new URLSearchParams(router.state.location.search).has('categoria')).toBe(false)
+    expect(screen.getByRole('searchbox')).toHaveValue('festival')
+    expect(screen.getByText('2 resultados')).toBeInTheDocument()
+    expect(consultas).toBe(1)
+  })
+
+  it('restaura categoría y texto desde la URL al volver a montar el catálogo', async () => {
+    const usuario = userEvent.setup()
+    const primera = mostrarCatalogo('/eventos?q=Caribbean')
+    await screen.findByRole('heading', { level: 2, name: eventoDePrueba.name })
+    await usuario.selectOptions(screen.getByRole('combobox', { name: 'Categoría' }), 'MUSIC')
+    const url = '/eventos' + primera.router.state.location.search
+    primera.unmount()
+    mostrarCatalogo(url)
+
+    expect(screen.getByRole('combobox', { name: 'Categoría' })).toHaveValue('MUSIC')
+    expect(screen.getByRole('searchbox')).toHaveValue('Caribbean')
+    expect(await screen.findByRole('heading', { level: 2, name: eventoDePrueba.name })).toBeInTheDocument()
+  })
+
+  it('muestra cero coincidencias y permite recuperar eventos al limpiar categoría', async () => {
+    const usuario = userEvent.setup()
+    mostrarCatalogo('/eventos?categoria=SPORTS')
+    expect(await screen.findByText('No hay eventos que coincidan con tu búsqueda.')).toBeInTheDocument()
+    await usuario.selectOptions(screen.getByRole('combobox', { name: 'Categoría' }), '')
+    expect(await screen.findByRole('heading', { level: 2, name: eventoDePrueba.name })).toBeInTheDocument()
+  })
+
+  it('ignora una categoría desconocida de la URL sin romper la cartelera', async () => {
+    mostrarCatalogo('/eventos?categoria=INVALIDA')
+    expect(screen.getByRole('combobox', { name: 'Categoría' })).toHaveValue('')
+    expect(await screen.findByRole('heading', { level: 2, name: eventoDePrueba.name })).toBeInTheDocument()
+  })
+
+  it.each([undefined, 'INVALIDA'])('rechaza una categoría de respuesta fuera del contrato: %s', async (category) => {
+    server.use(http.get('*/api/events/published', () => HttpResponse.json([{ ...eventoDePrueba, category }])))
+    mostrarCatalogo()
+    expect(await screen.findByRole('alert')).toHaveTextContent('No se pudieron cargar los eventos publicados.')
+    expect(screen.queryByRole('heading', { level: 2, name: eventoDePrueba.name })).not.toBeInTheDocument()
+  })
+
   it('consulta por artista y restaura el catálogo al quitar el filtro', async () => {
     let artistaConsultado: string | null = null
     let consultasGenerales = 0
@@ -36,6 +103,7 @@ describe('CatalogoEventos', () => {
         return HttpResponse.json([{
           eventCode: 'SOLAR-2026',
           name: 'Concierto de Solar Beat',
+          category: 'MUSIC',
           status: 'PUBLISHED',
           eventDate: '2026-12-12T18:00:00',
           venueName: 'Marina Convention Center',

@@ -2,6 +2,7 @@ import type { EstadoEvento, ResumenEvento } from '../../api/eventos.tipos'
 import { Link } from 'react-router'
 import { RUTAS } from '../../lib/rutas'
 import { formatearFecha } from '../../lib/formato'
+import { etiquetasCategoria } from '../../lib/categoriasEvento'
 
 const etiquetasEstado: Record<EstadoEvento, string> = {
   DRAFT: 'Borrador',
@@ -18,9 +19,10 @@ interface TarjetaEventoProps {
 export default function TarjetaEvento({ evento }: TarjetaEventoProps) {
   return (
     <article className="h-full rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
-        {etiquetasEstado[evento.status]}
-      </span>
+      <div className="flex flex-wrap gap-2 text-sm font-medium">
+        <span className="rounded-full bg-marca-50 px-3 py-1 text-marca-700">{etiquetasCategoria[evento.category]}</span>
+        <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">{etiquetasEstado[evento.status]}</span>
+      </div>
       <h2 className="mt-4 font-titulo text-xl font-bold">{evento.name}</h2>
       <p className="mt-2 text-sm text-slate-500">{evento.eventCode}</p>
       <p className="mt-4 text-slate-600">

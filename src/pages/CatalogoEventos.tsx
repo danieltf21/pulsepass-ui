@@ -3,10 +3,12 @@ import TarjetaEvento from '../components/eventos/TarjetaEvento'
 import FiltrosEventos from '../components/eventos/FiltrosEventos'
 import { useSearchParams } from 'react-router'
 import { z } from 'zod'
+import { categoriaEventoSchema, type CategoriaEvento } from '../api/eventos.tipos'
 
 const filtrosSchema = z.object({
   q: z.string().max(200).catch(''),
   artista: z.string().trim().max(150).catch(''),
+  categoria: categoriaEventoSchema.or(z.literal('')).catch(''),
 })
 
 function normalizar(texto: string) {
@@ -15,15 +17,17 @@ function normalizar(texto: string) {
 
 export default function CatalogoEventos() {
   const [parametros, setParametros] = useSearchParams()
-  const { q: busqueda, artista } = filtrosSchema.parse({
+  const { q: busqueda, artista, categoria } = filtrosSchema.parse({
     q: parametros.get('q') ?? '',
     artista: parametros.get('artista') ?? '',
+    categoria: parametros.get('categoria') ?? '',
   })
   const publicados = useEventos(!artista)
   const porArtista = useEventosPorArtista(artista)
   const { data: eventos, isPending, isError, isFetching, refetch } = artista ? porArtista : publicados
   const eventosFiltrados = eventos?.filter((evento) =>
-    normalizar(evento.name).includes(normalizar(busqueda.trim())),
+    normalizar(evento.name).includes(normalizar(busqueda.trim()))
+      && (!categoria || evento.category === categoria),
   ) ?? []
 
   function cambiarBusqueda(valor: string) {
@@ -35,12 +39,21 @@ export default function CatalogoEventos() {
     }, { replace: true })
   }
 
+  function cambiarCategoria(valor: CategoriaEvento | '') {
+    setParametros((actuales) => {
+      const siguientes = new URLSearchParams(actuales)
+      if (valor) siguientes.set('categoria', valor)
+      else siguientes.delete('categoria')
+      return siguientes
+    }, { replace: true })
+  }
+
   return (
       <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         <h1 className="font-titulo text-3xl font-bold">Cartelera de eventos</h1>
         <p className="mt-3 text-slate-600">Descubre tu próxima experiencia.</p>
 
-        <FiltrosEventos busqueda={busqueda} onBusquedaChange={cambiarBusqueda} />
+        <FiltrosEventos busqueda={busqueda} categoria={categoria} onBusquedaChange={cambiarBusqueda} onCategoriaChange={cambiarCategoria} />
         {artista && (
           <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
             <p>Eventos de <strong>{artista}</strong></p>
