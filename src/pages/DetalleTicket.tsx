@@ -112,7 +112,7 @@ export default function DetalleTicket() {
               <dd className="mt-1 break-all text-slate-600">{ticket.userEmail}</dd>
             </div>
           </dl>
-          {cancelada && <p role="status" className="mt-6 rounded-lg bg-green-50 p-4 text-green-800">La entrada se canceló correctamente.</p>}
+          {cancelada && <p role="status" aria-live="off" className="mt-6 rounded-lg bg-green-50 p-4 text-green-800">La entrada se canceló correctamente.</p>}
           {ticket.status === 'PAID' && (
             <div className="mt-6">
               <button

@@ -73,7 +73,7 @@ export default function Registro() {
             </div>
           ))}
         </div>
-        {errors.root && <p role="alert" className="rounded-lg bg-red-50 p-4 text-red-800">{errors.root.message}</p>}
+        {errors.root && <p role="alert" aria-live="off" className="rounded-lg bg-red-50 p-4 text-red-800">{errors.root.message}</p>}
         <button
           type="submit"
           disabled={isSubmitting}

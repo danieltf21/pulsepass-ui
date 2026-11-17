@@ -62,7 +62,7 @@ export default function FormularioEvento({ onCreado, onCancelar }: FormularioEve
 
   return (
     <form noValidate aria-busy={ocupado} onSubmit={(event) => { void handleSubmit(enviar)(event) }} className="mt-8 space-y-6">
-      {errors.root && <p role="alert" className="rounded-lg bg-red-50 p-4 text-red-800">{errors.root.message}</p>}
+      {errors.root && <p role="alert" aria-live="off" className="rounded-lg bg-red-50 p-4 text-red-800">{errors.root.message}</p>}
       <fieldset disabled={ocupado} className="space-y-6">
         <legend className="sr-only">Datos del nuevo evento</legend>
         {([

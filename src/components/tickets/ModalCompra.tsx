@@ -75,7 +75,7 @@ export default function ModalCompra({ abierto, eventCode, nombreEvento, onCerrar
           {errors.type && <p id="error-tipo-ticket" role="alert" className="mt-2 text-sm text-red-700">{errors.type.message}</p>}
         </div>
         <p className="text-sm text-slate-600">El precio de la entrada se mostrará en la confirmación de compra.</p>
-        {errors.root && <p role="alert" className="rounded-lg bg-red-50 p-4 text-red-800">{errors.root.message}</p>}
+        {errors.root && <p role="alert" aria-live="off" className="rounded-lg bg-red-50 p-4 text-red-800">{errors.root.message}</p>}
         <div className="flex flex-wrap gap-3">
           <button
             type="submit"

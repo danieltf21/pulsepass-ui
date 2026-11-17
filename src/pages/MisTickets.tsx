@@ -31,7 +31,7 @@ export default function MisTickets() {
       <div className="mt-6">
         <FiltroEstadoTicket valor={filtro} onCambiar={setFiltro} />
       </div>
-      {cancelada && <p role="status" className="mt-6 rounded-lg bg-green-50 p-4 text-green-800">La entrada se canceló correctamente.</p>}
+      {cancelada && <p role="status" aria-live="off" className="mt-6 rounded-lg bg-green-50 p-4 text-green-800">La entrada se canceló correctamente.</p>}
 
       <section aria-label="Tus entradas" aria-busy={isFetching} className="mt-8">
         {isPending ? (

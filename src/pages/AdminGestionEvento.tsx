@@ -116,7 +116,7 @@ export default function AdminGestionEvento() {
       ) : (
         <article className="mt-8">
           {aviso.success && aviso.data.eventoCreado === consulta.data.eventCode && (
-            <p role="status" className="mb-6 rounded-lg bg-green-50 p-4 text-green-900">Evento creado correctamente.</p>
+            <p role="status" aria-live="off" className="mb-6 rounded-lg bg-green-50 p-4 text-green-900">Evento creado correctamente.</p>
           )}
           <h1 className="font-titulo text-3xl font-bold">{consulta.data.name}</h1>
           <p className="mt-2 break-all font-mono text-slate-600">{consulta.data.eventCode}</p>
@@ -143,7 +143,7 @@ export default function AdminGestionEvento() {
             >
               Publicar evento
             </button>
-            {publicado === consulta.data.eventCode && <p role="status" className="mt-4 rounded-lg bg-green-50 p-4 text-green-900">Evento publicado correctamente.</p>}
+            {publicado === consulta.data.eventCode && <p role="status" aria-live="off" className="mt-4 rounded-lg bg-green-50 p-4 text-green-900">Evento publicado correctamente.</p>}
           </section>
           <section aria-labelledby="artistas-asociados" className="mt-8 border-t border-slate-200 pt-6">
             <h2 id="artistas-asociados" className="font-titulo text-xl font-bold">Artistas asociados</h2>
@@ -171,11 +171,11 @@ export default function AdminGestionEvento() {
                 </button>
               </div>
               {errors.artistId && <p id="error-artista-evento" role="alert" className="mt-2 text-red-800">{errors.artistId.message}</p>}
-              {errors.root && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-4 text-red-800">{errors.root.message}</p>}
+              {errors.root && <p role="alert" aria-live="off" className="mt-4 rounded-lg bg-red-50 p-4 text-red-800">{errors.root.message}</p>}
               {artistas.isPending && <p role="status" className="mt-3 text-slate-600">Cargando artistas…</p>}
               {artistas.isError && <div role="alert" className="mt-3 text-red-800"><p>No se pudieron cargar los artistas.</p><button type="button" disabled={artistas.isFetching} onClick={() => void artistas.refetch()} className="mt-2 min-h-11 rounded px-3 underline focus-visible:outline-2 focus-visible:outline-marca-600">Reintentar artistas</button></div>}
               {artistas.isSuccess && sinArtistasDisponibles && <p role="status" className="mt-3 text-slate-600">No hay artistas activos disponibles para asociar.</p>}
-              {artistaAsociado === consulta.data.eventCode && <p role="status" className="mt-4 rounded-lg bg-green-50 p-4 text-green-900">Artista asociado correctamente.</p>}
+              {artistaAsociado === consulta.data.eventCode && <p role="status" aria-live="off" className="mt-4 rounded-lg bg-green-50 p-4 text-green-900">Artista asociado correctamente.</p>}
             </form>
           </section>
           <Link to={RUTAS.ticketsPagadosEvento(consulta.data.eventCode)} className="mt-8 inline-block rounded text-marca-700 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
@@ -187,7 +187,7 @@ export default function AdminGestionEvento() {
         <Modal abierto titulo="Publicar evento" onCerrar={cerrarPublicacion} bloqueado={publicacion.isPending}>
           <p className="text-slate-700">¿Confirmas que quieres publicar el evento <span className="break-all font-mono">{codigo.data}</span>?</p>
           <p className="mt-3 text-sm text-slate-600">Al publicarlo aparecerá en la cartelera pública.</p>
-          {publicacion.isError && <p role="alert" className="mt-4 rounded-lg bg-red-50 p-4 text-red-800">{publicacion.error instanceof ApiError ? publicacion.error.message : 'No se pudo publicar el evento. Inténtalo de nuevo.'}</p>}
+          {publicacion.isError && <p role="alert" aria-live="off" className="mt-4 rounded-lg bg-red-50 p-4 text-red-800">{publicacion.error instanceof ApiError ? publicacion.error.message : 'No se pudo publicar el evento. Inténtalo de nuevo.'}</p>}
           <div className="mt-6 flex flex-wrap gap-3">
             <button type="button" disabled={publicacion.isPending} onClick={() => void confirmarPublicacion()} className="rounded-lg bg-marca-600 px-5 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60">
               {publicacion.isPending ? 'Publicando…' : 'Confirmar publicación'}

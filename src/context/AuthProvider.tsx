@@ -5,6 +5,7 @@ import type { Login, Sesion } from '../api/auth.tipos'
 import { ApiError, conectarSesionHttp } from '../api/http'
 import { borrarSesionGuardada, guardarSesion, leerSesionGuardada } from '../lib/sesion'
 import { AuthContext } from './AuthContext'
+import { limpiarAvisos } from '../lib/avisos'
 
 interface AuthProviderProps {
   children: ReactNode
@@ -17,6 +18,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
   const tokenActual = useRef<string | null>(null)
 
   const cerrarSesion = useCallback((motivo?: 'expirada') => {
+    limpiarAvisos()
     operacion.current += 1
     tokenActual.current = null
     borrarSesionGuardada()

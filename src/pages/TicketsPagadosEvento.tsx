@@ -42,7 +42,7 @@ function UsarTicket({ ticket, onUsado }: { ticket: Ticket; onUsado: (codigo: str
       >
         {ingreso.isPending ? 'Registrando…' : 'Usar'}
       </button>
-      {ingreso.isError && <p role="alert" className="mt-2 max-w-xs text-sm text-red-800">{ingreso.error instanceof ApiError ? ingreso.error.message : 'No se pudo registrar el ingreso.'}</p>}
+      {ingreso.isError && <p role="alert" aria-live="off" className="mt-2 max-w-xs text-sm text-red-800">{ingreso.error instanceof ApiError ? ingreso.error.message : 'No se pudo registrar el ingreso.'}</p>}
     </div>
   )
 }
@@ -82,7 +82,7 @@ export default function TicketsPagadosEvento() {
         </div>
         {errors.eventCode && <p id="error-evento-tickets" role="alert" className="mt-2 text-red-800">{errors.eventCode.message}</p>}
       </form>
-      {ultimoIngreso?.evento === codigo && <p role="status" className="mt-6 rounded-lg bg-green-50 p-4 text-green-900">Ingreso registrado para <span className="break-all font-mono">{ultimoIngreso.ticket}</span>.</p>}
+      {ultimoIngreso?.evento === codigo && <p role="status" aria-live="off" className="mt-6 rounded-lg bg-green-50 p-4 text-green-900">Ingreso registrado para <span className="break-all font-mono">{ultimoIngreso.ticket}</span>.</p>}
       <section aria-label="Tickets pagados por evento" aria-busy={consulta.isFetching} className="mt-8">
         {!codigo ? <p className="text-slate-600">Introduce un código de evento válido para consultar sus entradas pagadas.</p>
           : consulta.isPending ? <p role="status">Cargando entradas pagadas…</p>

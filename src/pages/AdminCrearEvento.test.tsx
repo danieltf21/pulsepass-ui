@@ -8,6 +8,7 @@ import { RUTAS } from '../lib/rutas'
 import { server } from '../test/mocks/server'
 import { eventoDePrueba, sedeDePrueba } from '../test/mocks/handlers'
 import AdminCrearEvento from './AdminCrearEvento'
+import { obtenerAvisos } from '../lib/avisos'
 
 function mostrarFormulario() {
   const cliente = new QueryClient({ defaultOptions: { queries: { retryDelay: 0 } } })
@@ -73,6 +74,7 @@ describe('AdminCrearEvento', () => {
     }])
     expect(cliente.getQueryData(['evento', eventoDePrueba.eventCode])).toEqual(creado)
     expect(cliente.getQueryData(['eventos', 'creados', 3])).toEqual([creado])
+    expect(obtenerAvisos()).toEqual([expect.objectContaining({ tipo: 'exito', mensaje: 'Evento creado correctamente.' })])
   })
 
   it('asigna los errores 400 a los campos del formulario', async () => {
@@ -96,6 +98,7 @@ describe('AdminCrearEvento', () => {
     await completarFormulario()
     fireEvent.click(screen.getByRole('button', { name: 'Crear evento' }))
     expect(await screen.findByRole('alert')).toHaveTextContent('El código del evento ya existe.')
+    expect(obtenerAvisos()).toEqual([expect.objectContaining({ tipo: 'error', mensaje: 'El código del evento ya existe.' })])
     expect(screen.getByLabelText('Nombre')).toHaveValue(eventoDePrueba.name)
     expect(router.state.location.pathname).toBe(RUTAS.adminCrearEvento)
   })
