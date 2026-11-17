@@ -37,7 +37,7 @@ export default function ModalConfirmarCancelacion({ ticketCode, onCerrar, onCanc
       <p className="text-slate-700">¿Confirmas que quieres cancelar la entrada <span className="break-all font-mono">{ticketCode}</span>?</p>
       <p className="mt-3 text-sm text-slate-600">La entrada cancelada ya no podrá utilizarse para ingresar al evento.</p>
       {cancelacion.isError && (
-        <p role="alert" className="mt-4 rounded-lg bg-red-50 p-4 text-red-800">
+        <p role="alert" aria-live="off" className="mt-4 rounded-lg bg-red-50 p-4 text-red-800">
           {cancelacion.error instanceof ApiError ? cancelacion.error.message : 'No se pudo cancelar la entrada. Inténtalo de nuevo.'}
         </p>
       )}

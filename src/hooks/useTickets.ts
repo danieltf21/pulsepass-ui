@@ -1,3 +1,4 @@
+import { useAvisosMutacion } from './useAvisosMutacion'
 import { useEffect, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { UsuarioAutenticado } from '../api/auth.tipos'
@@ -10,6 +11,7 @@ import type { FormularioCompra, Ticket } from '../api/tickets.tipos'
 import { useAuth } from './useAuth'
 
 export function useComprarTicket(eventCode: string) {
+  const avisos = useAvisosMutacion('Compra realizada. Consulta tu entrada en la confirmación.')
   const { sesion } = useAuth()
   const queryClient = useQueryClient()
 
@@ -25,6 +27,7 @@ export function useComprarTicket(eventCode: string) {
       return comprarTicket({ userEmail: sesion.usuario.email, eventCode, type })
     },
     retry: false,
+    onError: avisos.error,
     onSuccess: async (ticket) => {
       // Una compra iniciada antes de salir no debe repoblar la caché de otra sesión.
       const usuarioActual = queryClient.getQueryData<UsuarioAutenticado>(['auth', 'me'])
@@ -36,6 +39,7 @@ export function useComprarTicket(eventCode: string) {
         queryClient.invalidateQueries({ queryKey: ['evento', eventCode] }),
         queryClient.invalidateQueries({ queryKey: ['eventos', 'publicados'] }),
       ])
+      avisos.exito()
     },
   })
 }
@@ -82,6 +86,7 @@ export function useMisTickets() {
 }
 
 export function useCancelarTicket(ticketCode: string) {
+  const avisos = useAvisosMutacion('La entrada se cancel? correctamente.')
   const { sesion } = useAuth()
   const queryClient = useQueryClient()
   const sesionActual = useRef(sesion)
@@ -101,6 +106,7 @@ export function useCancelarTicket(ticketCode: string) {
       return cancelarTicket(ticketCode)
     },
     retry: false,
+    onError: avisos.error,
     onSuccess: async (ticket) => {
       const actual = sesionActual.current
       if (sesion.estado !== 'autenticada' || actual.estado !== 'autenticada'
@@ -125,11 +131,13 @@ export function useCancelarTicket(ticketCode: string) {
         queryClient.invalidateQueries({ queryKey: ['evento', ticket.eventCode] }),
         queryClient.invalidateQueries({ queryKey: ['eventos', 'publicados'] }),
       ])
+      avisos.exito()
     },
   })
 }
 
 export function useMarcarTicketUsado(ticketCode: string) {
+  const avisos = useAvisosMutacion('Ingreso registrado.')
   const { sesion } = useAuth()
   const queryClient = useQueryClient()
   const sesionActual = useRef(sesion)
@@ -149,6 +157,7 @@ export function useMarcarTicketUsado(ticketCode: string) {
       return marcarTicketUsado(ticketCode)
     },
     retry: false,
+    onError: avisos.error,
     onSuccess: async (ticket) => {
       const actual = sesionActual.current
       if (sesion.estado !== 'autenticada' || actual.estado !== 'autenticada'
@@ -177,6 +186,7 @@ export function useMarcarTicketUsado(ticketCode: string) {
         queryClient.invalidateQueries({ queryKey: clavePropios }),
         queryClient.invalidateQueries({ queryKey: clavePagados }),
       ])
+      avisos.exito()
     },
   })
 }

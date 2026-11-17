@@ -1,3 +1,4 @@
+import { useAvisosMutacion } from './useAvisosMutacion'
 import { useEffect, useRef } from 'react'
 import { skipToken, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { asociarArtistaEvento, crearEvento, obtenerEvento, obtenerEventosPorArtista, obtenerEventosPublicados, publicarEvento } from '../api/eventos'
@@ -42,6 +43,7 @@ export function useEventosPorArtista(stageName: string) {
 }
 
 export function useCrearEvento() {
+  const avisos = useAvisosMutacion('Evento creado correctamente.')
   const { sesion } = useAuth()
   const queryClient = useQueryClient()
   const sesionActual = useRef(sesion)
@@ -61,6 +63,7 @@ export function useCrearEvento() {
       return crearEvento(datos)
     },
     retry: false,
+    onError: avisos.error,
     onSuccess: async (evento) => {
       const actual = sesionActual.current
       if (sesion.estado !== 'autenticada' || actual.estado !== 'autenticada'
@@ -78,6 +81,7 @@ export function useCrearEvento() {
       queryClient.setQueryData<DetalleEvento[]>(claveCreados, (eventos = []) =>
         [evento, ...eventos.filter((anterior) => anterior.eventCode !== evento.eventCode)],
       )
+      avisos.exito()
     },
   })
 }
@@ -93,6 +97,7 @@ export function useEventosCreados() {
 }
 
 export function usePublicarEvento(eventCode: string) {
+  const avisos = useAvisosMutacion('Evento publicado correctamente.')
   const { sesion } = useAuth()
   const queryClient = useQueryClient()
   const sesionActual = useRef(sesion)
@@ -115,6 +120,7 @@ export function usePublicarEvento(eventCode: string) {
       return publicarEvento(eventCode)
     },
     retry: false,
+    onError: avisos.error,
     onSuccess: async (evento) => {
       const actual = sesionActual.current
       if (sesion.estado !== 'autenticada' || actual.estado !== 'autenticada'
@@ -135,11 +141,13 @@ export function usePublicarEvento(eventCode: string) {
         queryClient.invalidateQueries({ queryKey: ['eventos', 'publicados'] }),
         queryClient.invalidateQueries({ queryKey: ['eventos', 'artista'] }),
       ])
+      avisos.exito()
     },
   })
 }
 
 export function useAsociarArtista(eventCode: string) {
+  const avisos = useAvisosMutacion('Artista asociado correctamente.')
   const { sesion } = useAuth()
   const queryClient = useQueryClient()
   const sesionActual = useRef(sesion)
@@ -162,6 +170,7 @@ export function useAsociarArtista(eventCode: string) {
       return asociarArtistaEvento(eventCode, artistId)
     },
     retry: false,
+    onError: avisos.error,
     onSuccess: async (evento) => {
       const actual = sesionActual.current
       if (sesion.estado !== 'autenticada' || actual.estado !== 'autenticada'
@@ -182,6 +191,7 @@ export function useAsociarArtista(eventCode: string) {
         queryClient.invalidateQueries({ queryKey: ['eventos', 'publicados'] }),
         queryClient.invalidateQueries({ queryKey: ['eventos', 'artista'] }),
       ])
+      avisos.exito()
     },
   })
 }

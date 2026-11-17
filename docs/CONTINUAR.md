@@ -2,7 +2,8 @@
 
 ## Git y acuerdos
 
-- Rama actual: docs/auditoria-categorias, desde develop en 3ecfb63.
+- Rama actual: feature/avisos-toast, desde develop en 8543f7d.
+- PR #14 de auditoria posterior a categorias fusionado; commit documental af37593 integrado en 8543f7d.
 - PR #13 de categorias fusionado; commit frontend a384175 integrado en 3ecfb63. Develop local actualizado por fast-forward.
 - PR #12 de auditoria fusionado; commit documental 44d481d integrado en 362e797.
 - PR #11 de navegacion movil fusionado en develop; confirmado contra GitHub al retomar. Develop local actualizado por fast-forward.
@@ -13,7 +14,21 @@
 - Avanzar paso a paso y anunciar archivos y finalidad antes de modificar.
 - Nuevas ramas desde develop; PR hacia develop. Main al terminar el proyecto.
 
-## Bloque actual: auditoria posterior a categorias
+## Bloque actual: avisos toast
+
+- Store en memoria en lib/avisos.ts: exito/error/info, maximo 3 avisos, deduplicacion por tipo/mensaje y cierre manual sin temporizador.
+- Avisos.tsx montado junto al router: region aria-live polite, texto escapado y botones de cierre accesibles. No roba foco al aparecer. Portal se traslada al ultimo dialog abierto para evitar la inercia del documento modal; MutationObserver limpia su suscripcion al desmontar.
+- useAvisosMutacion integrado en registro, comprar/cancelar/usar ticket y crear/publicar/asociar evento. Descarta callbacks de sesiones anteriores o componentes desmontados; 403 anuncia el error y 401 autenticado se deja al flujo de expiracion.
+- AuthProvider limpia avisos al cerrar sesion. Los mensajes locales de estas mutaciones siguen visibles con aria-live off para evitar duplicar el anuncio; errores por campo conservan sus alertas.
+- Nuevas pruebas de cierre, cola/deduplicacion, texto no ejecutable, portal dentro/fuera de dialog, permisos, errores internos y callbacks tardios. AdminCrearEvento verifica avisos de exito/conflicto junto al recorrido existente.
+- Revision visual fuera del dialog: exito/error y cierre visible en Brave, escritorio y 360 x 552 px, mediante vista temporal sin operaciones de backend.
+- Revision DENTRO del dialog completada en Chrome: escritorio y 360 x 490 px. Aviso visible sobre el fondo modal, texto completo y cierre accesible; Tab + Enter cierra solo el aviso y mantiene abierto el dialog. Sin cortes horizontales observados en lo revisado. No equivale a prueba con lector de pantalla ni auditoria WCAG completa.
+- Los fallos previos de CUA (pipe, lectura de URL y cuota de revision automatica) ya no impidieron esta comprobacion. Vista temporal retirada del repositorio despues de completar la prueba.
+- Vite levantado en http://127.0.0.1:5173 (sesion de comando 45437); comprobar antes de iniciar otro. Chrome quedo en la URL temporal retirada con emulacion movil; abrir / para volver a la app. La API/backend no fue reiniciada ni se modificaron datos.
+- Comprobaciones finales: 192 pruebas pasando en 30 archivos con npm.cmd test -- --maxWorkers=2; build, lint y git diff --check correctos. El primer intento tras reinicio tuvo dos timeouts y se edito el caso 403 durante ejecucion; la repeticion focalizada (18 casos) y la suite completa posterior pasaron. La revision visual posterior no cambio codigo de la app, solo uso y retiro una vista temporal.
+- Tras completar la revision visual y explicar FR-FE-GEN-003, el usuario indico continuar con el cierre de este bloque. Commit/push de avisos-toast autorizados; verificar git status y git log al retomar para confirmar ejecucion. No incluye fusion ni futuros bloques.
+
+## Auditoria posterior a categorias (ya integrada)
 
 - AUDITORIA_PRD.md cierra EVT-001 y EVT-002 con evidencia de codigo, pruebas y revision visual ya ejecutadas.
 - Recuento: 33 completos, 8 parciales, 2 pendientes sobre 43 (76,74 %); 31/33 funcionales. Es recuento de IDs completos, no porcentaje de esfuerzo ni cumplimiento total del PRD.
@@ -91,10 +106,10 @@
 
 ## Siguiente paso
 
-1. Ejecutar commit/push de la actualizacion documental posterior a categorias ya autorizados y preparar PR hacia develop; verificar primero estado remoto. No fusionar sin autorizacion.
-2. Siguiente bloque funcional: avisos toast reutilizables y accesibles para mutaciones (FR-FE-GEN-003); revisar integracion con errores por campo y modales para evitar anuncios duplicados.
+1. Ejecutar commit/push del bloque toast ya autorizados y preparar PR hacia develop; verificar primero estado remoto. No fusionar sin autorizacion.
+2. Actualizar auditoria con evidencia del bloque toast cuando corresponda; no deducir cumplimiento total de accesibilidad a partir de aria-live o de esta revision visual.
 3. Seguir con modo oscuro, fidelidad visual, responsive completo, accesibilidad, Lighthouse, compatibilidad y README del producto.
-4. Completar trazabilidad de los 50 tests minimos y de las operaciones del backend; la suite de 185 casos no demuestra esa cobertura por si sola.
+4. Completar trazabilidad de los 50 tests minimos y de las operaciones del backend; el total de casos no demuestra esa cobertura por si solo.
 5. No fusionar sin autorizacion; mantener la misma regla de recuento al actualizar la auditoria.
 
 ## Referencias

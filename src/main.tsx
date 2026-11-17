@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router/dom'
 import './index.css'
 import { router } from './router'
 import AuthProvider from './context/AuthProvider'
+import Avisos from './components/ui/Avisos'
 
 const queryClient = new QueryClient()
 
@@ -13,6 +14,7 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <RouterProvider router={router} />
+        <Avisos />
       </AuthProvider>
     </QueryClientProvider>
   </StrictMode>,

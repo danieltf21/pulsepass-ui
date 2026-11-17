@@ -115,9 +115,9 @@ export default function ValidacionIngreso() {
           )}
         </section>
       )}
-      {ingreso.isSuccess && <p role="status" className="mt-6 rounded-xl bg-green-50 p-6 text-xl font-semibold text-green-900">Ingreso registrado.</p>}
+      {ingreso.isSuccess && <p role="status" aria-live="off" className="mt-6 rounded-xl bg-green-50 p-6 text-xl font-semibold text-green-900">Ingreso registrado.</p>}
       {ingreso.isError && (
-        <p role="alert" className={`mt-6 rounded-xl border p-6 text-lg font-medium ${ingreso.error instanceof ApiError && ingreso.error.status === 409 ? 'border-amber-300 bg-amber-50 text-amber-900' : 'border-red-200 bg-red-50 text-red-900'}`}>
+        <p role="alert" aria-live="off" className={`mt-6 rounded-xl border p-6 text-lg font-medium ${ingreso.error instanceof ApiError && ingreso.error.status === 409 ? 'border-amber-300 bg-amber-50 text-amber-900' : 'border-red-200 bg-red-50 text-red-900'}`}>
           {mensajeError(ingreso.error)}
         </p>
       )}

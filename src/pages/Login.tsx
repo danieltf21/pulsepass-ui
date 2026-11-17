@@ -54,7 +54,7 @@ export default function Login() {
       <h1 className="font-titulo text-3xl font-bold">Iniciar sesión</h1>
       <p className="mt-3 text-slate-600">Accede a tu cuenta de PulsePass.</p>
       {estado.success && estado.data.registroExitoso && (
-        <p role="status" className="mt-4 rounded-lg bg-emerald-50 p-4 text-emerald-900">
+        <p role="status" aria-live="off" className="mt-4 rounded-lg bg-emerald-50 p-4 text-emerald-900">
           Cuenta creada. Inicia sesión.
         </p>
       )}
