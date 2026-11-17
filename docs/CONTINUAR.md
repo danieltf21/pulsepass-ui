@@ -2,7 +2,8 @@
 
 ## Git y acuerdos
 
-- Rama actual: docs/auditoria-prd-actualizada, desde develop en df48af9.
+- Rama actual: feature/categorias-eventos, desde origin/develop en 362e797.
+- PR #12 de auditoria fusionado; commit documental 44d481d integrado en 362e797.
 - PR #11 de navegacion movil fusionado en develop; confirmado contra GitHub al retomar. Develop local actualizado por fast-forward.
 - PR #10 de ADMIN fusionado en develop; confirmado contra GitHub el 2026-11-16. Develop local actualizado por fast-forward.
 - PR #9 de STAFF fusionado en develop.
@@ -11,7 +12,21 @@
 - Avanzar paso a paso y anunciar archivos y finalidad antes de modificar.
 - Nuevas ramas desde develop; PR hacia develop. Main al terminar el proyecto.
 
-## Bloque actual: auditoria actualizada
+## Bloque actual: categorias de eventos
+
+- El usuario autorizo expresamente ampliar el backend tras revisar que seccion 3.5 del PRD pide no solicitar cambios. Registrar esta excepcion; no presentarla como cumplimiento literal de esa restriccion.
+- Backend: rama feature/categoria-resumen-eventos, commit 27e0c68 creado y subido con autorizacion. EventSummaryResponse incorpora category; MapStruct lo copia del dominio. 22 pruebas pasan (controlador, seguridad, mapper y aceptacion). No se cambio base de datos ni reglas de negocio. Fusion remota no verificada.
+- Frontend: resumenEventoSchema exige category; TarjetaEvento muestra etiqueta en espanol. Etiquetas compartidas en lib/categoriasEvento.ts.
+- Catalogo incluye selector de las seis categorias y Todas; combina categoria con q y artista en cliente, conserva parametros ajenos y restaura el filtro desde URL. Valor de categoria desconocido en URL se ignora; respuesta API sin categoria o invalida se rechaza.
+- Se actualizaron mocks y pruebas: combinacion de filtros, limpieza, restauracion al remontar, cero coincidencias y contrato de respuesta.
+- Validacion actual: 185 pruebas pasando en 28 archivos, build y lint correctos; git diff --check correcto.
+- Comprobacion HTTP local posterior: /api/events/published ya devuelve category (CULTURE y MUSIC en los tres eventos actuales).
+- Revision real en Brave completada en escritorio y emulacion de 360 x 552 px: etiquetas de tarjeta, selector, MUSIC con 2 resultados, MUSIC + q=r1 con 1 resultado, recarga conserva ambos filtros, limpiar texto conserva categoria, SPORTS muestra cero coincidencias y Todas recupera los 3 eventos y elimina categoria de URL. Sin cortes horizontales observados en los elementos revisados.
+- Brave quedo en /eventos con Todas las categorias y emulacion de 360 px activa; no se modificaron eventos ni tickets. Combinacion con artista cubierta en MSW; no afirmar que se recorrio visualmente ese filtro.
+- El frontend necesita el backend actualizado antes de usarlo: el esquema estricto rechaza el contrato antiguo. No ocultar el desfase con una categoria inventada.
+- El usuario autorizo commit/push del frontend de categorias tras la revision visual. Verificar git status y git log al retomar para confirmar ejecucion. No incluye fusion ni futuros bloques. No se modificaron datos de negocio.
+
+## Auditoria actualizada (ya integrada)
 
 - AUDITORIA_PRD.md revisado contra las secciones 7 y 23 del PDF, con consultas de rutas, politica de tickets, errores y DoD.
 - Recuento conservador: 31 completos, 10 parciales y 2 pendientes de 43 IDs (72,09 %); funcionales completos: 29/33. No equivale a porcentaje de esfuerzo ni a cumplimiento total del PRD.
@@ -67,8 +82,8 @@
 
 ## Siguiente paso
 
-1. Ejecutar commit/push de la auditoria ya autorizados y preparar PR hacia develop; verificar primero el estado remoto. No fusionar sin autorizacion.
-2. Siguiente bloque funcional propuesto: categoria en tarjetas y filtro URL. Leer contrato real del backend; EventSummaryResponse actual no incluye category. No inventar ese campo ni decidir cambios de backend sin revisar el alcance.
+1. Ejecutar commit/push de categorias frontend ya autorizados y preparar PR hacia develop; verificar primero el estado remoto. No fusionar sin autorizacion.
+2. Actualizar auditoria con el nuevo estado y la excepcion explicita a seccion 3.5; no cambiar el porcentaje basandose solo en el numero de pruebas.
 3. Seguir con toast, modo oscuro, fidelidad visual, responsive completo, accesibilidad, Lighthouse, compatibilidad y README del producto.
 4. Completar trazabilidad de los 50 tests minimos y de las operaciones del backend; la suite de 179 casos no demuestra esa cobertura por si sola.
 5. No fusionar sin autorizacion; mantener la misma regla de recuento al actualizar la auditoria.

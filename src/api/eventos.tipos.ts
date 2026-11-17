@@ -9,17 +9,6 @@ export const estadoEventoSchema = z.enum([
   'FINISHED',
 ])
 
-// Corresponde al DTO EventSummaryResponse del backend.
-export const resumenEventoSchema = z.object({
-  eventCode: z.string(),
-  name: z.string(),
-  status: estadoEventoSchema,
-  eventDate: z.iso.datetime({ local: true }),
-  venueName: z.string(),
-})
-
-export const eventosPublicadosSchema = z.array(resumenEventoSchema)
-
 export const categoriaEventoSchema = z.enum([
   'MUSIC',
   'SPORTS',
@@ -29,6 +18,18 @@ export const categoriaEventoSchema = z.enum([
   'ENTERTAINMENT',
 ])
 
+// EventSummaryResponse incluye category desde el cambio backend 27e0c68.
+export const resumenEventoSchema = z.object({
+  eventCode: z.string(),
+  name: z.string(),
+  category: categoriaEventoSchema,
+  status: estadoEventoSchema,
+  eventDate: z.iso.datetime({ local: true }),
+  venueName: z.string(),
+})
+
+export const eventosPublicadosSchema = z.array(resumenEventoSchema)
+
 // Los artistas del evento usan el mismo contrato ArtistResponse.
 export const artistaEventoSchema = artistaSchema
 
@@ -36,7 +37,6 @@ export const artistaEventoSchema = artistaSchema
 export const detalleEventoSchema = resumenEventoSchema.extend({
   id: z.number().int().positive(),
   description: z.string().nullable(),
-  category: categoriaEventoSchema,
   minimumAge: z.number().int().nonnegative(),
   venueCode: z.string(),
   artists: z.array(artistaEventoSchema),

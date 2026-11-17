@@ -57,6 +57,7 @@ export const eventosPublicadosDePrueba: ResumenEvento[] = [
   {
     eventCode: eventoDePrueba.eventCode,
     name: eventoDePrueba.name,
+    category: eventoDePrueba.category,
     status: eventoDePrueba.status,
     eventDate: eventoDePrueba.eventDate,
     venueName: eventoDePrueba.venueName,

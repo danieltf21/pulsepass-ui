@@ -7,6 +7,7 @@ import TarjetaEvento from './TarjetaEvento'
 const evento: ResumenEvento = {
   eventCode: 'CMF-2026',
   name: 'Caribbean Music Fest 2026',
+  category: 'MUSIC',
   status: 'PUBLISHED',
   eventDate: '2026-12-12T18:00:00',
   venueName: 'Marina Convention Center',
@@ -28,6 +29,7 @@ describe('TarjetaEvento', () => {
     expect(screen.getByText(evento.eventCode)).toBeInTheDocument()
     expect(screen.getByText(evento.venueName)).toBeInTheDocument()
     expect(screen.getByText('Publicado')).toBeInTheDocument()
+    expect(screen.getByText('Música')).toBeInTheDocument()
   })
 
   it('presenta la fecha con un valor legible por máquinas', () => {
