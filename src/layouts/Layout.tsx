@@ -1,3 +1,4 @@
+import { useId, useRef, useState } from 'react'
 import { Link, matchPath, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router'
 import { RUTAS } from '../lib/rutas'
 import { useAuth } from '../hooks/useAuth'
@@ -13,10 +14,20 @@ export default function Layout() {
   const { sesion, cerrarSesion } = useAuth()
   const navegar = useNavigate()
   const ubicacion = useLocation()
+  const [menuEnUbicacion, setMenuEnUbicacion] = useState<string | null>(null)
+  const menuAbierto = menuEnUbicacion === ubicacion.key
+  const menuId = useId()
+  const botonMenu = useRef<HTMLButtonElement>(null)
   const enTicketsPagados = ubicacion.pathname === RUTAS.buscarTicketsPagados
     || Boolean(matchPath(RUTAS.ticketsPagados, ubicacion.pathname))
 
+  // Descarta la apertura anterior para que Atrás no vuelva a mostrar el menú.
+  if (menuEnUbicacion !== null && menuEnUbicacion !== ubicacion.key) {
+    setMenuEnUbicacion(null)
+  }
+
   function salir() {
+    setMenuEnUbicacion(null)
     cerrarSesion()
     void navegar(RUTAS.inicio, { replace: true })
   }
@@ -43,7 +54,15 @@ export default function Layout() {
       >
         Saltar al contenido
       </a>
-      <header className="border-b border-slate-200 bg-white">
+      <header
+        className="border-b border-slate-200 bg-white"
+        onKeyDown={(evento) => {
+          if (evento.key === 'Escape' && menuAbierto) {
+            setMenuEnUbicacion(null)
+            botonMenu.current?.focus()
+          }
+        }}
+      >
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-5 sm:px-6">
           <Link
             to={RUTAS.inicio}
@@ -51,7 +70,26 @@ export default function Layout() {
           >
             PulsePass
           </Link>
-          <nav aria-label="Navegación principal" className="flex flex-wrap gap-2">
+          <button
+            ref={botonMenu}
+            type="button"
+            aria-expanded={menuAbierto}
+            aria-controls={menuId}
+            onClick={() => setMenuEnUbicacion(menuAbierto ? null : ubicacion.key)}
+            className="rounded-lg border border-slate-300 px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 lg:hidden"
+          >
+            {menuAbierto ? 'Cerrar menú' : 'Abrir menú'}
+          </button>
+          <nav
+            id={menuId}
+            aria-label="Navegación principal"
+            className={`${menuAbierto ? 'flex' : 'hidden'} w-full min-w-0 flex-col gap-2 lg:flex lg:flex-row lg:flex-wrap`}
+            onClick={(evento) => {
+              if (evento.target instanceof Element && evento.target.closest('a')) {
+                setMenuEnUbicacion(null)
+              }
+            }}
+          >
             {enlaces.map(({ destino, texto }) => (
               <NavLink
                 key={destino}
@@ -68,7 +106,7 @@ export default function Layout() {
               <span role="status" className="px-4 py-3 text-sm text-slate-600">Comprobando sesión…</span>
             ) : sesion.estado === 'autenticada' ? (
               <>
-                <span className="px-4 py-3 text-sm text-slate-700">{sesion.usuario.username}</span>
+                <span className="min-w-0 break-words px-4 py-3 text-sm text-slate-700">{sesion.usuario.username}</span>
                 <NavLink
                   to={RUTAS.cuenta}
                   className={({ isActive }) =>
