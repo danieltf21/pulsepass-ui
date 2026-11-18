@@ -2,10 +2,12 @@ import { Link } from 'react-router'
 import TarjetaEvento from '../components/eventos/TarjetaEvento'
 import TarjetaArtista from '../components/artistas/TarjetaArtista'
 import { useArtistasActivos } from '../hooks/useArtistas'
+import { useAuth } from '../hooks/useAuth'
 import { useEventos } from '../hooks/useEventos'
 import { RUTAS } from '../lib/rutas'
 
 export default function Inicio() {
+  const { sesion } = useAuth()
   const { data: eventos, isPending, isError, isFetching, refetch } = useEventos()
   const artistas = useArtistasActivos()
 
@@ -18,12 +20,22 @@ export default function Inicio() {
         <p className="mt-5 max-w-xl text-lg leading-relaxed">
           Música, cultura, deporte y tecnología en un solo lugar.
         </p>
-        <Link
-          to={RUTAS.eventos}
-          className="mt-8 inline-flex rounded-lg bg-white dark:bg-slate-900 px-5 py-3 font-semibold text-marca-700 dark:text-indigo-300 hover:bg-marca-50 dark:hover:bg-indigo-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-        >
-          Ver cartelera
-        </Link>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link
+            to={RUTAS.eventos}
+            className="inline-flex rounded-lg bg-white dark:bg-slate-900 px-5 py-3 font-semibold text-marca-700 dark:text-indigo-300 hover:bg-marca-50 dark:hover:bg-indigo-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+          >
+            Ver cartelera
+          </Link>
+          {sesion.estado === 'anonima' && (
+            <Link
+              to={RUTAS.registro}
+              className="inline-flex rounded-lg border border-white bg-slate-950/40 px-5 py-3 font-semibold text-white hover:bg-slate-950/60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            >
+              Crear cuenta
+            </Link>
+          )}
+        </div>
       </section>
 
       <section aria-labelledby="proximos-eventos" aria-busy={isFetching} className="mt-12">
