@@ -27,17 +27,17 @@ export default function ConfirmacionCompra() {
       {noDisponible ? (
         <section>
           <h1 className="font-titulo text-3xl font-bold">Ticket no disponible</h1>
-          <p className="mt-4 text-slate-600">La entrada no existe o no está disponible para tu cuenta.</p>
-          <Link to={RUTAS.eventos} className="mt-6 inline-block rounded text-marca-700 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
+          <p className="mt-4 text-slate-600 dark:text-slate-400">La entrada no existe o no está disponible para tu cuenta.</p>
+          <Link to={RUTAS.eventos} className="mt-6 inline-block rounded text-marca-700 dark:text-indigo-300 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
             Volver a eventos
           </Link>
         </section>
       ) : isPending ? (
-        <p role="status" className="text-slate-600">Cargando confirmación…</p>
+        <p role="status" className="text-slate-600 dark:text-slate-400">Cargando confirmación…</p>
       ) : isError ? (
-        <section role="alert" className="rounded-xl border border-red-200 bg-red-50 p-6">
+        <section role="alert" className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
           <h1 className="font-titulo text-2xl font-bold">No se pudo cargar la confirmación</h1>
-          <p className="mt-3 text-red-800">{error instanceof ApiError ? error.message : 'Inténtalo de nuevo.'}</p>
+          <p className="mt-3 text-red-800 dark:text-red-200">{error instanceof ApiError ? error.message : 'Inténtalo de nuevo.'}</p>
           <button
             type="button"
             disabled={isFetching}
@@ -50,31 +50,31 @@ export default function ConfirmacionCompra() {
       ) : (
         <>
           <h1 className="font-titulo text-3xl font-bold">{ticket.status === 'PAID' ? 'Compra confirmada' : 'Detalle de tu compra'}</h1>
-          <p className="mt-3 text-slate-600">Conserva el código de tu entrada.</p>
-          <dl className="mt-8 grid gap-6 rounded-xl border border-slate-200 bg-white p-6 sm:grid-cols-2 sm:p-8">
+          <p className="mt-3 text-slate-600 dark:text-slate-400">Conserva el código de tu entrada.</p>
+          <dl className="mt-8 grid gap-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 sm:grid-cols-2 sm:p-8">
             <div>
-              <dt className="font-medium text-slate-700">Código del ticket</dt>
-              <dd className="mt-1 break-all font-mono text-slate-900">{ticket.ticketCode}</dd>
+              <dt className="font-medium text-slate-700 dark:text-slate-300">Código del ticket</dt>
+              <dd className="mt-1 break-all font-mono text-slate-900 dark:text-slate-100">{ticket.ticketCode}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-700">Evento</dt>
-              <dd className="mt-1 text-slate-600">{ticket.eventName}</dd>
+              <dt className="font-medium text-slate-700 dark:text-slate-300">Evento</dt>
+              <dd className="mt-1 text-slate-600 dark:text-slate-400">{ticket.eventName}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-700">Tipo de entrada</dt>
-              <dd className="mt-1 text-slate-600">{tipos[ticket.type]}</dd>
+              <dt className="font-medium text-slate-700 dark:text-slate-300">Tipo de entrada</dt>
+              <dd className="mt-1 text-slate-600 dark:text-slate-400">{tipos[ticket.type]}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-700">Precio</dt>
-              <dd className="mt-1 text-slate-600"><PrecioCOP valor={ticket.price} /></dd>
+              <dt className="font-medium text-slate-700 dark:text-slate-300">Precio</dt>
+              <dd className="mt-1 text-slate-600 dark:text-slate-400"><PrecioCOP valor={ticket.price} /></dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-700">Estado</dt>
-              <dd className="mt-1 text-slate-600">{estados[ticket.status]}</dd>
+              <dt className="font-medium text-slate-700 dark:text-slate-300">Estado</dt>
+              <dd className="mt-1 text-slate-600 dark:text-slate-400">{estados[ticket.status]}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-700">Fecha de compra</dt>
-              <dd className="mt-1 text-slate-600"><time dateTime={ticket.purchaseDate}>{formatearFecha(ticket.purchaseDate)}</time></dd>
+              <dt className="font-medium text-slate-700 dark:text-slate-300">Fecha de compra</dt>
+              <dd className="mt-1 text-slate-600 dark:text-slate-400"><time dateTime={ticket.purchaseDate}>{formatearFecha(ticket.purchaseDate)}</time></dd>
             </div>
           </dl>
           <div className="mt-6 flex flex-wrap items-center gap-4">
@@ -86,7 +86,7 @@ export default function ConfirmacionCompra() {
           </Link>
           <Link
             to={RUTAS.evento(ticket.eventCode)}
-            className="inline-flex rounded text-marca-700 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+            className="inline-flex rounded text-marca-700 dark:text-indigo-300 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
           >
             Volver al evento
           </Link>

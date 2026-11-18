@@ -18,7 +18,7 @@ const categorias: Record<CategoriaEvento, string> = {
   EDUCATION: 'Educación', CULTURE: 'Cultura', ENTERTAINMENT: 'Entretenimiento',
 }
 const campos = ['eventCode', 'name', 'description', 'category', 'eventDate', 'minimumAge', 'venueCode'] as const
-const estiloCampo = 'mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60'
+const estiloCampo = 'mt-2 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60'
 
 export default function FormularioEvento({ onCreado, onCancelar }: FormularioEventoProps) {
   const crear = useCrearEvento()
@@ -57,12 +57,12 @@ export default function FormularioEvento({ onCreado, onCancelar }: FormularioEve
   }
 
   function errorCampo(campo: typeof campos[number]) {
-    return errors[campo] && <p id={`error-${campo}`} role="alert" className="mt-2 text-sm text-red-800">{errors[campo]?.message}</p>
+    return errors[campo] && <p id={`error-${campo}`} role="alert" className="mt-2 text-sm text-red-800 dark:text-red-200">{errors[campo]?.message}</p>
   }
 
   return (
     <form noValidate aria-busy={ocupado} onSubmit={(event) => { void handleSubmit(enviar)(event) }} className="mt-8 space-y-6">
-      {errors.root && <p role="alert" aria-live="off" className="rounded-lg bg-red-50 p-4 text-red-800">{errors.root.message}</p>}
+      {errors.root && <p role="alert" aria-live="off" className="rounded-lg bg-red-50 dark:bg-red-950 p-4 text-red-800 dark:text-red-200">{errors.root.message}</p>}
       <fieldset disabled={ocupado} className="space-y-6">
         <legend className="sr-only">Datos del nuevo evento</legend>
         {([
@@ -78,7 +78,7 @@ export default function FormularioEvento({ onCreado, onCancelar }: FormularioEve
         <div>
           <label htmlFor="description" className="block font-medium">Descripción (opcional)</label>
           <textarea id="description" rows={4} maxLength={1000} {...register('description')} aria-invalid={Boolean(errors.description)} aria-describedby={`contador-descripcion${errors.description ? ' error-description' : ''}`} className={estiloCampo} />
-          <p id="contador-descripcion" className="mt-1 text-right text-sm text-slate-600">{descripcion.length}/1000</p>
+          <p id="contador-descripcion" className="mt-1 text-right text-sm text-slate-600 dark:text-slate-400">{descripcion.length}/1000</p>
           {errorCampo('description')}
         </div>
         <div className="grid gap-6 sm:grid-cols-2">
@@ -106,19 +106,19 @@ export default function FormularioEvento({ onCreado, onCancelar }: FormularioEve
             <option value="">Selecciona una sede</option>
             {sedes.data?.map((sede) => <option key={sede.code} value={sede.code}>{sede.name} ({sede.code})</option>)}
           </select>
-          {sedes.isPending && <p role="status" className="mt-2 text-slate-600">Cargando sedes…</p>}
+          {sedes.isPending && <p role="status" className="mt-2 text-slate-600 dark:text-slate-400">Cargando sedes…</p>}
           {sedes.isError && (
-            <div role="alert" className="mt-2 text-red-800">
+            <div role="alert" className="mt-2 text-red-800 dark:text-red-200">
               <p>No se pudieron cargar las sedes.</p>
               <button type="button" disabled={sedes.isFetching} onClick={() => void sedes.refetch()} className="mt-2 min-h-11 rounded px-3 underline focus-visible:outline-2 focus-visible:outline-marca-600">Reintentar</button>
             </div>
           )}
-          {sedes.isSuccess && sinSedes && <p role="status" className="mt-2 text-slate-600">No hay sedes activas para crear un evento.</p>}
+          {sedes.isSuccess && sinSedes && <p role="status" className="mt-2 text-slate-600 dark:text-slate-400">No hay sedes activas para crear un evento.</p>}
           {errorCampo('venueCode')}
         </div>
       </fieldset>
       <div className="flex flex-wrap justify-end gap-3">
-        <button type="button" disabled={ocupado} onClick={onCancelar} className="rounded-lg border border-slate-300 px-5 py-3 text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60">Cancelar</button>
+        <button type="button" disabled={ocupado} onClick={onCancelar} className="rounded-lg border border-slate-300 dark:border-slate-600 px-5 py-3 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60">Cancelar</button>
         <button type="submit" disabled={ocupado || sedes.isPending || sedes.isError || sinSedes} className="rounded-lg bg-marca-600 px-5 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60">{ocupado ? 'Creando evento…' : 'Crear evento'}</button>
       </div>
     </form>

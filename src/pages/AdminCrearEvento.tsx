@@ -9,7 +9,7 @@ export default function AdminCrearEvento() {
     <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <Link
         to={RUTAS.adminEventos}
-        className="rounded text-marca-700 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+        className="rounded text-marca-700 dark:text-indigo-300 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
       >
         Volver a eventos
       </Link>

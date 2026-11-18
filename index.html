@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Aplica la preferencia antes del primer render para evitar un destello claro.
+      (() => {
+        let tema = 'sistema';
+        try { tema = localStorage.getItem('pulsepass.tema') || 'sistema'; } catch {}
+        const oscuro = tema === 'oscuro' || (tema !== 'claro' && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.toggle('dark', oscuro);
+      })();
+    </script>
     <title>PulsePass | Eventos, artistas y entradas</title>
   </head>
   <body>

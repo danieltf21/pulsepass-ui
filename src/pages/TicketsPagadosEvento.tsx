@@ -42,7 +42,7 @@ function UsarTicket({ ticket, onUsado }: { ticket: Ticket; onUsado: (codigo: str
       >
         {ingreso.isPending ? 'Registrando…' : 'Usar'}
       </button>
-      {ingreso.isError && <p role="alert" aria-live="off" className="mt-2 max-w-xs text-sm text-red-800">{ingreso.error instanceof ApiError ? ingreso.error.message : 'No se pudo registrar el ingreso.'}</p>}
+      {ingreso.isError && <p role="alert" aria-live="off" className="mt-2 max-w-xs text-sm text-red-800 dark:text-red-200">{ingreso.error instanceof ApiError ? ingreso.error.message : 'No se pudo registrar el ingreso.'}</p>}
     </div>
   )
 }
@@ -77,25 +77,25 @@ export default function TicketsPagadosEvento() {
       })} className="mt-6">
         <label htmlFor="evento-tickets" className="block font-medium">Código del evento</label>
         <div className="mt-2 flex flex-wrap gap-3">
-          <input id="evento-tickets" {...register('eventCode')} aria-invalid={Boolean(errors.eventCode)} aria-describedby={errors.eventCode ? 'error-evento-tickets' : undefined} className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-4 py-3 font-mono focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600" />
+          <input id="evento-tickets" {...register('eventCode')} aria-invalid={Boolean(errors.eventCode)} aria-describedby={errors.eventCode ? 'error-evento-tickets' : undefined} className="min-w-0 flex-1 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 font-mono focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600" />
           <button type="submit" disabled={consulta.isFetching} className="rounded-lg bg-marca-600 px-5 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60">Ir</button>
         </div>
-        {errors.eventCode && <p id="error-evento-tickets" role="alert" className="mt-2 text-red-800">{errors.eventCode.message}</p>}
+        {errors.eventCode && <p id="error-evento-tickets" role="alert" className="mt-2 text-red-800 dark:text-red-200">{errors.eventCode.message}</p>}
       </form>
-      {ultimoIngreso?.evento === codigo && <p role="status" aria-live="off" className="mt-6 rounded-lg bg-green-50 p-4 text-green-900">Ingreso registrado para <span className="break-all font-mono">{ultimoIngreso.ticket}</span>.</p>}
+      {ultimoIngreso?.evento === codigo && <p role="status" aria-live="off" className="mt-6 rounded-lg bg-green-50 dark:bg-green-950 p-4 text-green-900 dark:text-green-200">Ingreso registrado para <span className="break-all font-mono">{ultimoIngreso.ticket}</span>.</p>}
       <section aria-label="Tickets pagados por evento" aria-busy={consulta.isFetching} className="mt-8">
-        {!codigo ? <p className="text-slate-600">Introduce un código de evento válido para consultar sus entradas pagadas.</p>
+        {!codigo ? <p className="text-slate-600 dark:text-slate-400">Introduce un código de evento válido para consultar sus entradas pagadas.</p>
           : consulta.isPending ? <p role="status">Cargando entradas pagadas…</p>
           : consulta.isError ? (
-            <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-6 text-red-900">
+            <div role="alert" className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6 text-red-900 dark:text-red-200">
               <h2 className="text-xl font-semibold">{consulta.error instanceof ApiError && consulta.error.status === 403 ? 'Sin permisos' : consulta.error instanceof ApiError && consulta.error.status === 404 ? 'Evento no encontrado' : 'No se pudieron cargar las entradas pagadas'}</h2>
               <p className="mt-2">{consulta.error instanceof ApiError ? consulta.error.message : 'Inténtalo de nuevo.'}</p>
-              <button type="button" disabled={consulta.isFetching} onClick={() => void consulta.refetch()} className="mt-4 min-h-11 rounded-lg border border-red-300 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:opacity-60">Reintentar</button>
+              <button type="button" disabled={consulta.isFetching} onClick={() => void consulta.refetch()} className="mt-4 min-h-11 rounded-lg border border-red-300 dark:border-red-700 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:opacity-60">Reintentar</button>
             </div>
           ) : (
             <>
               <p className="mb-4 font-semibold">Total: {consulta.data.length}</p>
-              {consulta.data.length === 0 ? <p role="status" className="rounded-xl border border-slate-200 bg-white p-6 text-slate-600">Este evento no tiene entradas pagadas.</p>
+              {consulta.data.length === 0 ? <p role="status" className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-slate-600 dark:text-slate-400">Este evento no tiene entradas pagadas.</p>
                 : <Tabla titulo="Entradas pagadas del evento" columnas={columnas} filas={consulta.data} claveFila={(ticket) => ticket.ticketCode} />}
             </>
           )}

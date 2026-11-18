@@ -51,7 +51,7 @@ export default function CatalogoEventos() {
   return (
       <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         <h1 className="font-titulo text-3xl font-bold">Cartelera de eventos</h1>
-        <p className="mt-3 text-slate-600">Descubre tu próxima experiencia.</p>
+        <p className="mt-3 text-slate-600 dark:text-slate-400">Descubre tu próxima experiencia.</p>
 
         <FiltrosEventos busqueda={busqueda} categoria={categoria} onBusquedaChange={cambiarBusqueda} onCategoriaChange={cambiarCategoria} />
         {artista && (
@@ -64,7 +64,7 @@ export default function CatalogoEventos() {
                 siguientes.delete('artista')
                 return siguientes
               }, { replace: true })}
-              className="rounded px-3 py-2 text-marca-700 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+              className="rounded px-3 py-2 text-marca-700 dark:text-indigo-300 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
             >
               Quitar filtro de artista
             </button>
@@ -73,14 +73,14 @@ export default function CatalogoEventos() {
 
         <section aria-label="Eventos publicados" aria-busy={isFetching} className="mt-8">
           {isPending && (
-            <p role="status" className="rounded-xl border border-slate-200 bg-white p-6 text-slate-600">
+            <p role="status" className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-slate-600 dark:text-slate-400">
               Cargando eventos…
             </p>
           )}
 
           {isError && (
-            <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-6">
-              <p className="text-red-800">No se pudieron cargar los eventos publicados.</p>
+            <div role="alert" className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
+              <p className="text-red-800 dark:text-red-200">No se pudieron cargar los eventos publicados.</p>
               <button
                 type="button"
                 disabled={isFetching}
@@ -93,7 +93,7 @@ export default function CatalogoEventos() {
           )}
 
           {!isPending && !isError && eventos.length === 0 && (
-            <p role="status" className="rounded-xl border border-slate-200 bg-white p-6 text-slate-600">
+            <p role="status" className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-slate-600 dark:text-slate-400">
               {artista
                 ? 'No hay eventos disponibles para este artista.'
                 : 'Aún no hay eventos publicados. Vuelve pronto para descubrir novedades.'}
@@ -101,7 +101,7 @@ export default function CatalogoEventos() {
           )}
 
           {!isPending && !isError && eventos.length > 0 && (
-            <p role="status" className="mb-4 text-sm text-slate-600">
+            <p role="status" className="mb-4 text-sm text-slate-600 dark:text-slate-400">
               {eventosFiltrados.length === 0
                 ? 'No hay eventos que coincidan con tu búsqueda.'
                 : `${eventosFiltrados.length} resultado${eventosFiltrados.length === 1 ? '' : 's'}`}

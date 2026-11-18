@@ -2,7 +2,9 @@
 
 ## Git y acuerdos
 
-- Rama actual: feature/avisos-toast, desde develop en 8543f7d.
+- Rama actual: `feature/modo-oscuro`, desde `develop` en `69123b8`.
+- PR #15 de avisos toast fusionado en `develop`. Commit de la funcionalidad: `022cf95`.
+- Pedir permiso explícito antes de cada commit y de cada push. Pedir autorización para fusionar por separado.
 - PR #14 de auditoria posterior a categorias fusionado; commit documental af37593 integrado en 8543f7d.
 - PR #13 de categorias fusionado; commit frontend a384175 integrado en 3ecfb63. Develop local actualizado por fast-forward.
 - PR #12 de auditoria fusionado; commit documental 44d481d integrado en 362e797.
@@ -14,7 +16,16 @@
 - Avanzar paso a paso y anunciar archivos y finalidad antes de modificar.
 - Nuevas ramas desde develop; PR hacia develop. Main al terminar el proyecto.
 
-## Bloque actual: avisos toast
+## Bloque actual: modo oscuro
+
+- `FR-FE-GEN-004`: selector Sistema, Claro y Oscuro, persistencia de la preferencia y variantes `dark:`. Las pruebas del selector cubren cambios del sistema, persistencia y sincronización entre pestañas.
+- Brave en escritorio: Inicio y parte superior de la cartelera. Se probaron las tres opciones y la persistencia de Oscuro tras navegar y recargar.
+- Brave a 360 × 552 px: catálogo, menú móvil, formulario de acceso y, como USER, Mi cuenta, Mis tickets y detalle de entrada. El detalle también se revisó en escritorio.
+- ADMIN: Administración de eventos en escritorio y Nuevo evento en escritorio y a 360 × 552 px. STAFF: formularios iniciales de Validación de ingreso y Tickets pagados en ambos tamaños. La revisión no modificó eventos ni tickets.
+- Queda pendiente cotejar las vistas con las referencias del PRD, incluidas las variantes a 390 px, y completar las auditorías de accesibilidad y compatibilidad.
+- Verificación del bloque: 196 pruebas aprobadas en 31 archivos con `npm.cmd test -- --maxWorkers=2`. Build, lint y `git diff --check` correctos.
+
+## Bloque de avisos toast (ya integrado)
 
 - Store en memoria en lib/avisos.ts: exito/error/info, maximo 3 avisos, deduplicacion por tipo/mensaje y cierre manual sin temporizador.
 - Avisos.tsx montado junto al router: region aria-live polite, texto escapado y botones de cierre accesibles. No roba foco al aparecer. Portal se traslada al ultimo dialog abierto para evitar la inercia del documento modal; MutationObserver limpia su suscripcion al desmontar.
@@ -26,7 +37,7 @@
 - Los fallos previos de CUA (pipe, lectura de URL y cuota de revision automatica) ya no impidieron esta comprobacion. Vista temporal retirada del repositorio despues de completar la prueba.
 - Vite levantado en http://127.0.0.1:5173 (sesion de comando 45437); comprobar antes de iniciar otro. Chrome quedo en la URL temporal retirada con emulacion movil; abrir / para volver a la app. La API/backend no fue reiniciada ni se modificaron datos.
 - Comprobaciones finales: 192 pruebas pasando en 30 archivos con npm.cmd test -- --maxWorkers=2; build, lint y git diff --check correctos. El primer intento tras reinicio tuvo dos timeouts y se edito el caso 403 durante ejecucion; la repeticion focalizada (18 casos) y la suite completa posterior pasaron. La revision visual posterior no cambio codigo de la app, solo uso y retiro una vista temporal.
-- Tras completar la revision visual y explicar FR-FE-GEN-003, el usuario indico continuar con el cierre de este bloque. Commit/push de avisos-toast autorizados; verificar git status y git log al retomar para confirmar ejecucion. No incluye fusion ni futuros bloques.
+- El bloque `FR-FE-GEN-003` quedó integrado en el PR #15.
 
 ## Auditoria posterior a categorias (ya integrada)
 
@@ -106,11 +117,9 @@
 
 ## Siguiente paso
 
-1. Ejecutar commit/push del bloque toast ya autorizados y preparar PR hacia develop; verificar primero estado remoto. No fusionar sin autorizacion.
-2. Actualizar auditoria con evidencia del bloque toast cuando corresponda; no deducir cumplimiento total de accesibilidad a partir de aria-live o de esta revision visual.
-3. Seguir con modo oscuro, fidelidad visual, responsive completo, accesibilidad, Lighthouse, compatibilidad y README del producto.
-4. Completar trazabilidad de los 50 tests minimos y de las operaciones del backend; el total de casos no demuestra esa cobertura por si solo.
-5. No fusionar sin autorizacion; mantener la misma regla de recuento al actualizar la auditoria.
+1. Cerrar el bloque de modo oscuro con autorización para commit y, por separado, para push. El PR va hacia `develop`.
+2. Desde `develop` con el modo oscuro integrado, abrir una rama para validar el máximo de 72 bytes UTF-8 en Registro y permitir acceder a la consulta por nombre de usuario desde Mi cuenta con la identidad de sesión. Verificar ambos cambios con pruebas.
+3. Cotejar las referencias visuales del PRD y completar responsive, accesibilidad, Lighthouse, compatibilidad, trazabilidad de los 50 casos mínimos, cobertura de operaciones y README del producto.
 
 ## Referencias
 

@@ -47,12 +47,12 @@ export default function Registro() {
   return (
     <main className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Crear cuenta</h1>
-      <p className="mt-3 text-slate-600">Regístrate en PulsePass para gestionar tus entradas.</p>
+      <p className="mt-3 text-slate-600 dark:text-slate-400">Regístrate en PulsePass para gestionar tus entradas.</p>
       <form noValidate onSubmit={handleSubmit(enviar)} aria-busy={isSubmitting} className="mt-6 space-y-5">
         <div className="grid gap-5 sm:grid-cols-2">
           {campos.map((campo) => (
             <div key={campo.nombre}>
-              <label htmlFor={`registro-${campo.nombre}`} className="block text-sm font-medium text-slate-700">
+              <label htmlFor={`registro-${campo.nombre}`} className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                 {campo.etiqueta}
               </label>
               <input
@@ -62,18 +62,18 @@ export default function Registro() {
                 {...register(campo.nombre)}
                 aria-invalid={Boolean(errors[campo.nombre])}
                 aria-describedby={errors[campo.nombre] ? `error-${campo.nombre}` : campo.nombre === 'password' ? 'ayuda-password' : undefined}
-                className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+                className="mt-2 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
               />
-              {campo.nombre === 'password' && <p id="ayuda-password" className="mt-2 text-sm text-slate-600">Entre 12 y 72 caracteres.</p>}
+              {campo.nombre === 'password' && <p id="ayuda-password" className="mt-2 text-sm text-slate-600 dark:text-slate-400">Entre 12 y 72 caracteres.</p>}
               {errors[campo.nombre] && (
-                <p id={`error-${campo.nombre}`} role="alert" className="mt-2 text-sm text-red-700">
+                <p id={`error-${campo.nombre}`} role="alert" className="mt-2 text-sm text-red-700 dark:text-red-200">
                   {errors[campo.nombre]?.message}
                 </p>
               )}
             </div>
           ))}
         </div>
-        {errors.root && <p role="alert" aria-live="off" className="rounded-lg bg-red-50 p-4 text-red-800">{errors.root.message}</p>}
+        {errors.root && <p role="alert" aria-live="off" className="rounded-lg bg-red-50 dark:bg-red-950 p-4 text-red-800 dark:text-red-200">{errors.root.message}</p>}
         <button
           type="submit"
           disabled={isSubmitting}
@@ -82,9 +82,9 @@ export default function Registro() {
           {isSubmitting ? 'Creando cuenta…' : 'Crear cuenta'}
         </button>
       </form>
-      <p className="mt-6 text-sm text-slate-600">
+      <p className="mt-6 text-sm text-slate-600 dark:text-slate-400">
         ¿Ya tienes cuenta?{' '}
-        <Link to={RUTAS.login} className="rounded text-marca-700 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">Iniciar sesión</Link>
+        <Link to={RUTAS.login} className="rounded text-marca-700 dark:text-indigo-300 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">Iniciar sesión</Link>
       </p>
     </main>
   )

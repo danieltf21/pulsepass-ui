@@ -20,7 +20,7 @@ export default function Inicio() {
         </p>
         <Link
           to={RUTAS.eventos}
-          className="mt-8 inline-flex rounded-lg bg-white px-5 py-3 font-semibold text-marca-700 hover:bg-marca-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+          className="mt-8 inline-flex rounded-lg bg-white dark:bg-slate-900 px-5 py-3 font-semibold text-marca-700 dark:text-indigo-300 hover:bg-marca-50 dark:hover:bg-indigo-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
         >
           Ver cartelera
         </Link>
@@ -31,7 +31,7 @@ export default function Inicio() {
           <h2 id="proximos-eventos" className="font-titulo text-2xl font-bold">Próximos eventos</h2>
           <Link
             to={RUTAS.eventos}
-            className="rounded py-2 font-medium text-marca-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+            className="rounded py-2 font-medium text-marca-700 dark:text-indigo-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
           >
             Ver todos los eventos
           </Link>
@@ -42,13 +42,13 @@ export default function Inicio() {
             <p className="sr-only">Cargando eventos…</p>
             <div aria-hidden="true" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3].map((numero) => (
-                <div key={numero} className="h-64 rounded-xl border border-slate-200 bg-slate-200 motion-safe:animate-pulse" />
+                <div key={numero} className="h-64 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-200 dark:bg-slate-800 motion-safe:animate-pulse" />
               ))}
             </div>
           </div>
         ) : isError ? (
-          <div role="alert" className="mt-6 rounded-xl border border-red-200 bg-red-50 p-6">
-            <p className="text-red-800">No se pudieron cargar los próximos eventos.</p>
+          <div role="alert" className="mt-6 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
+            <p className="text-red-800 dark:text-red-200">No se pudieron cargar los próximos eventos.</p>
             <button
               type="button"
               disabled={isFetching}
@@ -59,7 +59,7 @@ export default function Inicio() {
             </button>
           </div>
         ) : eventos.length === 0 ? (
-          <p role="status" className="mt-6 rounded-xl border border-slate-200 bg-white p-6 text-slate-600">
+          <p role="status" className="mt-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-slate-600 dark:text-slate-400">
             Aún no hay eventos publicados.
           </p>
         ) : (
@@ -75,16 +75,16 @@ export default function Inicio() {
           <h2 id="artistas-destacados" className="font-titulo text-2xl font-bold">Artistas destacados</h2>
           <Link
             to={RUTAS.artistas}
-            className="rounded py-2 font-medium text-marca-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+            className="rounded py-2 font-medium text-marca-700 dark:text-indigo-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
           >
             Ver todos los artistas
           </Link>
         </div>
         {artistas.isPending ? (
-          <p role="status" className="mt-6 text-slate-600">Cargando artistas…</p>
+          <p role="status" className="mt-6 text-slate-600 dark:text-slate-400">Cargando artistas…</p>
         ) : artistas.isError ? (
-          <div role="alert" className="mt-6 rounded-xl border border-red-200 bg-red-50 p-6">
-            <p className="text-red-800">No se pudieron cargar los artistas destacados.</p>
+          <div role="alert" className="mt-6 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
+            <p className="text-red-800 dark:text-red-200">No se pudieron cargar los artistas destacados.</p>
             <button
               type="button"
               disabled={artistas.isFetching}
@@ -95,7 +95,7 @@ export default function Inicio() {
             </button>
           </div>
         ) : artistas.data.length === 0 ? (
-          <p role="status" className="mt-6 rounded-xl border border-slate-200 bg-white p-6 text-slate-600">
+          <p role="status" className="mt-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-slate-600 dark:text-slate-400">
             Aún no hay artistas destacados.
           </p>
         ) : (

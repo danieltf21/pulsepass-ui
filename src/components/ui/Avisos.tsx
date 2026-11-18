@@ -3,9 +3,9 @@ import { createPortal } from 'react-dom'
 import { cerrarAviso, obtenerAvisos, suscribirAvisos, type Aviso } from '../../lib/avisos'
 
 const tonos: Record<Aviso['tipo'], string> = {
-  exito: 'border-emerald-300 bg-emerald-50 text-emerald-950',
-  error: 'border-red-300 bg-red-50 text-red-950',
-  info: 'border-indigo-300 bg-indigo-50 text-indigo-950',
+  exito: 'border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950 text-emerald-950 dark:text-emerald-200',
+  error: 'border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-950 text-red-950 dark:text-red-200',
+  info: 'border-indigo-300 dark:border-indigo-700 bg-indigo-50 dark:bg-indigo-950 text-indigo-950 dark:text-indigo-200',
 }
 const titulos: Record<Aviso['tipo'], string> = { exito: 'Operación completada', error: 'No se completó la operación', info: 'Información' }
 

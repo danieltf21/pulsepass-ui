@@ -2,6 +2,7 @@ import { useId, useRef, useState } from 'react'
 import { Link, matchPath, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router'
 import { RUTAS } from '../lib/rutas'
 import { useAuth } from '../hooks/useAuth'
+import SelectorTema from '../components/ui/SelectorTema'
 
 const enlaces = [
   { destino: RUTAS.inicio, texto: 'Inicio' },
@@ -47,15 +48,15 @@ export default function Layout() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 font-cuerpo text-slate-900">
+    <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950 font-cuerpo text-slate-900 dark:text-slate-100">
       <a
         href="#contenido"
-        className="sr-only z-10 rounded-lg bg-white p-3 text-marca-700 focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+        className="sr-only z-10 rounded-lg bg-white dark:bg-slate-900 p-3 text-marca-700 dark:text-indigo-300 focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
       >
         Saltar al contenido
       </a>
       <header
-        className="border-b border-slate-200 bg-white"
+        className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
         onKeyDown={(evento) => {
           if (evento.key === 'Escape' && menuAbierto) {
             setMenuEnUbicacion(null)
@@ -66,17 +67,18 @@ export default function Layout() {
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-5 sm:px-6">
           <Link
             to={RUTAS.inicio}
-            className="rounded font-titulo text-2xl font-bold text-marca-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+            className="rounded font-titulo text-2xl font-bold text-marca-600 dark:text-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
           >
             PulsePass
           </Link>
+          <SelectorTema />
           <button
             ref={botonMenu}
             type="button"
             aria-expanded={menuAbierto}
             aria-controls={menuId}
             onClick={() => setMenuEnUbicacion(menuAbierto ? null : ubicacion.key)}
-            className="rounded-lg border border-slate-300 px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 lg:hidden"
+            className="rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 lg:hidden"
           >
             {menuAbierto ? 'Cerrar menú' : 'Abrir menú'}
           </button>
@@ -96,21 +98,21 @@ export default function Layout() {
                 to={destino}
                 end={destino === RUTAS.inicio}
                 className={({ isActive }) =>
-                  `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                  `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
                 }
               >
                 {texto}
               </NavLink>
             ))}
             {sesion.estado === 'cargando' ? (
-              <span role="status" className="px-4 py-3 text-sm text-slate-600">Comprobando sesión…</span>
+              <span role="status" className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">Comprobando sesión…</span>
             ) : sesion.estado === 'autenticada' ? (
               <>
-                <span className="min-w-0 break-words px-4 py-3 text-sm text-slate-700">{sesion.usuario.username}</span>
+                <span className="min-w-0 break-words px-4 py-3 text-sm text-slate-700 dark:text-slate-300">{sesion.usuario.username}</span>
                 <NavLink
                   to={RUTAS.cuenta}
                   className={({ isActive }) =>
-                    `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                    `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
                   }
                 >
                   Mi cuenta
@@ -119,7 +121,7 @@ export default function Layout() {
                   <NavLink
                     to={RUTAS.misTickets}
                     className={({ isActive }) =>
-                      `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                      `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
                     }
                   >
                     Mis tickets
@@ -130,7 +132,7 @@ export default function Layout() {
                   <NavLink
                     to={RUTAS.validacionIngreso}
                     className={({ isActive }) =>
-                      `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                      `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
                     }
                   >
                     Validar ingreso
@@ -138,7 +140,7 @@ export default function Layout() {
                   <Link
                     to={RUTAS.buscarTicketsPagados}
                     aria-current={enTicketsPagados ? 'page' : undefined}
-                    className={`rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${enTicketsPagados ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`}
+                    className={`rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${enTicketsPagados ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                   >
                     Tickets pagados
                   </Link>
@@ -148,7 +150,7 @@ export default function Layout() {
                   <NavLink
                     to={RUTAS.adminEventos}
                     className={({ isActive }) =>
-                      `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                      `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
                     }
                   >
                     Administrar eventos
@@ -157,7 +159,7 @@ export default function Layout() {
                 <button
                   type="button"
                   onClick={salir}
-                  className="rounded-lg px-4 py-3 text-sm font-medium text-marca-700 hover:bg-marca-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+                  className="rounded-lg px-4 py-3 text-sm font-medium text-marca-700 dark:text-indigo-300 hover:bg-marca-50 dark:hover:bg-indigo-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
                 >
                   Salir
                 </button>
@@ -167,7 +169,7 @@ export default function Layout() {
                 <NavLink
                 to={RUTAS.login}
                 className={({ isActive }) =>
-                  `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                  `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
                 }
               >
                 Iniciar sesión
@@ -175,7 +177,7 @@ export default function Layout() {
                 <NavLink
                   to={RUTAS.registro}
                   className={({ isActive }) =>
-                    `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 text-marca-700' : 'text-slate-600 hover:bg-slate-100'}`
+                    `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
                   }
                 >
                   Registrarse
@@ -190,8 +192,8 @@ export default function Layout() {
         <Outlet />
       </div>
 
-      <footer className="border-t border-slate-200 bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-slate-600 sm:px-6">
+      <footer className="border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+        <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-slate-600 dark:text-slate-400 sm:px-6">
           PulsePass · Eventos, artistas y entradas.
         </div>
       </footer>

@@ -26,20 +26,20 @@ export default function MisTickets() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Mis tickets</h1>
-      <p className="mt-3 text-slate-600">Consulta las entradas que has comprado en PulsePass.</p>
+      <p className="mt-3 text-slate-600 dark:text-slate-400">Consulta las entradas que has comprado en PulsePass.</p>
 
       <div className="mt-6">
         <FiltroEstadoTicket valor={filtro} onCambiar={setFiltro} />
       </div>
-      {cancelada && <p role="status" aria-live="off" className="mt-6 rounded-lg bg-green-50 p-4 text-green-800">La entrada se canceló correctamente.</p>}
+      {cancelada && <p role="status" aria-live="off" className="mt-6 rounded-lg bg-green-50 dark:bg-green-950 p-4 text-green-800 dark:text-green-200">La entrada se canceló correctamente.</p>}
 
       <section aria-label="Tus entradas" aria-busy={isFetching} className="mt-8">
         {isPending ? (
-          <p role="status" className="text-slate-600">Cargando tus entradas…</p>
+          <p role="status" className="text-slate-600 dark:text-slate-400">Cargando tus entradas…</p>
         ) : isError ? (
-          <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-6">
-            <h2 className="text-lg font-semibold text-red-900">No se pudieron cargar tus entradas</h2>
-            <p className="mt-2 text-red-800">
+          <div role="alert" className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
+            <h2 className="text-lg font-semibold text-red-900 dark:text-red-200">No se pudieron cargar tus entradas</h2>
+            <p className="mt-2 text-red-800 dark:text-red-200">
               {error instanceof ApiError ? error.message : 'Inténtalo de nuevo en unos momentos.'}
             </p>
             <button
@@ -52,38 +52,38 @@ export default function MisTickets() {
             </button>
           </div>
         ) : tickets.length === 0 ? (
-          <div className="rounded-xl border border-slate-200 bg-white p-6">
-            <p role="status" className="text-slate-600">Aún no tienes entradas.</p>
-            <Link to={RUTAS.eventos} className="mt-4 inline-block rounded text-marca-700 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
+          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
+            <p role="status" className="text-slate-600 dark:text-slate-400">Aún no tienes entradas.</p>
+            <Link to={RUTAS.eventos} className="mt-4 inline-block rounded text-marca-700 dark:text-indigo-300 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
               Explorar eventos
             </Link>
           </div>
         ) : ticketsVisibles.length === 0 ? (
-          <p role="status" className="rounded-xl border border-slate-200 bg-white p-6 text-slate-600">
+          <p role="status" className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-slate-600 dark:text-slate-400">
             No tienes entradas con el estado seleccionado.
           </p>
         ) : (
           <ul className="grid gap-6 md:grid-cols-2">
             {ticketsVisibles.map((ticket) => (
-              <li key={ticket.ticketCode} className="min-w-0 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+              <li key={ticket.ticketCode} className="min-w-0 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
                 <h2 className="font-titulo text-xl font-bold">{ticket.eventName}</h2>
-                <p className="mt-2 break-all font-mono text-sm text-slate-600">{ticket.ticketCode}</p>
+                <p className="mt-2 break-all font-mono text-sm text-slate-600 dark:text-slate-400">{ticket.ticketCode}</p>
                 <dl className="mt-5 grid gap-4 sm:grid-cols-2">
                   <div>
                     <dt className="font-medium">Tipo de entrada</dt>
-                    <dd className="mt-1 text-slate-600">{tipos[ticket.type]}</dd>
+                    <dd className="mt-1 text-slate-600 dark:text-slate-400">{tipos[ticket.type]}</dd>
                   </div>
                   <div>
                     <dt className="font-medium">Estado</dt>
-                    <dd className="mt-1 text-slate-600">{estados[ticket.status]}</dd>
+                    <dd className="mt-1 text-slate-600 dark:text-slate-400">{estados[ticket.status]}</dd>
                   </div>
                   <div>
                     <dt className="font-medium">Precio</dt>
-                    <dd className="mt-1 text-slate-600"><PrecioCOP valor={ticket.price} /></dd>
+                    <dd className="mt-1 text-slate-600 dark:text-slate-400"><PrecioCOP valor={ticket.price} /></dd>
                   </div>
                   <div>
                     <dt className="font-medium">Fecha de compra</dt>
-                    <dd className="mt-1 text-slate-600">
+                    <dd className="mt-1 text-slate-600 dark:text-slate-400">
                       <time dateTime={ticket.purchaseDate}>{formatearFecha(ticket.purchaseDate)}</time>
                     </dd>
                   </div>
@@ -104,7 +104,7 @@ export default function MisTickets() {
                         setCancelada(false)
                         setTicketACancelar(ticket.ticketCode)
                       }}
-                      className="rounded-lg border border-red-300 px-4 py-3 font-medium text-red-800 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                      className="rounded-lg border border-red-300 dark:border-red-700 px-4 py-3 font-medium text-red-800 dark:text-red-200 hover:bg-red-50 dark:hover:bg-red-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                     >
                       Cancelar entrada
                     </button>
@@ -112,7 +112,7 @@ export default function MisTickets() {
                 <Link
                   to={RUTAS.evento(ticket.eventCode)}
                   aria-label={`Ver evento ${ticket.eventName}`}
-                  className="inline-block rounded text-marca-700 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+                  className="inline-block rounded text-marca-700 dark:text-indigo-300 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
                 >
                   Ver evento
                 </Link>
