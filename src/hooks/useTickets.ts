@@ -2,6 +2,7 @@ import { useAvisosMutacion } from './useAvisosMutacion'
 import { useEffect, useRef } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { UsuarioAutenticado } from '../api/auth.tipos'
+import { obtenerEvento } from '../api/eventos'
 import { ApiError } from '../api/http'
 import {
   cancelarTicket, comprarTicket, marcarTicketUsado, obtenerTicket,
@@ -199,7 +200,7 @@ export function useTicketsPagadosPorEvento(eventCode: string) {
 
   return useQuery({
     queryKey: ['tickets', 'pagados', codigo],
-    queryFn: ({ signal }) => {
+    queryFn: async ({ signal }) => {
       if (sesion.estado !== 'autenticada') {
         throw new ApiError(401, 'Debes iniciar sesión para consultar las entradas pagadas.')
       }
@@ -209,7 +210,10 @@ export function useTicketsPagadosPorEvento(eventCode: string) {
       if (!codigo) {
         throw new ApiError(400, 'El código del evento no es válido.')
       }
-      return obtenerTicketsPagadosPorEvento(codigo, signal)
+      const entradas = await obtenerTicketsPagadosPorEvento(codigo, signal)
+      // La API devuelve una lista vacía también cuando el evento no existe.
+      if (entradas.length === 0) await obtenerEvento(codigo, signal)
+      return entradas
     },
     enabled: tienePermiso && codigo.length > 0,
     retry: (intentosFallidos, error) => error instanceof ApiError && intentosFallidos < 1

@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest'
 import type { Ticket } from '../api/tickets.tipos'
 import { AuthContext } from '../context/AuthContext'
 import { RUTAS } from '../lib/rutas'
+import { eventoDePrueba } from '../test/mocks/handlers'
 import { server } from '../test/mocks/server'
 import TicketsPagadosEvento from './TicketsPagadosEvento'
 
@@ -76,6 +77,7 @@ describe('TicketsPagadosEvento', () => {
     let entradas = [ticket]
     server.use(
       http.get('*/api/events/CMF-2026/tickets/paid', () => HttpResponse.json(entradas)),
+      http.get('*/api/events/CMF-2026', () => HttpResponse.json({ ...eventoDePrueba, eventCode: 'CMF-2026' })),
       http.patch('*/api/tickets/TKT-001/use', () => {
         entradas = []
         return HttpResponse.json({ ...ticket, status: 'USED' })
@@ -106,11 +108,25 @@ describe('TicketsPagadosEvento', () => {
     expect(screen.queryByText(/Ingreso registrado para/)).not.toBeInTheDocument()
   })
 
-  it('muestra el estado vacío', async () => {
-    server.use(http.get('*/api/events/CMF-2026/tickets/paid', () => HttpResponse.json([])))
+  it('muestra el estado vacío cuando el evento existe', async () => {
+    server.use(
+      http.get('*/api/events/CMF-2026/tickets/paid', () => HttpResponse.json([])),
+      http.get('*/api/events/CMF-2026', () => HttpResponse.json({ ...eventoDePrueba, eventCode: 'CMF-2026' })),
+    )
     mostrarPagina()
     expect(await screen.findByText('Este evento no tiene entradas pagadas.')).toBeInTheDocument()
     expect(screen.getByText('Total: 0')).toBeInTheDocument()
+  })
+
+  it('distingue un evento inexistente cuando tickets pagados devuelve una lista vacía', async () => {
+    server.use(
+      http.get('*/api/events/CMF-2026/tickets/paid', () => HttpResponse.json([])),
+      http.get('*/api/events/CMF-2026', () => new HttpResponse(null, { status: 404 })),
+    )
+    mostrarPagina()
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Evento no encontrado')
+    expect(screen.queryByText('Total: 0')).not.toBeInTheDocument()
   })
 
   it.each([[403, 'Sin permisos'], [404, 'Evento no encontrado']] as const)('maneja el error %s', async (status, mensaje) => {
