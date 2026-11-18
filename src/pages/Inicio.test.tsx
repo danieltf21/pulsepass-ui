@@ -3,11 +3,13 @@ import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { http, HttpResponse } from 'msw'
+import type { Sesion } from '../api/auth.tipos'
+import { AuthContext } from '../context/AuthContext'
 import { server } from '../test/mocks/server'
 import { eventosPublicadosDePrueba } from '../test/mocks/handlers'
 import Inicio from './Inicio'
 
-function mostrarInicio() {
+function mostrarInicio(sesion: Sesion = { estado: 'anonima' }) {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false, retryDelay: 0 } },
   })
@@ -15,13 +17,29 @@ function mostrarInicio() {
   return render(
     <QueryClientProvider client={queryClient}>
       <MemoryRouter>
-        <Inicio />
+        <AuthContext.Provider value={{ sesion, iniciarSesion: async () => {}, cerrarSesion: () => {} }}>
+          <Inicio />
+        </AuthContext.Provider>
       </MemoryRouter>
     </QueryClientProvider>,
   )
 }
 
 describe('Inicio', () => {
+  it('ofrece Crear cuenta al visitante y enlaza al registro', () => {
+    mostrarInicio()
+    expect(screen.getByRole('link', { name: 'Crear cuenta' })).toHaveAttribute('href', '/registro')
+  })
+
+  it('oculta Crear cuenta con sesión iniciada y conserva Ver cartelera', () => {
+    mostrarInicio({
+      estado: 'autenticada', accessToken: 'token-prueba', expiraEn: 2_000_000_000_000,
+      usuario: { id: 1, username: 'andrea', email: 'andrea@example.com', roles: ['USER'] },
+    })
+    expect(screen.queryByRole('link', { name: 'Crear cuenta' })).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Ver cartelera' })).toHaveAttribute('href', '/eventos')
+  })
+
   it('muestra el estado vacío cuando la API no devuelve eventos', async () => {
     server.use(http.get('*/api/events/published', () => HttpResponse.json([])))
     mostrarInicio()
