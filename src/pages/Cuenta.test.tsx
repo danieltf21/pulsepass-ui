@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { createMemoryRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
@@ -64,6 +65,22 @@ describe('Mi cuenta', () => {
     expect(screen.getByRole('link', { name: 'Mi cuenta' })).toHaveAttribute('aria-current', 'page')
     expect(correo).toBe(usuario.email)
     expect(autorizacion).toBe(`Bearer ${token}`)
+  })
+
+  it('permite consultar por el nombre de la sesión con Bearer', async () => {
+    let solicitud: Request | undefined
+    server.use(http.get('*/api/users/by-username', ({ request }) => {
+      solicitud = request
+      return HttpResponse.json({ ...perfil, lastName: 'Gómez' })
+    }))
+    mostrarCuenta()
+    expect(await screen.findByText('Pérez')).toBeInTheDocument()
+
+    await userEvent.setup().selectOptions(screen.getByRole('combobox', { name: 'Consultar por' }), 'username')
+
+    expect(await screen.findByText('Gómez')).toBeInTheDocument()
+    expect(new URL(solicitud!.url).searchParams.get('username')).toBe(usuario.username)
+    expect(solicitud?.headers.get('Authorization')).toBe(`Bearer ${token}`)
   })
 
   it('redirige al anónimo sin consultar sus datos y conserva el destino', async () => {

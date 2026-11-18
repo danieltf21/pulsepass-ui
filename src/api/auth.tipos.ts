@@ -12,7 +12,8 @@ export const registroSchema = z.object({
   email: z.email('Escribe un correo válido.'),
   password: z.string()
     .min(12, 'La contraseña debe tener al menos 12 caracteres.')
-    .max(72, 'La contraseña debe tener como máximo 72 caracteres.'),
+    .refine((password) => new TextEncoder().encode(password).length <= 72,
+      'La contraseña debe ocupar como máximo 72 bytes en UTF-8.'),
   firstName: z.string().trim().min(1, 'Escribe tus nombres.'),
   lastName: z.string().trim().min(1, 'Escribe tus apellidos.'),
   phone: z.string().trim().optional(),
