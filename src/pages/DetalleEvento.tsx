@@ -35,9 +35,13 @@ export default function DetalleEvento() {
   const { data: evento, isPending, isError, error, isFetching, refetch } = useEvento(codigo)
   const noDisponible = !parametros.success
     || (isError && error instanceof ApiError && (error.status === 403 || error.status === 404))
+  const sinRolComprador = sesion.estado === 'autenticada' && !sesion.usuario.roles.includes('USER')
+  const compraHabilitada = evento?.status === 'PUBLISHED' && sesion.estado !== 'cargando' && !sinRolComprador
 
   return (
-    <main className="px-4 py-10 sm:px-6">
+    <main className={compraHabilitada
+      ? 'px-4 pt-10 pb-[calc(7rem+env(safe-area-inset-bottom))] md:px-6 md:pb-10'
+      : 'px-4 py-10 sm:px-6'}>
       <div className="mx-auto max-w-4xl">
         <Link to={RUTAS.eventos} className="rounded text-marca-700 dark:text-indigo-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
           Volver al catálogo
@@ -101,11 +105,12 @@ export default function DetalleEvento() {
               </div>
             </dl>
 
-            <div className="mt-8">
+            <div className={compraHabilitada
+              ? 'fixed inset-x-0 bottom-0 z-10 border-t border-slate-200 bg-white px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-lg dark:border-slate-700 dark:bg-slate-900 md:static md:mt-8 md:border-0 md:bg-transparent md:p-0 md:shadow-none md:dark:bg-transparent'
+              : 'mt-8'}>
               <button
                 type="button"
-                disabled={evento.status !== 'PUBLISHED' || sesion.estado === 'cargando'
-                  || (sesion.estado === 'autenticada' && !sesion.usuario.roles.includes('USER'))}
+                disabled={!compraHabilitada}
                 onClick={() => {
                   if (sesion.estado === 'anonima') {
                     void navigate(RUTAS.login, {
@@ -115,14 +120,14 @@ export default function DetalleEvento() {
                     setCompraAbierta(true)
                   }
                 }}
-                className="rounded-lg bg-marca-600 px-5 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-11 w-full rounded-lg bg-marca-600 px-5 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
               >
                 Comprar entrada
               </button>
               {evento.status !== 'PUBLISHED' && (
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Este evento no tiene entradas disponibles para comprar.</p>
               )}
-              {sesion.estado === 'autenticada' && !sesion.usuario.roles.includes('USER') && (
+              {sinRolComprador && (
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">La compra de entradas requiere una cuenta con rol de usuario.</p>
               )}
             </div>
