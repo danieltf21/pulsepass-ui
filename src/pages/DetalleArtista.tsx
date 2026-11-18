@@ -24,15 +24,15 @@ export default function DetalleArtista() {
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <Link
         to={RUTAS.artistas}
-        className="rounded text-marca-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+        className="rounded text-marca-700 dark:text-indigo-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
       >
         Volver a artistas
       </Link>
 
       {consulta.isPending ? (
-        <p role="status" className="mt-8 text-slate-600">Cargando artista…</p>
+        <p role="status" className="mt-8 text-slate-600 dark:text-slate-400">Cargando artista…</p>
       ) : consulta.isError ? (
-        <section role="alert" className="mt-8 rounded-xl border border-red-200 bg-red-50 p-6">
+        <section role="alert" className="mt-8 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
           <h1 className="font-titulo text-2xl font-bold">No se pudo cargar el artista</h1>
           <button
             type="button"
@@ -45,16 +45,16 @@ export default function DetalleArtista() {
         </section>
       ) : (
         <>
-          <section className="mt-8 rounded-xl border border-slate-200 bg-white p-6 sm:p-8">
+          <section className="mt-8 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 sm:p-8">
             <h1 className="font-titulo text-3xl font-bold">{consulta.data.stageName}</h1>
             <dl className="mt-6 grid gap-6 sm:grid-cols-2">
               <div>
-                <dt className="font-medium text-slate-700">Género</dt>
-                <dd className="mt-1 text-slate-600">{consulta.data.genre || 'No informado'}</dd>
+                <dt className="font-medium text-slate-700 dark:text-slate-300">Género</dt>
+                <dd className="mt-1 text-slate-600 dark:text-slate-400">{consulta.data.genre || 'No informado'}</dd>
               </div>
               <div>
-                <dt className="font-medium text-slate-700">País</dt>
-                <dd className="mt-1 text-slate-600">{consulta.data.country || 'No informado'}</dd>
+                <dt className="font-medium text-slate-700 dark:text-slate-300">País</dt>
+                <dd className="mt-1 text-slate-600 dark:text-slate-400">{consulta.data.country || 'No informado'}</dd>
               </div>
             </dl>
           </section>
@@ -62,10 +62,10 @@ export default function DetalleArtista() {
           <section aria-labelledby="eventos-artista" aria-busy={eventos.isFetching} className="mt-10">
             <h2 id="eventos-artista" className="font-titulo text-2xl font-bold">Eventos del artista</h2>
             {eventos.isPending ? (
-              <p role="status" className="mt-4 text-slate-600">Cargando eventos…</p>
+              <p role="status" className="mt-4 text-slate-600 dark:text-slate-400">Cargando eventos…</p>
             ) : eventos.isError ? (
-              <div role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-6">
-                <p className="text-red-800">No se pudieron cargar los eventos del artista.</p>
+              <div role="alert" className="mt-4 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
+                <p className="text-red-800 dark:text-red-200">No se pudieron cargar los eventos del artista.</p>
                 <button
                   type="button"
                   disabled={eventos.isFetching}
@@ -76,7 +76,7 @@ export default function DetalleArtista() {
                 </button>
               </div>
             ) : eventos.data.length === 0 ? (
-              <p role="status" className="mt-4 rounded-xl border border-slate-200 bg-white p-6 text-slate-600">
+              <p role="status" className="mt-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-slate-600 dark:text-slate-400">
                 No hay eventos disponibles para este artista.
               </p>
             ) : (

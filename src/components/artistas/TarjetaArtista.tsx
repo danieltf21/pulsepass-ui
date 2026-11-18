@@ -8,22 +8,22 @@ interface TarjetaArtistaProps {
 
 export default function TarjetaArtista({ artista }: TarjetaArtistaProps) {
   return (
-    <article className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+    <article className="flex h-full flex-col rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
       <div
         aria-hidden="true"
-        className="flex h-16 w-16 items-center justify-center rounded-full bg-marca-50 text-2xl font-bold text-marca-700"
+        className="flex h-16 w-16 items-center justify-center rounded-full bg-marca-50 dark:bg-indigo-950 text-2xl font-bold text-marca-700 dark:text-indigo-300"
       >
         {Array.from(artista.stageName.trim())[0]?.toLocaleUpperCase('es-CO') ?? '♪'}
       </div>
-      <h2 className="mt-4 font-titulo text-xl font-bold text-slate-900">{artista.stageName}</h2>
+      <h2 className="mt-4 font-titulo text-xl font-bold text-slate-900 dark:text-slate-100">{artista.stageName}</h2>
       <dl className="mt-4 space-y-3 text-sm">
         <div>
-          <dt className="font-medium text-slate-700">Género</dt>
-          <dd className="mt-1 text-slate-600">{artista.genre || 'No informado'}</dd>
+          <dt className="font-medium text-slate-700 dark:text-slate-300">Género</dt>
+          <dd className="mt-1 text-slate-600 dark:text-slate-400">{artista.genre || 'No informado'}</dd>
         </div>
         <div>
-          <dt className="font-medium text-slate-700">País</dt>
-          <dd className="mt-1 text-slate-600">{artista.country || 'No informado'}</dd>
+          <dt className="font-medium text-slate-700 dark:text-slate-300">País</dt>
+          <dd className="mt-1 text-slate-600 dark:text-slate-400">{artista.country || 'No informado'}</dd>
         </div>
       </dl>
       <div className="mt-auto pt-6">

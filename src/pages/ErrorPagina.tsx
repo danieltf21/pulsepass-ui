@@ -3,10 +3,10 @@ import { RUTAS } from '../lib/rutas'
 
 export default function ErrorPagina() {
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-16 font-cuerpo text-slate-900 sm:px-6">
+    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 px-4 py-16 font-cuerpo text-slate-900 dark:text-slate-100 sm:px-6">
       <div className="mx-auto max-w-3xl text-center">
         <h1 className="font-titulo text-3xl font-bold">No se pudo mostrar la página</h1>
-        <p role="alert" className="mt-4 text-slate-600">
+        <p role="alert" className="mt-4 text-slate-600 dark:text-slate-400">
           Ocurrió un error inesperado. Puedes intentar recargar la página o volver al inicio.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -20,7 +20,7 @@ export default function ErrorPagina() {
           <Link
             to={RUTAS.inicio}
             reloadDocument
-            className="rounded-lg border border-slate-300 px-5 py-3 font-medium text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+            className="rounded-lg border border-slate-300 dark:border-slate-600 px-5 py-3 font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
           >
             Volver al inicio
           </Link>

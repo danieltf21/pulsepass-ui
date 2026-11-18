@@ -19,10 +19,10 @@ export default function ListaArtistas() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Artistas</h1>
-      <p className="mt-3 text-slate-600">Conoce a los artistas de PulsePass.</p>
+      <p className="mt-3 text-slate-600 dark:text-slate-400">Conoce a los artistas de PulsePass.</p>
       <BuscadorArtista onBuscar={setNombreBuscado} onLimpiar={() => setNombreBuscado('')} />
       {nombreBuscado && (
-        <p className="mt-4 text-sm text-slate-600">Búsqueda: <strong>{nombreBuscado}</strong></p>
+        <p className="mt-4 text-sm text-slate-600 dark:text-slate-400">Búsqueda: <strong>{nombreBuscado}</strong></p>
       )}
 
       <section aria-label="Resultados de artistas" aria-busy={isFetching} className="mt-8">
@@ -31,18 +31,18 @@ export default function ListaArtistas() {
             <p className="sr-only">Cargando artistas…</p>
             <div aria-hidden="true" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3].map((numero) => (
-                <div key={numero} className="h-72 rounded-xl bg-slate-200 motion-safe:animate-pulse" />
+                <div key={numero} className="h-72 rounded-xl bg-slate-200 dark:bg-slate-800 motion-safe:animate-pulse" />
               ))}
             </div>
           </div>
         ) : noEncontrado ? (
-          <p role="status" className="rounded-xl border border-slate-200 bg-white p-6 text-slate-600">
+          <p role="status" className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-slate-600 dark:text-slate-400">
             No se encontró un artista con ese nombre artístico.
           </p>
         ) : isError ? (
-          <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-6">
-            <h2 className="text-lg font-semibold text-red-900">No se pudieron cargar los artistas</h2>
-            <p className="mt-2 text-red-800">Inténtalo de nuevo en unos momentos.</p>
+          <div role="alert" className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
+            <h2 className="text-lg font-semibold text-red-900 dark:text-red-200">No se pudieron cargar los artistas</h2>
+            <p className="mt-2 text-red-800 dark:text-red-200">Inténtalo de nuevo en unos momentos.</p>
             <button
               type="button"
               disabled={isFetching}
@@ -53,7 +53,7 @@ export default function ListaArtistas() {
             </button>
           </div>
         ) : artistas.length === 0 ? (
-          <p role="status" className="rounded-xl border border-slate-200 bg-white p-6 text-slate-600">
+          <p role="status" className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-slate-600 dark:text-slate-400">
             Aún no hay artistas activos.
           </p>
         ) : (

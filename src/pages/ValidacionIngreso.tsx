@@ -76,13 +76,13 @@ export default function ValidacionIngreso() {
             spellCheck={false}
             aria-invalid={Boolean(errors.codigo)}
             aria-describedby={errors.codigo ? 'error-codigo-ticket' : undefined}
-            className="min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-4 py-3 font-mono focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+            className="min-w-0 flex-1 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 font-mono focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
           />
           <button type="submit" disabled={consulta.isFetching || ingreso.isPending} className="rounded-lg bg-marca-600 px-5 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60">
             {consulta.isFetching ? 'Buscando…' : 'Buscar'}
           </button>
         </div>
-        {errors.codigo && <p id="error-codigo-ticket" role="alert" className="mt-2 text-red-800">{errors.codigo.message}</p>}
+        {errors.codigo && <p id="error-codigo-ticket" role="alert" className="mt-2 text-red-800 dark:text-red-200">{errors.codigo.message}</p>}
       </form>
 
       {codigo && (
@@ -90,12 +90,12 @@ export default function ValidacionIngreso() {
           {consulta.isPending ? (
             <p role="status">Buscando ticket…</p>
           ) : consulta.isError ? (
-            <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-6 text-red-900">
+            <div role="alert" className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6 text-red-900 dark:text-red-200">
               <h2 className="text-xl font-semibold">{mensajeError(consulta.error)}</h2>
               <p className="mt-2">Revisa el código y vuelve a buscar.</p>
             </div>
           ) : (
-            <article className="rounded-xl border border-slate-300 bg-white p-6 shadow-sm">
+            <article className="rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-6 shadow-sm">
               <h2 className="font-titulo text-2xl font-bold">{consulta.data.eventName}</h2>
               <p className="mt-3 break-all font-mono">{consulta.data.ticketCode}</p>
               <p className="mt-4 text-lg font-semibold">{estados[consulta.data.status]}</p>
@@ -115,9 +115,9 @@ export default function ValidacionIngreso() {
           )}
         </section>
       )}
-      {ingreso.isSuccess && <p role="status" aria-live="off" className="mt-6 rounded-xl bg-green-50 p-6 text-xl font-semibold text-green-900">Ingreso registrado.</p>}
+      {ingreso.isSuccess && <p role="status" aria-live="off" className="mt-6 rounded-xl bg-green-50 dark:bg-green-950 p-6 text-xl font-semibold text-green-900 dark:text-green-200">Ingreso registrado.</p>}
       {ingreso.isError && (
-        <p role="alert" aria-live="off" className={`mt-6 rounded-xl border p-6 text-lg font-medium ${ingreso.error instanceof ApiError && ingreso.error.status === 409 ? 'border-amber-300 bg-amber-50 text-amber-900' : 'border-red-200 bg-red-50 text-red-900'}`}>
+        <p role="alert" aria-live="off" className={`mt-6 rounded-xl border p-6 text-lg font-medium ${ingreso.error instanceof ApiError && ingreso.error.status === 409 ? 'border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-950 text-amber-900 dark:text-amber-200' : 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 text-red-900 dark:text-red-200'}`}>
           {mensajeError(ingreso.error)}
         </p>
       )}

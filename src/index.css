@@ -1,4 +1,11 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root { color-scheme: light; background: #f8fafc; color: #0f172a; }
+  :root.dark { color-scheme: dark; background: #020617; color: #f1f5f9; }
+  body { margin: 0; }
+}
 
 @theme {
   --color-marca-50: #eef2ff;

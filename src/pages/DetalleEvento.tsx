@@ -39,21 +39,21 @@ export default function DetalleEvento() {
   return (
     <main className="px-4 py-10 sm:px-6">
       <div className="mx-auto max-w-4xl">
-        <Link to={RUTAS.eventos} className="rounded text-marca-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
+        <Link to={RUTAS.eventos} className="rounded text-marca-700 dark:text-indigo-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
           Volver al catálogo
         </Link>
 
         {noDisponible ? (
-          <section className="mt-8 rounded-xl border border-slate-200 bg-white p-6">
+          <section className="mt-8 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
             <h1 className="font-titulo text-2xl font-bold">Evento no disponible</h1>
-            <p className="mt-3 text-slate-600">El evento no existe o no está disponible para consultar.</p>
+            <p className="mt-3 text-slate-600 dark:text-slate-400">El evento no existe o no está disponible para consultar.</p>
           </section>
         ) : isPending ? (
-          <p role="status" className="mt-8 text-slate-600">Cargando evento…</p>
+          <p role="status" className="mt-8 text-slate-600 dark:text-slate-400">Cargando evento…</p>
         ) : isError ? (
-          <section role="alert" className="mt-8 rounded-xl border border-red-200 bg-red-50 p-6">
+          <section role="alert" className="mt-8 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
             <h1 className="font-titulo text-2xl font-bold">No se pudo cargar el evento</h1>
-            <p className="mt-3 text-red-800">
+            <p className="mt-3 text-red-800 dark:text-red-200">
               {error instanceof ApiError ? error.message : 'La información recibida no tiene el formato esperado.'}
             </p>
             <button
@@ -66,34 +66,34 @@ export default function DetalleEvento() {
             </button>
           </section>
         ) : (
-          <article className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <article className="mt-8 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm sm:p-8">
             <div className="flex flex-wrap gap-2 text-sm font-medium">
-              <span className="rounded-full bg-marca-50 px-3 py-1 text-marca-700">{categorias[evento.category]}</span>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">{estados[evento.status]}</span>
+              <span className="rounded-full bg-marca-50 dark:bg-indigo-950 px-3 py-1 text-marca-700 dark:text-indigo-300">{categorias[evento.category]}</span>
+              <span className="rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-slate-700 dark:text-slate-300">{estados[evento.status]}</span>
             </div>
             <h1 className="mt-5 font-titulo text-3xl font-bold">{evento.name}</h1>
-            <p className="mt-2 text-sm text-slate-500">{evento.eventCode}</p>
-            <p className="mt-6 whitespace-pre-line leading-relaxed text-slate-600">
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{evento.eventCode}</p>
+            <p className="mt-6 whitespace-pre-line leading-relaxed text-slate-600 dark:text-slate-400">
               {evento.description?.trim() || 'Este evento aún no tiene descripción.'}
             </p>
 
             <dl className="mt-8 grid gap-6 sm:grid-cols-2">
               <div>
                 <dt className="font-semibold">Fecha y hora</dt>
-                <dd className="mt-1 text-slate-600">
+                <dd className="mt-1 text-slate-600 dark:text-slate-400">
                   <time dateTime={evento.eventDate}>{formatearFecha(evento.eventDate)}</time>
                 </dd>
               </div>
               <div>
                 <dt className="font-semibold">Edad mínima</dt>
-                <dd className="mt-1 text-slate-600">{evento.minimumAge} años</dd>
+                <dd className="mt-1 text-slate-600 dark:text-slate-400">{evento.minimumAge} años</dd>
               </div>
               <div>
                 <dt className="font-semibold">Sede</dt>
-                <dd className="mt-1 text-slate-600">
+                <dd className="mt-1 text-slate-600 dark:text-slate-400">
                   <Link
                     to={RUTAS.sede(evento.venueCode)}
-                    className="rounded text-marca-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+                    className="rounded text-marca-700 dark:text-indigo-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
                   >
                     {evento.venueName} ({evento.venueCode})
                   </Link>
@@ -120,10 +120,10 @@ export default function DetalleEvento() {
                 Comprar entrada
               </button>
               {evento.status !== 'PUBLISHED' && (
-                <p className="mt-2 text-sm text-slate-600">Este evento no tiene entradas disponibles para comprar.</p>
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Este evento no tiene entradas disponibles para comprar.</p>
               )}
               {sesion.estado === 'autenticada' && !sesion.usuario.roles.includes('USER') && (
-                <p className="mt-2 text-sm text-slate-600">La compra de entradas requiere una cuenta con rol de usuario.</p>
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">La compra de entradas requiere una cuenta con rol de usuario.</p>
               )}
             </div>
             {compraAbierta && sesion.estado === 'autenticada' && sesion.usuario.roles.includes('USER') && (
@@ -139,24 +139,24 @@ export default function DetalleEvento() {
               />
             )}
 
-            <section aria-labelledby="titulo-artistas" className="mt-8 border-t border-slate-200 pt-6">
+            <section aria-labelledby="titulo-artistas" className="mt-8 border-t border-slate-200 dark:border-slate-700 pt-6">
               <h2 id="titulo-artistas" className="font-titulo text-xl font-bold">Artistas</h2>
               {evento.artists.length === 0 ? (
-                <p className="mt-3 text-slate-600">Aún no hay artistas anunciados.</p>
+                <p className="mt-3 text-slate-600 dark:text-slate-400">Aún no hay artistas anunciados.</p>
               ) : (
                 <ul className="mt-4 grid gap-4 sm:grid-cols-2">
                   {evento.artists.map((artista) => (
-                    <li key={artista.id} className="rounded-lg bg-slate-50 p-4">
+                    <li key={artista.id} className="rounded-lg bg-slate-50 dark:bg-slate-950 p-4">
                       <h3 className="font-semibold">
                         <Link
                           to={RUTAS.artista(artista.id)}
-                          className="rounded text-marca-700 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+                          className="rounded text-marca-700 dark:text-indigo-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
                         >
                           {artista.stageName}
                         </Link>
                       </h3>
-                      {artista.genre && <p className="mt-1 text-sm text-slate-600">{artista.genre}</p>}
-                      {artista.country && <p className="mt-1 text-sm text-slate-600">{artista.country}</p>}
+                      {artista.genre && <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{artista.genre}</p>}
+                      {artista.country && <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{artista.country}</p>}
                     </li>
                   ))}
                 </ul>

@@ -52,29 +52,29 @@ export default function Login() {
   return (
     <main className="mx-auto max-w-md px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Iniciar sesión</h1>
-      <p className="mt-3 text-slate-600">Accede a tu cuenta de PulsePass.</p>
+      <p className="mt-3 text-slate-600 dark:text-slate-400">Accede a tu cuenta de PulsePass.</p>
       {estado.success && estado.data.registroExitoso && (
-        <p role="status" aria-live="off" className="mt-4 rounded-lg bg-emerald-50 p-4 text-emerald-900">
+        <p role="status" aria-live="off" className="mt-4 rounded-lg bg-emerald-50 dark:bg-emerald-950 p-4 text-emerald-900 dark:text-emerald-200">
           Cuenta creada. Inicia sesión.
         </p>
       )}
-      {expirada && <p role="status" className="mt-4 rounded-lg bg-amber-50 p-4 text-amber-900">Tu sesión expiró. Inicia sesión de nuevo.</p>}
+      {expirada && <p role="status" className="mt-4 rounded-lg bg-amber-50 dark:bg-amber-950 p-4 text-amber-900 dark:text-amber-200">Tu sesión expiró. Inicia sesión de nuevo.</p>}
 
       <form noValidate onSubmit={handleSubmit(enviar)} aria-busy={isSubmitting} className="mt-6 space-y-5">
         <div>
-          <label htmlFor="identifier" className="block text-sm font-medium text-slate-700">Usuario o correo</label>
+          <label htmlFor="identifier" className="block text-sm font-medium text-slate-700 dark:text-slate-300">Usuario o correo</label>
           <input
             id="identifier"
             autoComplete="username"
             {...register('identifier')}
             aria-invalid={Boolean(errors.identifier)}
             aria-describedby={errors.identifier ? 'error-identifier' : undefined}
-            className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+            className="mt-2 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
           />
-          {errors.identifier && <p id="error-identifier" role="alert" className="mt-2 text-sm text-red-700">{errors.identifier.message}</p>}
+          {errors.identifier && <p id="error-identifier" role="alert" className="mt-2 text-sm text-red-700 dark:text-red-200">{errors.identifier.message}</p>}
         </div>
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-slate-700">Contraseña</label>
+          <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-300">Contraseña</label>
           <input
             id="password"
             type="password"
@@ -82,11 +82,11 @@ export default function Login() {
             {...register('password')}
             aria-invalid={Boolean(errors.password)}
             aria-describedby={errors.password ? 'error-password' : undefined}
-            className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+            className="mt-2 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
           />
-          {errors.password && <p id="error-password" role="alert" className="mt-2 text-sm text-red-700">{errors.password.message}</p>}
+          {errors.password && <p id="error-password" role="alert" className="mt-2 text-sm text-red-700 dark:text-red-200">{errors.password.message}</p>}
         </div>
-        {errors.root && <p role="alert" className="rounded-lg bg-red-50 p-4 text-red-800">{errors.root.message}</p>}
+        {errors.root && <p role="alert" className="rounded-lg bg-red-50 dark:bg-red-950 p-4 text-red-800 dark:text-red-200">{errors.root.message}</p>}
         <button
           type="submit"
           disabled={isSubmitting}
@@ -95,11 +95,11 @@ export default function Login() {
           {isSubmitting ? 'Ingresando…' : 'Ingresar'}
         </button>
       </form>
-      <p className="mt-6 text-sm text-slate-600">
+      <p className="mt-6 text-sm text-slate-600 dark:text-slate-400">
         ¿No tienes cuenta?{' '}
         <Link
           to={RUTAS.registro}
-          className="rounded text-marca-700 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+          className="rounded text-marca-700 dark:text-indigo-300 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
         >
           Crear cuenta
         </Link>

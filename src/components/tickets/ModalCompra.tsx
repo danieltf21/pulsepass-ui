@@ -56,26 +56,26 @@ export default function ModalCompra({ abierto, eventCode, nombreEvento, onCerrar
 
   return (
     <Modal abierto={abierto} titulo="Comprar entrada" onCerrar={cerrar} bloqueado={ocupado}>
-      <p className="text-slate-700">{nombreEvento}</p>
+      <p className="text-slate-700 dark:text-slate-300">{nombreEvento}</p>
       <form noValidate onSubmit={(event) => { void handleSubmit(enviar)(event) }} aria-busy={ocupado} className="mt-6 space-y-5">
         <div>
-          <label htmlFor="tipo-ticket" className="block text-sm font-medium text-slate-700">Tipo de entrada</label>
+          <label htmlFor="tipo-ticket" className="block text-sm font-medium text-slate-700 dark:text-slate-300">Tipo de entrada</label>
           <select
             id="tipo-ticket"
             {...register('type')}
             disabled={ocupado}
             aria-invalid={Boolean(errors.type)}
             aria-describedby={errors.type ? 'error-tipo-ticket' : undefined}
-            className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+            className="mt-2 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
           >
             {Object.entries(tipos).map(([valor, etiqueta]) => (
               <option key={valor} value={valor}>{etiqueta}</option>
             ))}
           </select>
-          {errors.type && <p id="error-tipo-ticket" role="alert" className="mt-2 text-sm text-red-700">{errors.type.message}</p>}
+          {errors.type && <p id="error-tipo-ticket" role="alert" className="mt-2 text-sm text-red-700 dark:text-red-200">{errors.type.message}</p>}
         </div>
-        <p className="text-sm text-slate-600">El precio de la entrada se mostrará en la confirmación de compra.</p>
-        {errors.root && <p role="alert" aria-live="off" className="rounded-lg bg-red-50 p-4 text-red-800">{errors.root.message}</p>}
+        <p className="text-sm text-slate-600 dark:text-slate-400">El precio de la entrada se mostrará en la confirmación de compra.</p>
+        {errors.root && <p role="alert" aria-live="off" className="rounded-lg bg-red-50 dark:bg-red-950 p-4 text-red-800 dark:text-red-200">{errors.root.message}</p>}
         <div className="flex flex-wrap gap-3">
           <button
             type="submit"
@@ -88,7 +88,7 @@ export default function ModalCompra({ abierto, eventCode, nombreEvento, onCerrar
             type="button"
             onClick={cerrar}
             disabled={ocupado}
-            className="rounded-lg border border-slate-300 px-4 py-3 text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60"
+            className="rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-3 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60"
           >
             Cancelar
           </button>

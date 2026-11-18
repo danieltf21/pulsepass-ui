@@ -16,10 +16,10 @@ interface TablaProps<T> {
 export default function Tabla<T>({ titulo, columnas, filas, claveFila }: TablaProps<T>) {
   return (
     <>
-      <div className="hidden overflow-x-auto rounded-xl border border-slate-200 bg-white md:block">
+      <div className="hidden overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 md:block">
         <table className="w-full text-left text-sm">
           <caption className="sr-only">{titulo}</caption>
-          <thead className="border-b border-slate-200 bg-slate-100 text-slate-900">
+          <thead className="border-b border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
             <tr>
               {columnas.map((columna) => <th key={columna.id} scope="col" className="px-4 py-4 font-semibold">{columna.titulo}</th>)}
             </tr>
@@ -27,7 +27,7 @@ export default function Tabla<T>({ titulo, columnas, filas, claveFila }: TablaPr
           <tbody className="divide-y divide-slate-200">
             {filas.map((fila) => (
               <tr key={claveFila(fila)}>
-                {columnas.map((columna) => <td key={columna.id} className="px-4 py-4 align-top text-slate-700">{columna.renderizar(fila)}</td>)}
+                {columnas.map((columna) => <td key={columna.id} className="px-4 py-4 align-top text-slate-700 dark:text-slate-300">{columna.renderizar(fila)}</td>)}
               </tr>
             ))}
           </tbody>
@@ -35,12 +35,12 @@ export default function Tabla<T>({ titulo, columnas, filas, claveFila }: TablaPr
       </div>
       <ul aria-label={titulo} className="grid gap-4 md:hidden">
         {filas.map((fila) => (
-          <li key={claveFila(fila)} className="min-w-0 rounded-xl border border-slate-200 bg-white p-5">
+          <li key={claveFila(fila)} className="min-w-0 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">
             <dl className="space-y-4">
               {columnas.map((columna) => (
                 <div key={columna.id}>
-                  <dt className="text-sm font-semibold text-slate-900">{columna.titulo}</dt>
-                  <dd className="mt-1 break-words text-slate-700">{columna.renderizar(fila)}</dd>
+                  <dt className="text-sm font-semibold text-slate-900 dark:text-slate-100">{columna.titulo}</dt>
+                  <dd className="mt-1 break-words text-slate-700 dark:text-slate-300">{columna.renderizar(fila)}</dd>
                 </div>
               ))}
             </dl>

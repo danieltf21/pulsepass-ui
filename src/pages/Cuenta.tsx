@@ -23,16 +23,16 @@ export default function Cuenta() {
   return (
     <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Mi cuenta</h1>
-      <p className="mt-3 text-slate-600">Consulta tus datos de usuario.</p>
+      <p className="mt-3 text-slate-600 dark:text-slate-400">Consulta tus datos de usuario.</p>
       <section aria-label="Datos de mi cuenta" aria-busy={isFetching} className="mt-8">
         {isPending ? (
-          <p role="status" className="text-slate-600">Cargando tu cuenta…</p>
+          <p role="status" className="text-slate-600 dark:text-slate-400">Cargando tu cuenta…</p>
         ) : isError ? (
-          <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-6">
-            <h2 className="text-lg font-semibold text-red-900">
+          <div role="alert" className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
+            <h2 className="text-lg font-semibold text-red-900 dark:text-red-200">
               {error instanceof ApiError && error.status === 404 ? 'Cuenta no disponible' : 'No se pudieron cargar tus datos'}
             </h2>
-            <p className="mt-2 text-red-800">
+            <p className="mt-2 text-red-800 dark:text-red-200">
               {error instanceof ApiError ? error.message : 'Inténtalo de nuevo en unos momentos.'}
             </p>
             <button
@@ -45,30 +45,30 @@ export default function Cuenta() {
             </button>
           </div>
         ) : (
-          <dl className="grid gap-6 rounded-xl border border-slate-200 bg-white p-6 sm:grid-cols-2 sm:p-8">
+          <dl className="grid gap-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 sm:grid-cols-2 sm:p-8">
             <div>
-              <dt className="font-medium text-slate-700">Nombres</dt>
-              <dd className="mt-1 text-slate-600">{usuario.firstName}</dd>
+              <dt className="font-medium text-slate-700 dark:text-slate-300">Nombres</dt>
+              <dd className="mt-1 text-slate-600 dark:text-slate-400">{usuario.firstName}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-700">Apellidos</dt>
-              <dd className="mt-1 text-slate-600">{usuario.lastName}</dd>
+              <dt className="font-medium text-slate-700 dark:text-slate-300">Apellidos</dt>
+              <dd className="mt-1 text-slate-600 dark:text-slate-400">{usuario.lastName}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-700">Usuario</dt>
-              <dd className="mt-1 break-words text-slate-600">{usuario.username}</dd>
+              <dt className="font-medium text-slate-700 dark:text-slate-300">Usuario</dt>
+              <dd className="mt-1 break-words text-slate-600 dark:text-slate-400">{usuario.username}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-700">Correo electrónico</dt>
-              <dd className="mt-1 break-words text-slate-600">{usuario.email}</dd>
+              <dt className="font-medium text-slate-700 dark:text-slate-300">Correo electrónico</dt>
+              <dd className="mt-1 break-words text-slate-600 dark:text-slate-400">{usuario.email}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-700">Estado de la cuenta</dt>
-              <dd className="mt-1 text-slate-600">{usuario.active ? 'Activa' : 'Inactiva'}</dd>
+              <dt className="font-medium text-slate-700 dark:text-slate-300">Estado de la cuenta</dt>
+              <dd className="mt-1 text-slate-600 dark:text-slate-400">{usuario.active ? 'Activa' : 'Inactiva'}</dd>
             </div>
             <div>
-              <dt className="font-medium text-slate-700">Roles</dt>
-              <dd className="mt-1 text-slate-600">
+              <dt className="font-medium text-slate-700 dark:text-slate-300">Roles</dt>
+              <dd className="mt-1 text-slate-600 dark:text-slate-400">
                 {sesion.usuario.roles.map((rol) => nombresRol[rol]).join(', ') || 'Sin roles asignados'}
               </dd>
             </div>

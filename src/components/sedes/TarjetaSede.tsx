@@ -10,16 +10,16 @@ const formatoNumero = new Intl.NumberFormat('es-CO')
 
 export default function TarjetaSede({ sede }: TarjetaSedeProps) {
   return (
-    <article className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="font-titulo text-xl font-bold text-slate-900">{sede.name}</h2>
+    <article className="flex h-full flex-col rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
+      <h2 className="font-titulo text-xl font-bold text-slate-900 dark:text-slate-100">{sede.name}</h2>
       <dl className="mt-4 space-y-3 text-sm">
         <div>
-          <dt className="font-medium text-slate-700">Ciudad</dt>
-          <dd className="mt-1 text-slate-600">{sede.city}</dd>
+          <dt className="font-medium text-slate-700 dark:text-slate-300">Ciudad</dt>
+          <dd className="mt-1 text-slate-600 dark:text-slate-400">{sede.city}</dd>
         </div>
         <div>
-          <dt className="font-medium text-slate-700">Capacidad</dt>
-          <dd className="mt-1 text-slate-600">{formatoNumero.format(sede.capacity)} personas</dd>
+          <dt className="font-medium text-slate-700 dark:text-slate-300">Capacidad</dt>
+          <dd className="mt-1 text-slate-600 dark:text-slate-400">{formatoNumero.format(sede.capacity)} personas</dd>
         </div>
       </dl>
       <div className="mt-auto pt-6">

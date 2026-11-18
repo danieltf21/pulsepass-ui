@@ -6,6 +6,10 @@ import './index.css'
 import { router } from './router'
 import AuthProvider from './context/AuthProvider'
 import Avisos from './components/ui/Avisos'
+import { iniciarTema } from './lib/tema'
+
+const detenerTema = iniciarTema()
+if (import.meta.hot) import.meta.hot.dispose(detenerTema)
 
 const queryClient = new QueryClient()
 
