@@ -64,7 +64,7 @@ export default function Registro() {
                 aria-describedby={errors[campo.nombre] ? `error-${campo.nombre}` : campo.nombre === 'password' ? 'ayuda-password' : undefined}
                 className="mt-2 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
               />
-              {campo.nombre === 'password' && <p id="ayuda-password" className="mt-2 text-sm text-slate-600 dark:text-slate-400">Entre 12 y 72 caracteres.</p>}
+              {campo.nombre === 'password' && <p id="ayuda-password" className="mt-2 text-sm text-slate-600 dark:text-slate-400">Mínimo 12 caracteres y máximo 72 bytes en UTF-8.</p>}
               {errors[campo.nombre] && (
                 <p id={`error-${campo.nombre}`} role="alert" className="mt-2 text-sm text-red-700 dark:text-red-200">
                   {errors[campo.nombre]?.message}

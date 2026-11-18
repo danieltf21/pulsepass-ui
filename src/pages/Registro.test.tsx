@@ -77,6 +77,36 @@ describe('Registro', () => {
     expect(peticiones).toBe(0)
   })
 
+  it('envía una contraseña multibyte de exactamente 72 bytes sin modificarla', async () => {
+    const password = 'á'.repeat(36)
+    let cuerpo: unknown
+    server.use(http.post('*/api/users', async ({ request }) => {
+      cuerpo = await request.json()
+      return HttpResponse.json(usuarioCreado, { status: 201 })
+    }))
+    const router = mostrarRegistro()
+    const persona = await completarFormulario(password)
+    await persona.click(screen.getByRole('button', { name: 'Crear cuenta' }))
+
+    expect(await screen.findByText('Cuenta creada. Inicia sesión.')).toBeInTheDocument()
+    expect(router.state.location.pathname).toBe('/login')
+    expect(cuerpo).toMatchObject({ password })
+  })
+
+  it('rechaza una contraseña multibyte de 73 bytes antes de llamar a la API', async () => {
+    let peticiones = 0
+    server.use(http.post('*/api/users', () => {
+      peticiones += 1
+      return HttpResponse.json(usuarioCreado, { status: 201 })
+    }))
+    mostrarRegistro()
+    const persona = await completarFormulario('á'.repeat(36) + 'a')
+    await persona.click(screen.getByRole('button', { name: 'Crear cuenta' }))
+
+    expect(await screen.findByText('La contraseña debe ocupar como máximo 72 bytes en UTF-8.')).toBeInTheDocument()
+    expect(peticiones).toBe(0)
+  })
+
   it('muestra un mensaje genérico ante 409 sin exponer el detalle interno', async () => {
     server.use(http.post('*/api/users', () => HttpResponse.json({
       timestamp: '2026-11-15T10:00:00', status: 409, error: 'Conflict',

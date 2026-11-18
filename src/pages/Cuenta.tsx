@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Navigate } from 'react-router'
 import type { Rol } from '../api/auth.tipos'
 import { ApiError } from '../api/http'
@@ -13,7 +14,8 @@ const nombresRol: Record<Rol, string> = {
 
 export default function Cuenta() {
   const { sesion } = useAuth()
-  const { data: usuario, isPending, isError, error, isFetching, refetch } = useMiCuenta()
+  const [criterio, setCriterio] = useState<'email' | 'username'>('email')
+  const { data: usuario, isPending, isError, error, isFetching, refetch } = useMiCuenta(criterio)
 
   if (sesion.estado !== 'autenticada') return null
   if (error instanceof ApiError && error.status === 403) {
@@ -24,6 +26,18 @@ export default function Cuenta() {
     <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Mi cuenta</h1>
       <p className="mt-3 text-slate-600 dark:text-slate-400">Consulta tus datos de usuario.</p>
+      <div className="mt-6">
+        <label htmlFor="criterio-cuenta" className="block text-sm font-medium">Consultar por</label>
+        <select
+          id="criterio-cuenta"
+          value={criterio}
+          onChange={(event) => setCriterio(event.currentTarget.value === 'username' ? 'username' : 'email')}
+          className="mt-2 min-h-11 rounded-lg border border-slate-300 bg-white px-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 dark:border-slate-600 dark:bg-slate-900"
+        >
+          <option value="email">Correo electrónico</option>
+          <option value="username">Nombre de usuario</option>
+        </select>
+      </div>
       <section aria-label="Datos de mi cuenta" aria-busy={isFetching} className="mt-8">
         {isPending ? (
           <p role="status" className="text-slate-600 dark:text-slate-400">Cargando tu cuenta…</p>
