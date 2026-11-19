@@ -1,12 +1,28 @@
 import { http as mswHttp, HttpResponse } from 'msw'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { ApiError, http } from './http'
+import { iniciarSesion } from './auth'
 import { server } from '../test/mocks/server'
 import { obtenerEvento, obtenerEventosPorArtista, obtenerEventosPublicados } from './eventos'
 import { obtenerArtista, obtenerArtistaPorNombre, obtenerArtistasActivos } from './artistas'
 import { obtenerSede, obtenerSedesActivas } from './sedes'
 
 describe('cliente HTTP', () => {
+  it('devuelve ApiError con el campo inválido antes de enviar la solicitud', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+
+    try {
+      await expect(iniciarSesion({ identifier: ' ', password: 'prueba' })).rejects.toMatchObject({
+        name: 'ApiError',
+        status: 400,
+        details: { identifier: 'Escribe tu usuario o correo.' },
+      })
+      expect(fetchSpy).not.toHaveBeenCalled()
+    } finally {
+      fetchSpy.mockRestore()
+    }
+  })
+
   it.each([
     ['eventos publicados', '/events/published', () => obtenerEventosPublicados()],
     ['detalle de evento', '/events/CMF-2026', () => obtenerEvento('CMF-2026')],

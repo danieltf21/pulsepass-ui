@@ -4,6 +4,8 @@ import { Link, Navigate, useLocation, useNavigate } from 'react-router'
 import { z } from 'zod'
 import { loginSchema, type Login as DatosLogin } from '../api/auth.tipos'
 import { ApiError } from '../api/http'
+import Boton from '../components/ui/Boton'
+import Campo from '../components/ui/Campo'
 import { useAuth } from '../hooks/useAuth'
 import { RUTAS } from '../lib/rutas'
 
@@ -61,39 +63,29 @@ export default function Login() {
       {expirada && <p role="status" className="mt-4 rounded-lg bg-amber-50 dark:bg-amber-950 p-4 text-amber-900 dark:text-amber-200">Tu sesión expiró. Inicia sesión de nuevo.</p>}
 
       <form noValidate onSubmit={handleSubmit(enviar)} aria-busy={isSubmitting} className="mt-6 space-y-5">
-        <div>
-          <label htmlFor="identifier" className="block text-sm font-medium text-slate-700 dark:text-slate-300">Usuario o correo</label>
-          <input
-            id="identifier"
-            autoComplete="username"
-            {...register('identifier')}
-            aria-invalid={Boolean(errors.identifier)}
-            aria-describedby={errors.identifier ? 'error-identifier' : undefined}
-            className="mt-2 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
-          />
-          {errors.identifier && <p id="error-identifier" role="alert" className="mt-2 text-sm text-red-700 dark:text-red-200">{errors.identifier.message}</p>}
-        </div>
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-300">Contraseña</label>
-          <input
-            id="password"
-            type="password"
-            autoComplete="current-password"
-            {...register('password')}
-            aria-invalid={Boolean(errors.password)}
-            aria-describedby={errors.password ? 'error-password' : undefined}
-            className="mt-2 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
-          />
-          {errors.password && <p id="error-password" role="alert" className="mt-2 text-sm text-red-700 dark:text-red-200">{errors.password.message}</p>}
-        </div>
+        <Campo
+          id="identifier"
+          etiqueta="Usuario o correo"
+          autoComplete="username"
+          error={errors.identifier}
+          {...register('identifier')}
+        />
+        <Campo
+          id="password"
+          etiqueta="Contraseña"
+          type="password"
+          autoComplete="current-password"
+          error={errors.password}
+          {...register('password')}
+        />
         {errors.root && <p role="alert" className="rounded-lg bg-red-50 dark:bg-red-950 p-4 text-red-800 dark:text-red-200">{errors.root.message}</p>}
-        <button
+        <Boton
           type="submit"
           disabled={isSubmitting}
-          className="w-full rounded-lg bg-marca-600 px-4 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:cursor-wait disabled:opacity-60"
+          className="w-full font-medium disabled:cursor-wait"
         >
           {isSubmitting ? 'Ingresando…' : 'Ingresar'}
-        </button>
+        </Boton>
       </form>
       <p className="mt-6 text-sm text-slate-600 dark:text-slate-400">
         ¿No tienes cuenta?{' '}

@@ -23,7 +23,7 @@ function mostrarDetalle() {
     <QueryClientProvider client={cliente}>
       <AuthContext.Provider value={{
         sesion: {
-          estado: 'autenticada', accessToken: 'token-prueba', expiraEn: Date.now() + 60000,
+          estado: 'autenticada', accessToken: 'token-prueba', expiraEn: 1_800_000_060_000,
           usuario: { id: 1, username: 'comprador', email: ticket.userEmail, roles: ['USER'] },
         },
         iniciarSesion: async () => {}, cerrarSesion: () => {},

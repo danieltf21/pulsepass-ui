@@ -1,6 +1,7 @@
 import { Link } from 'react-router'
 import type { Sede } from '../../api/sedes.tipos'
 import { RUTAS } from '../../lib/rutas'
+import Tarjeta from '../ui/Tarjeta'
 
 interface TarjetaSedeProps {
   sede: Sede
@@ -10,7 +11,7 @@ const formatoNumero = new Intl.NumberFormat('es-CO')
 
 export default function TarjetaSede({ sede }: TarjetaSedeProps) {
   return (
-    <article className="flex h-full flex-col rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
+    <Tarjeta className="flex flex-col">
       <h2 className="font-titulo text-xl font-bold text-slate-900 dark:text-slate-100">{sede.name}</h2>
       <dl className="mt-4 space-y-3 text-sm">
         <div>
@@ -31,6 +32,6 @@ export default function TarjetaSede({ sede }: TarjetaSedeProps) {
           Ver sede
         </Link>
       </div>
-    </article>
+    </Tarjeta>
   )
 }

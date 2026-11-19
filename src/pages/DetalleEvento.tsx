@@ -1,30 +1,16 @@
+import EstadoCarga from '../components/ui/EstadoCarga'
 import { useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
 import { z } from 'zod'
 import { ApiError } from '../api/http'
-import type { CategoriaEvento, EstadoEvento } from '../api/eventos.tipos'
 import { useEvento } from '../hooks/useEventos'
 import { RUTAS } from '../lib/rutas'
-import { formatearFecha } from '../lib/formato'
 import { useAuth } from '../hooks/useAuth'
 import ModalCompra from '../components/tickets/ModalCompra'
+import DatosEvento from '../components/eventos/DatosEvento'
 
 const parametrosSchema = z.object({ eventCode: z.string().trim().min(1).max(50) })
-const categorias: Record<CategoriaEvento, string> = {
-  MUSIC: 'Música',
-  SPORTS: 'Deportes',
-  TECHNOLOGY: 'Tecnología',
-  EDUCATION: 'Educación',
-  CULTURE: 'Cultura',
-  ENTERTAINMENT: 'Entretenimiento',
-}
-const estados: Record<EstadoEvento, string> = {
-  DRAFT: 'Borrador',
-  PUBLISHED: 'Publicado',
-  SOLD_OUT: 'Agotado',
-  CANCELLED: 'Cancelado',
-  FINISHED: 'Finalizado',
-}
+
 export default function DetalleEvento() {
   const { sesion } = useAuth()
   const navigate = useNavigate()
@@ -53,7 +39,7 @@ export default function DetalleEvento() {
             <p className="mt-3 text-slate-600 dark:text-slate-400">El evento no existe o no está disponible para consultar.</p>
           </section>
         ) : isPending ? (
-          <p role="status" className="mt-8 text-slate-600 dark:text-slate-400">Cargando evento…</p>
+          <EstadoCarga className="mt-8">Cargando evento…</EstadoCarga>
         ) : isError ? (
           <section role="alert" className="mt-8 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
             <h1 className="font-titulo text-2xl font-bold">No se pudo cargar el evento</h1>
@@ -71,39 +57,7 @@ export default function DetalleEvento() {
           </section>
         ) : (
           <article className="mt-8 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm sm:p-8">
-            <div className="flex flex-wrap gap-2 text-sm font-medium">
-              <span className="rounded-full bg-marca-50 dark:bg-indigo-950 px-3 py-1 text-marca-700 dark:text-indigo-300">{categorias[evento.category]}</span>
-              <span className="rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-slate-700 dark:text-slate-300">{estados[evento.status]}</span>
-            </div>
-            <h1 className="mt-5 font-titulo text-3xl font-bold">{evento.name}</h1>
-            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{evento.eventCode}</p>
-            <p className="mt-6 whitespace-pre-line leading-relaxed text-slate-600 dark:text-slate-400">
-              {evento.description?.trim() || 'Este evento aún no tiene descripción.'}
-            </p>
-
-            <dl className="mt-8 grid gap-6 sm:grid-cols-2">
-              <div>
-                <dt className="font-semibold">Fecha y hora</dt>
-                <dd className="mt-1 text-slate-600 dark:text-slate-400">
-                  <time dateTime={evento.eventDate}>{formatearFecha(evento.eventDate)}</time>
-                </dd>
-              </div>
-              <div>
-                <dt className="font-semibold">Edad mínima</dt>
-                <dd className="mt-1 text-slate-600 dark:text-slate-400">{evento.minimumAge} años</dd>
-              </div>
-              <div>
-                <dt className="font-semibold">Sede</dt>
-                <dd className="mt-1 text-slate-600 dark:text-slate-400">
-                  <Link
-                    to={RUTAS.sede(evento.venueCode)}
-                    className="rounded text-marca-700 dark:text-indigo-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
-                  >
-                    {evento.venueName} ({evento.venueCode})
-                  </Link>
-                </dd>
-              </div>
-            </dl>
+            <DatosEvento evento={evento} />
 
             <div className={compraHabilitada
               ? 'fixed inset-x-0 bottom-0 z-10 border-t border-slate-200 bg-white px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-lg dark:border-slate-700 dark:bg-slate-900 md:static md:mt-8 md:border-0 md:bg-transparent md:p-0 md:shadow-none md:dark:bg-transparent'

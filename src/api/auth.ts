@@ -10,13 +10,13 @@ import {
   type UsuarioAutenticado,
   type UsuarioRegistrado,
 } from './auth.tipos'
-import { ApiError, http, validarRespuesta } from './http'
+import { ApiError, http, validarRespuesta, validarSolicitud } from './http'
 
 export async function registrarUsuario(
   datos: Registro,
   signal?: AbortSignal,
 ): Promise<UsuarioRegistrado> {
-  const registro = registroSchema.parse(datos)
+  const registro = validarSolicitud(registroSchema, datos)
   let respuesta: unknown
 
   try {
@@ -37,7 +37,7 @@ export async function registrarUsuario(
 }
 
 export async function iniciarSesion(datos: Login, signal?: AbortSignal): Promise<RespuestaLogin> {
-  const credenciales = loginSchema.parse(datos)
+  const credenciales = validarSolicitud(loginSchema, datos)
   let respuesta: unknown
 
   try {

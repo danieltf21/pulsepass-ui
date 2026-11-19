@@ -1,3 +1,5 @@
+import BotonReintentar from '../components/ui/BotonReintentar'
+import EstadoCarga from '../components/ui/EstadoCarga'
 import { Link, useParams } from 'react-router'
 import { z } from 'zod'
 import { ApiError } from '../api/http'
@@ -30,18 +32,11 @@ export default function DetalleArtista() {
       </Link>
 
       {consulta.isPending ? (
-        <p role="status" className="mt-8 text-slate-600 dark:text-slate-400">Cargando artista…</p>
+        <EstadoCarga className="mt-8">Cargando artista…</EstadoCarga>
       ) : consulta.isError ? (
         <section role="alert" className="mt-8 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
           <h1 className="font-titulo text-2xl font-bold">No se pudo cargar el artista</h1>
-          <button
-            type="button"
-            disabled={consulta.isFetching}
-            onClick={() => void consulta.refetch()}
-            className="mt-4 rounded-lg bg-marca-600 px-4 py-3 text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60"
-          >
-            {consulta.isFetching ? 'Reintentando…' : 'Reintentar'}
-          </button>
+          <BotonReintentar enCurso={consulta.isFetching} onReintentar={() => void consulta.refetch()} />
         </section>
       ) : (
         <>
@@ -62,18 +57,11 @@ export default function DetalleArtista() {
           <section aria-labelledby="eventos-artista" aria-busy={eventos.isFetching} className="mt-10">
             <h2 id="eventos-artista" className="font-titulo text-2xl font-bold">Eventos del artista</h2>
             {eventos.isPending ? (
-              <p role="status" className="mt-4 text-slate-600 dark:text-slate-400">Cargando eventos…</p>
+              <EstadoCarga className="mt-4">Cargando eventos…</EstadoCarga>
             ) : eventos.isError ? (
               <div role="alert" className="mt-4 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
                 <p className="text-red-800 dark:text-red-200">No se pudieron cargar los eventos del artista.</p>
-                <button
-                  type="button"
-                  disabled={eventos.isFetching}
-                  onClick={() => void eventos.refetch()}
-                  className="mt-4 rounded-lg bg-marca-600 px-4 py-3 text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60"
-                >
-                  {eventos.isFetching ? 'Reintentando…' : 'Reintentar'}
-                </button>
+                <BotonReintentar enCurso={eventos.isFetching} onReintentar={() => void eventos.refetch()} />
               </div>
             ) : eventos.data.length === 0 ? (
               <p role="status" className="mt-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-slate-600 dark:text-slate-400">

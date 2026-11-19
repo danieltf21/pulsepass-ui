@@ -1,7 +1,12 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router'
 import { RUTAS } from '../lib/rutas'
 
 export default function ErrorPagina() {
+  useEffect(() => {
+    document.title = 'No se pudo mostrar la página | PulsePass'
+  }, [])
+
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-slate-950 px-4 py-16 font-cuerpo text-slate-900 dark:text-slate-100 sm:px-6">
       <div className="mx-auto max-w-3xl text-center">

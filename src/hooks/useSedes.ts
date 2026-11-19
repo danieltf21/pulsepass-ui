@@ -1,13 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { obtenerSede, obtenerSedesActivas } from '../api/sedes'
-import { ApiError } from '../api/http'
-
-function reintentarConsulta(intentosFallidos: number, error: Error): boolean {
-  if (!(error instanceof ApiError)) return false
-
-  return intentosFallidos < 1
-    && (error.status === 0 || (error.status >= 500 && error.status < 600))
-}
+import { reintentarConsulta } from './reintentarConsulta'
 
 export function useSedesActivas() {
   return useQuery({

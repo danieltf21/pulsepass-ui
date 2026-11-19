@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { ApiError } from '../api/http'
 import { obtenerUsuarioPorCorreo, obtenerUsuarioPorNombre } from '../api/usuarios'
+import { reintentarConsulta } from './reintentarConsulta'
 import { useAuth } from './useAuth'
 
 export function useMiCuenta(criterio: 'email' | 'username' = 'email') {
@@ -17,7 +18,6 @@ export function useMiCuenta(criterio: 'email' | 'username' = 'email') {
         ? obtenerUsuarioPorCorreo(usuario.email, signal)
         : obtenerUsuarioPorNombre(usuario.username, signal)
     },
-    retry: (intentosFallidos, error) => error instanceof ApiError && intentosFallidos < 1
-      && (error.status === 0 || (error.status >= 500 && error.status < 600)),
+    retry: reintentarConsulta,
   })
 }

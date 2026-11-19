@@ -4,16 +4,8 @@ import { skipToken, useMutation, useQuery, useQueryClient } from '@tanstack/reac
 import { asociarArtistaEvento, crearEvento, obtenerEvento, obtenerEventosPorArtista, obtenerEventosPublicados, publicarEvento } from '../api/eventos'
 import type { CrearEvento, DetalleEvento } from '../api/eventos.tipos'
 import { ApiError } from '../api/http'
+import { reintentarConsulta } from './reintentarConsulta'
 import { useAuth } from './useAuth'
-
-function reintentarConsulta(intentosFallidos: number, error: Error): boolean {
-  if (!(error instanceof ApiError)) return false
-
-  const esErrorDeRed = error.status === 0
-  const esErrorDelServidor = error.status >= 500 && error.status < 600
-
-  return intentosFallidos < 1 && (esErrorDeRed || esErrorDelServidor)
-}
 
 export function useEventos(habilitado = true) {
   return useQuery({

@@ -1,16 +1,11 @@
-import type { EstadoEvento, ResumenEvento } from '../../api/eventos.tipos'
+import type { ResumenEvento } from '../../api/eventos.tipos'
 import { Link } from 'react-router'
 import { RUTAS } from '../../lib/rutas'
 import { formatearFecha } from '../../lib/formato'
 import { etiquetasCategoria } from '../../lib/categoriasEvento'
-
-const etiquetasEstado: Record<EstadoEvento, string> = {
-  DRAFT: 'Borrador',
-  PUBLISHED: 'Publicado',
-  SOLD_OUT: 'Agotado',
-  CANCELLED: 'Cancelado',
-  FINISHED: 'Finalizado',
-}
+import { etiquetasEstadoEvento } from '../../lib/estadosEvento'
+import Badge from '../ui/Badge'
+import Tarjeta from '../ui/Tarjeta'
 
 interface TarjetaEventoProps {
   evento: ResumenEvento
@@ -18,10 +13,10 @@ interface TarjetaEventoProps {
 
 export default function TarjetaEvento({ evento }: TarjetaEventoProps) {
   return (
-    <article className="h-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm">
+    <Tarjeta>
       <div className="flex flex-wrap gap-2 text-sm font-medium">
-        <span className="rounded-full bg-marca-50 dark:bg-indigo-950 px-3 py-1 text-marca-700 dark:text-indigo-300">{etiquetasCategoria[evento.category]}</span>
-        <span className="rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-slate-700 dark:text-slate-300">{etiquetasEstado[evento.status]}</span>
+        <Badge variante="marca">{etiquetasCategoria[evento.category]}</Badge>
+        <Badge>{etiquetasEstadoEvento[evento.status]}</Badge>
       </div>
       <h2 className="mt-4 font-titulo text-xl font-bold">{evento.name}</h2>
       <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{evento.eventCode}</p>
@@ -38,6 +33,6 @@ export default function TarjetaEvento({ evento }: TarjetaEventoProps) {
       >
         Ver detalle
       </Link>
-    </article>
+    </Tarjeta>
   )
 }

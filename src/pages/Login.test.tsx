@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { createMemoryRouter, Outlet } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import AuthProvider from '../context/AuthProvider'
 import { useAuth } from '../hooks/useAuth'
 import { guardarSesion } from '../lib/sesion'
@@ -52,6 +52,7 @@ function mostrarLogin() {
 }
 
 beforeEach(() => {
+  vi.setSystemTime(1_800_000_000_000)
   sessionStorage.clear()
   server.use(
     http.post('*/api/auth/login', () => HttpResponse.json({ accessToken: token, tokenType: 'Bearer', expiresIn: 900 })),
@@ -62,7 +63,10 @@ beforeEach(() => {
     ),
   )
 })
-afterEach(() => sessionStorage.clear())
+afterEach(() => {
+  sessionStorage.clear()
+  vi.useRealTimers()
+})
 
 async function enviarLogin() {
   const persona = userEvent.setup()
@@ -103,7 +107,7 @@ describe('Login y sesión', () => {
   })
 
   it('restaura una sesión guardada consultando me', async () => {
-    guardarSesion({ accessToken: token, expiraEn: Date.now() + 60_000 })
+    guardarSesion({ accessToken: token, expiraEn: 1_800_000_060_000 })
     mostrarLogin()
 
     expect(await screen.findByRole('heading', { name: 'Destino original' })).toBeInTheDocument()

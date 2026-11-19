@@ -6,10 +6,10 @@ import {
   type DetalleEvento,
   type ResumenEvento,
 } from './eventos.tipos'
-import { http, validarRespuesta } from './http'
+import { http, validarRespuesta, validarSolicitud } from './http'
 
 export async function crearEvento(datos: CrearEvento): Promise<DetalleEvento> {
-  const evento = crearEventoSchema.parse(datos)
+  const evento = validarSolicitud(crearEventoSchema, datos)
   const respuesta = await http('/events', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

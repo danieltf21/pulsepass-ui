@@ -62,6 +62,18 @@ function mensajePorEstado(status: number): string {
   }
 }
 
+export function validarSolicitud<T>(esquema: z.ZodType<T>, datos: unknown): T {
+  const resultado = esquema.safeParse(datos)
+  if (resultado.success) return resultado.data
+
+  const details = Object.fromEntries(
+    resultado.error.issues
+      .filter(({ path }) => path.length > 0)
+      .map(({ path, message }) => [path.map(String).join('.'), message]),
+  )
+  throw new ApiError(400, mensajePorEstado(400), details)
+}
+
 // Devuelve unknown: cada módulo de API valida su respuesta de éxito con Zod.
 export async function http(ruta: string, opciones: RequestInit = {}): Promise<unknown> {
   const headers = new Headers(opciones.headers)

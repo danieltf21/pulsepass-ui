@@ -22,7 +22,7 @@ export default function FiltrosEventos({ busqueda, categoria, onBusquedaChange, 
           maxLength={200}
           onChange={(event) => onBusquedaChange(event.target.value)}
           placeholder="Escribe el nombre de un evento"
-          className="min-w-0 flex-1 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+          className="min-w-0 flex-1 rounded-lg border border-slate-500 bg-white dark:bg-slate-900 px-4 py-3 placeholder:text-slate-600 dark:placeholder:text-slate-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
         />
         {busqueda && (
           <button
@@ -43,7 +43,7 @@ export default function FiltrosEventos({ busqueda, categoria, onBusquedaChange, 
             const seleccion = categoriaEventoSchema.safeParse(event.target.value)
             onCategoriaChange(seleccion.success ? seleccion.data : '')
           }}
-          className="mt-2 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 sm:max-w-xs"
+          className="mt-2 w-full rounded-lg border border-slate-500 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 sm:max-w-xs"
         >
           <option value="">Todas las categorías</option>
           {categoriaEventoSchema.options.map((valor) => <option key={valor} value={valor}>{etiquetasCategoria[valor]}</option>)}
