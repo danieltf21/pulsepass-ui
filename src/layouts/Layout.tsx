@@ -1,37 +1,18 @@
-import { useId, useRef, useState } from 'react'
-import { Link, matchPath, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router'
+import { useEffect } from 'react'
+import { Navigate, Outlet, useLocation, useMatches } from 'react-router'
 import { RUTAS } from '../lib/rutas'
 import { useAuth } from '../hooks/useAuth'
-import SelectorTema from '../components/ui/SelectorTema'
-
-const enlaces = [
-  { destino: RUTAS.inicio, texto: 'Inicio' },
-  { destino: RUTAS.eventos, texto: 'Eventos' },
-  { destino: RUTAS.artistas, texto: 'Artistas' },
-  { destino: RUTAS.sedes, texto: 'Sedes' },
-]
+import Navbar from './Navbar'
 
 export default function Layout() {
-  const { sesion, cerrarSesion } = useAuth()
-  const navegar = useNavigate()
+  const { sesion } = useAuth()
   const ubicacion = useLocation()
-  const [menuEnUbicacion, setMenuEnUbicacion] = useState<string | null>(null)
-  const menuAbierto = menuEnUbicacion === ubicacion.key
-  const menuId = useId()
-  const botonMenu = useRef<HTMLButtonElement>(null)
-  const enTicketsPagados = ubicacion.pathname === RUTAS.buscarTicketsPagados
-    || Boolean(matchPath(RUTAS.ticketsPagados, ubicacion.pathname))
+  const coincidencia = useMatches().at(-1)
+  const titulo = (coincidencia?.handle as { titulo?: string } | undefined)?.titulo
 
-  // Descarta la apertura anterior para que Atrás no vuelva a mostrar el menú.
-  if (menuEnUbicacion !== null && menuEnUbicacion !== ubicacion.key) {
-    setMenuEnUbicacion(null)
-  }
-
-  function salir() {
-    setMenuEnUbicacion(null)
-    cerrarSesion()
-    void navegar(RUTAS.inicio, { replace: true })
-  }
+  useEffect(() => {
+    if (titulo) document.title = `${titulo} | PulsePass`
+  }, [titulo])
 
   if (sesion.estado === 'anonima' && sesion.motivo === 'expirada'
     && ubicacion.pathname !== RUTAS.login) {
@@ -55,138 +36,7 @@ export default function Layout() {
       >
         Saltar al contenido
       </a>
-      <header
-        className="border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900"
-        onKeyDown={(evento) => {
-          if (evento.key === 'Escape' && menuAbierto) {
-            setMenuEnUbicacion(null)
-            botonMenu.current?.focus()
-          }
-        }}
-      >
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-5 sm:px-6">
-          <Link
-            to={RUTAS.inicio}
-            className="rounded font-titulo text-2xl font-bold text-marca-600 dark:text-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
-          >
-            PulsePass
-          </Link>
-          <SelectorTema />
-          <button
-            ref={botonMenu}
-            type="button"
-            aria-expanded={menuAbierto}
-            aria-controls={menuId}
-            onClick={() => setMenuEnUbicacion(menuAbierto ? null : ubicacion.key)}
-            className="rounded-lg border border-slate-300 dark:border-slate-600 px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 lg:hidden"
-          >
-            {menuAbierto ? 'Cerrar menú' : 'Abrir menú'}
-          </button>
-          <nav
-            id={menuId}
-            aria-label="Navegación principal"
-            className={`${menuAbierto ? 'flex' : 'hidden'} w-full min-w-0 flex-col gap-2 lg:flex lg:flex-row lg:flex-wrap`}
-            onClick={(evento) => {
-              if (evento.target instanceof Element && evento.target.closest('a')) {
-                setMenuEnUbicacion(null)
-              }
-            }}
-          >
-            {enlaces.map(({ destino, texto }) => (
-              <NavLink
-                key={destino}
-                to={destino}
-                end={destino === RUTAS.inicio}
-                className={({ isActive }) =>
-                  `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
-                }
-              >
-                {texto}
-              </NavLink>
-            ))}
-            {sesion.estado === 'cargando' ? (
-              <span role="status" className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">Comprobando sesión…</span>
-            ) : sesion.estado === 'autenticada' ? (
-              <>
-                <span className="min-w-0 break-words px-4 py-3 text-sm text-slate-700 dark:text-slate-300">{sesion.usuario.username}</span>
-                <NavLink
-                  to={RUTAS.cuenta}
-                  className={({ isActive }) =>
-                    `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
-                  }
-                >
-                  Mi cuenta
-                </NavLink>
-                {sesion.usuario.roles.includes('USER') && (
-                  <NavLink
-                    to={RUTAS.misTickets}
-                    className={({ isActive }) =>
-                      `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
-                    }
-                  >
-                    Mis tickets
-                  </NavLink>
-                )}
-                {sesion.usuario.roles.some((rol) => rol === 'STAFF' || rol === 'ADMIN') && (
-                  <>
-                  <NavLink
-                    to={RUTAS.validacionIngreso}
-                    className={({ isActive }) =>
-                      `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
-                    }
-                  >
-                    Validar ingreso
-                  </NavLink>
-                  <Link
-                    to={RUTAS.buscarTicketsPagados}
-                    aria-current={enTicketsPagados ? 'page' : undefined}
-                    className={`rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${enTicketsPagados ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
-                  >
-                    Tickets pagados
-                  </Link>
-                  </>
-                )}
-                {sesion.usuario.roles.includes('ADMIN') && (
-                  <NavLink
-                    to={RUTAS.adminEventos}
-                    className={({ isActive }) =>
-                      `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
-                    }
-                  >
-                    Administrar eventos
-                  </NavLink>
-                )}
-                <button
-                  type="button"
-                  onClick={salir}
-                  className="rounded-lg px-4 py-3 text-sm font-medium text-marca-700 dark:text-indigo-300 hover:bg-marca-50 dark:hover:bg-indigo-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
-                >
-                  Salir
-                </button>
-              </>
-            ) : (
-              <>
-                <NavLink
-                to={RUTAS.login}
-                className={({ isActive }) =>
-                  `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
-                }
-              >
-                Iniciar sesión
-              </NavLink>
-                <NavLink
-                  to={RUTAS.registro}
-                  className={({ isActive }) =>
-                    `rounded-lg px-4 py-3 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 ${isActive ? 'bg-marca-50 dark:bg-indigo-950 text-marca-700 dark:text-indigo-300' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`
-                  }
-                >
-                  Registrarse
-                </NavLink>
-              </>
-            )}
-          </nav>
-        </div>
-      </header>
+      <Navbar />
 
       <div id="contenido" tabIndex={-1} className="flex-1">
         <Outlet />

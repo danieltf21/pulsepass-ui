@@ -54,7 +54,7 @@ export default function TicketsPagadosEvento() {
   const navegar = useNavigate()
   const consulta = useTicketsPagadosPorEvento(codigo)
   const [ultimoIngreso, setUltimoIngreso] = useState<{ evento: string; ticket: string } | null>(null)
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<Busqueda>({
+  const { register, handleSubmit, reset, setFocus, formState: { errors } } = useForm<Busqueda>({
     resolver: zodResolver(busquedaSchema), defaultValues: { eventCode: codigo },
   })
   useEffect(() => { reset({ eventCode: codigo }) }, [codigo, reset])
@@ -71,13 +71,14 @@ export default function TicketsPagadosEvento() {
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Tickets pagados{codigo && <> · <span className="break-all font-mono">{codigo}</span></>}</h1>
       <form noValidate onSubmit={handleSubmit(({ eventCode: nuevoCodigo }) => {
+        setFocus('eventCode')
         setUltimoIngreso(null)
         if (nuevoCodigo === codigo) void consulta.refetch()
         else void navegar(RUTAS.ticketsPagadosEvento(nuevoCodigo))
       })} className="mt-6">
         <label htmlFor="evento-tickets" className="block font-medium">Código del evento</label>
         <div className="mt-2 flex flex-wrap gap-3">
-          <input id="evento-tickets" {...register('eventCode')} aria-invalid={Boolean(errors.eventCode)} aria-describedby={errors.eventCode ? 'error-evento-tickets' : undefined} className="min-w-0 flex-1 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 font-mono focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600" />
+          <input id="evento-tickets" {...register('eventCode')} aria-invalid={Boolean(errors.eventCode)} aria-describedby={errors.eventCode ? 'error-evento-tickets' : undefined} className="min-w-0 flex-1 rounded-lg border border-slate-500 bg-white dark:bg-slate-900 px-4 py-3 font-mono focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600" />
           <button type="submit" disabled={consulta.isFetching} className="rounded-lg bg-marca-600 px-5 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60">Ir</button>
         </div>
         {errors.eventCode && <p id="error-evento-tickets" role="alert" className="mt-2 text-red-800 dark:text-red-200">{errors.eventCode.message}</p>}

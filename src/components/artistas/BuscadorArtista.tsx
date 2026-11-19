@@ -37,7 +37,7 @@ export default function BuscadorArtista({ onBuscar, onLimpiar }: BuscadorArtista
           {...register('stageName')}
           aria-invalid={Boolean(errors.stageName)}
           aria-describedby={errors.stageName ? 'error-nombre-artista' : undefined}
-          className="min-w-0 flex-1 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+          className="w-full min-w-0 rounded-lg border border-slate-500 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 sm:w-auto sm:flex-1"
         />
         <button type="submit" className="rounded-lg bg-marca-600 px-4 py-3 text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
           Buscar artista

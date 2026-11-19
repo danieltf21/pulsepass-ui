@@ -1,3 +1,4 @@
+import EstadoCarga from '../components/ui/EstadoCarga'
 import { useState } from 'react'
 import { Link } from 'react-router'
 import { ApiError } from '../api/http'
@@ -35,7 +36,7 @@ export default function MisTickets() {
 
       <section aria-label="Tus entradas" aria-busy={isFetching} className="mt-8">
         {isPending ? (
-          <p role="status" className="text-slate-600 dark:text-slate-400">Cargando tus entradas…</p>
+          <EstadoCarga>Cargando tus entradas…</EstadoCarga>
         ) : isError ? (
           <div role="alert" className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
             <h2 className="text-lg font-semibold text-red-900 dark:text-red-200">No se pudieron cargar tus entradas</h2>

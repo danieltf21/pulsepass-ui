@@ -30,7 +30,7 @@ export default function AdminEventos() {
       <form noValidate onSubmit={handleSubmit(({ eventCode }) => { void navegar(RUTAS.administrarEvento(eventCode)) })} className="mt-8">
         <label htmlFor="buscar-evento-admin" className="block font-medium">Buscar evento por código</label>
         <div className="mt-2 flex flex-wrap gap-3">
-          <input id="buscar-evento-admin" {...register('eventCode')} aria-invalid={Boolean(errors.eventCode)} aria-describedby={errors.eventCode ? 'error-buscar-evento' : undefined} className="min-w-0 flex-1 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 font-mono focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600" />
+          <input id="buscar-evento-admin" {...register('eventCode')} aria-invalid={Boolean(errors.eventCode)} aria-describedby={errors.eventCode ? 'error-buscar-evento' : undefined} className="min-w-0 flex-1 rounded-lg border border-slate-500 bg-white dark:bg-slate-900 px-4 py-3 font-mono focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600" />
           <button type="submit" className="rounded-lg bg-marca-600 px-5 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">Abrir</button>
         </div>
         {errors.eventCode && <p id="error-buscar-evento" role="alert" className="mt-2 text-red-800 dark:text-red-200">{errors.eventCode.message}</p>}

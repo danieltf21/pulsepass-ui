@@ -1,8 +1,8 @@
 import { compraTicketSchema, ticketSchema, type CompraTicket, type Ticket } from './tickets.tipos'
-import { http, validarRespuesta } from './http'
+import { http, validarRespuesta, validarSolicitud } from './http'
 
 export async function comprarTicket(datos: CompraTicket): Promise<Ticket> {
-  const compra = compraTicketSchema.parse(datos)
+  const compra = validarSolicitud(compraTicketSchema, datos)
   const respuesta = await http('/tickets', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

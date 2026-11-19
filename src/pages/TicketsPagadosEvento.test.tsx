@@ -26,7 +26,7 @@ function mostrarPagina(ruta = RUTAS.ticketsPagadosEvento(ticket.eventCode)) {
     <QueryClientProvider client={cliente}>
       <AuthContext.Provider value={{
         sesion: {
-          estado: 'autenticada', accessToken: 'token-prueba', expiraEn: Date.now() + 60000,
+          estado: 'autenticada', accessToken: 'token-prueba', expiraEn: 1_800_000_060_000,
           usuario: { id: 2, username: 'operador', email: 'operador@example.com', roles: ['STAFF'] },
         },
         iniciarSesion: async () => {}, cerrarSesion: () => {},

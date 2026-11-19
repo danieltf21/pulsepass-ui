@@ -20,7 +20,7 @@ function mostrarValidacion(rol: Rol = 'STAFF') {
     <QueryClientProvider client={cliente}>
       <AuthContext.Provider value={{
         sesion: {
-          estado: 'autenticada', accessToken: 'token-prueba', expiraEn: Date.now() + 60000,
+          estado: 'autenticada', accessToken: 'token-prueba', expiraEn: 1_800_000_060_000,
           usuario: { id: 2, username: 'operador', email: 'operador@example.com', roles: [rol] },
         },
         iniciarSesion: async () => {}, cerrarSesion: () => {},
@@ -73,27 +73,42 @@ describe('ValidacionIngreso', () => {
     expect(registros).toBe(1)
   })
 
-  it('muestra el mensaje del backend ante un 409 y no anuncia ingreso correcto', async () => {
+  it('registra el primer ingreso y muestra el conflicto 409 en el segundo intento', async () => {
+    let intentos = 0
     server.use(
+      // La segunda consulta aún devuelve PAID para simular una lectura desactualizada.
       http.get('*/api/tickets/TKT-001', () => HttpResponse.json(ticket)),
-      http.patch('*/api/tickets/TKT-001/use', () => HttpResponse.json({
-        timestamp: '2026-11-15T12:00:00', status: 409, error: 'Conflict',
-        message: 'El ticket ya fue utilizado.', details: {},
-      }, { status: 409 })),
+      http.patch('*/api/tickets/TKT-001/use', () => {
+        intentos += 1
+        if (intentos === 1) return HttpResponse.json({ ...ticket, status: 'USED' })
+        return HttpResponse.json({
+          timestamp: '2026-11-15T12:00:00', status: 409, error: 'Conflict',
+          message: 'El ticket ya fue utilizado.', details: {},
+        }, { status: 409 })
+      }),
     )
     mostrarValidacion()
+    buscar()
+    fireEvent.click(await screen.findByRole('button', { name: 'Marcar como usado' }))
+    expect(await screen.findByText('Ingreso registrado.')).toBeInTheDocument()
+    expect(screen.getByText('Usado')).toBeInTheDocument()
+    expect(intentos).toBe(1)
+
     buscar()
     fireEvent.click(await screen.findByRole('button', { name: 'Marcar como usado' }))
     expect(await screen.findByRole('alert')).toHaveTextContent('El ticket ya fue utilizado.')
     expect(screen.queryByText('Ingreso registrado.')).not.toBeInTheDocument()
     expect(screen.getByLabelText('Código de ticket')).not.toHaveValue('')
+    expect(intentos).toBe(2)
   })
 
   it.each([[403, 'Sin permisos'], [404, 'Ticket no encontrado']] as const)('muestra el error %s en la búsqueda', async (status, mensaje) => {
     server.use(http.get('*/api/tickets/TKT-001', () => new HttpResponse(null, { status })))
     mostrarValidacion()
+    screen.getByRole('button', { name: 'Buscar' }).focus()
     buscar()
     expect(await screen.findByRole('alert')).toHaveTextContent(mensaje)
+    expect(screen.getByLabelText('Código de ticket')).toHaveFocus()
     expect(screen.queryByText(ticket.eventName)).not.toBeInTheDocument()
   })
 

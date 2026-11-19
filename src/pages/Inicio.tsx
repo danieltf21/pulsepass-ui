@@ -1,3 +1,4 @@
+import EstadoCarga from '../components/ui/EstadoCarga'
 import { Link } from 'react-router'
 import TarjetaEvento from '../components/eventos/TarjetaEvento'
 import TarjetaArtista from '../components/artistas/TarjetaArtista'
@@ -93,7 +94,7 @@ export default function Inicio() {
           </Link>
         </div>
         {artistas.isPending ? (
-          <p role="status" className="mt-6 text-slate-600 dark:text-slate-400">Cargando artistas…</p>
+          <EstadoCarga className="mt-6">Cargando artistas…</EstadoCarga>
         ) : artistas.isError ? (
           <div role="alert" className="mt-6 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
             <p className="text-red-800 dark:text-red-200">No se pudieron cargar los artistas destacados.</p>

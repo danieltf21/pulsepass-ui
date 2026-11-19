@@ -22,7 +22,7 @@ function mostrarFormulario() {
     <QueryClientProvider client={cliente}>
       <AuthContext.Provider value={{
         sesion: {
-          estado: 'autenticada', accessToken: 'token-prueba', expiraEn: Date.now() + 60000,
+          estado: 'autenticada', accessToken: 'token-prueba', expiraEn: 1_800_000_060_000,
           usuario: { id: 3, username: 'admin', email: 'admin@example.com', roles: ['ADMIN'] },
         },
         iniciarSesion: async () => {}, cerrarSesion: () => {},

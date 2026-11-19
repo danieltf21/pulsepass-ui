@@ -40,6 +40,7 @@ export default function ValidacionIngreso() {
 
   function buscar(datos: Busqueda) {
     if (enviando.current) return
+    campoCodigo.current?.focus()
     ingreso.reset()
     if (datos.codigo === codigo) void consulta.refetch()
     else setCodigo(datos.codigo)
@@ -76,7 +77,7 @@ export default function ValidacionIngreso() {
             spellCheck={false}
             aria-invalid={Boolean(errors.codigo)}
             aria-describedby={errors.codigo ? 'error-codigo-ticket' : undefined}
-            className="min-w-0 flex-1 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 font-mono focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+            className="min-w-0 flex-1 rounded-lg border border-slate-500 bg-white dark:bg-slate-900 px-4 py-3 font-mono focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
           />
           <button type="submit" disabled={consulta.isFetching || ingreso.isPending} className="rounded-lg bg-marca-600 px-5 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60">
             {consulta.isFetching ? 'Buscando…' : 'Buscar'}

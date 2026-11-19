@@ -1,3 +1,4 @@
+import EstadoCarga from '../components/ui/EstadoCarga'
 import { useEventos, useEventosPorArtista } from '../hooks/useEventos'
 import TarjetaEvento from '../components/eventos/TarjetaEvento'
 import FiltrosEventos from '../components/eventos/FiltrosEventos'
@@ -73,9 +74,9 @@ export default function CatalogoEventos() {
 
         <section aria-label="Eventos publicados" aria-busy={isFetching} className="mt-8">
           {isPending && (
-            <p role="status" className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-slate-600 dark:text-slate-400">
+            <EstadoCarga className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
               Cargando eventos…
-            </p>
+            </EstadoCarga>
           )}
 
           {isError && (

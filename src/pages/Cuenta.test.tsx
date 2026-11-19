@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { createMemoryRouter } from 'react-router'
 import { RouterProvider } from 'react-router/dom'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import AuthProvider from '../context/AuthProvider'
 import Layout from '../layouts/Layout'
 import RutaProtegida from '../layouts/RutaProtegida'
@@ -20,7 +20,7 @@ const usuario = { id: 1, username: 'andrea', email: 'andrea@example.com', roles:
 const perfil = { id: 1, username: 'andrea', email: 'andrea@example.com', firstName: 'Andrea', lastName: 'Pérez', active: true }
 
 function mostrarCuenta(autenticada = true) {
-  if (autenticada) guardarSesion({ accessToken: token, expiraEn: Date.now() + 60_000 })
+  if (autenticada) guardarSesion({ accessToken: token, expiraEn: 1_800_000_060_000 })
   const queryClient = new QueryClient({ defaultOptions: { queries: { retryDelay: 0, gcTime: 0 } } })
   const router = createMemoryRouter([{
     Component: Layout,
@@ -39,13 +39,17 @@ function mostrarCuenta(autenticada = true) {
 }
 
 beforeEach(() => {
+  vi.setSystemTime(1_800_000_000_000)
   sessionStorage.clear()
   server.use(
     http.get('*/api/auth/me', () => HttpResponse.json(usuario)),
     http.get('*/api/users/by-email', () => HttpResponse.json(perfil)),
   )
 })
-afterEach(() => sessionStorage.clear())
+afterEach(() => {
+  sessionStorage.clear()
+  vi.useRealTimers()
+})
 
 describe('Mi cuenta', () => {
   it('consulta el correo de la sesión con Bearer y muestra los datos y roles', async () => {

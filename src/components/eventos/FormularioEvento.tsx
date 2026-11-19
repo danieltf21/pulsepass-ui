@@ -18,7 +18,7 @@ const categorias: Record<CategoriaEvento, string> = {
   EDUCATION: 'Educación', CULTURE: 'Cultura', ENTERTAINMENT: 'Entretenimiento',
 }
 const campos = ['eventCode', 'name', 'description', 'category', 'eventDate', 'minimumAge', 'venueCode'] as const
-const estiloCampo = 'mt-2 w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60'
+const estiloCampo = 'mt-2 w-full rounded-lg border border-slate-500 bg-white dark:bg-slate-900 px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60'
 
 export default function FormularioEvento({ onCreado, onCancelar }: FormularioEventoProps) {
   const crear = useCrearEvento()

@@ -9,6 +9,7 @@ import {
   obtenerTicketsPorUsuario, obtenerTicketsPagadosPorEvento,
 } from '../api/tickets'
 import type { FormularioCompra, Ticket } from '../api/tickets.tipos'
+import { reintentarConsulta } from './reintentarConsulta'
 import { useAuth } from './useAuth'
 
 export function useComprarTicket(eventCode: string) {
@@ -56,8 +57,7 @@ export function useTicket(ticketCode: string) {
       && consulta.state.status === 'success' ? 5000 : false,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: 'always',
-    retry: (intentosFallidos, error) => error instanceof ApiError && intentosFallidos < 1
-      && (error.status === 0 || (error.status >= 500 && error.status < 600)),
+    retry: reintentarConsulta,
   })
 }
 
@@ -81,13 +81,12 @@ export function useMisTickets() {
     refetchInterval: (consulta) => consulta.state.status === 'success' ? 5000 : false,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: 'always',
-    retry: (intentosFallidos, error) => error instanceof ApiError && intentosFallidos < 1
-      && (error.status === 0 || (error.status >= 500 && error.status < 600)),
+    retry: reintentarConsulta,
   })
 }
 
 export function useCancelarTicket(ticketCode: string) {
-  const avisos = useAvisosMutacion('La entrada se cancel? correctamente.')
+  const avisos = useAvisosMutacion('La entrada se canceló correctamente.')
   const { sesion } = useAuth()
   const queryClient = useQueryClient()
   const sesionActual = useRef(sesion)
@@ -216,7 +215,6 @@ export function useTicketsPagadosPorEvento(eventCode: string) {
       return entradas
     },
     enabled: tienePermiso && codigo.length > 0,
-    retry: (intentosFallidos, error) => error instanceof ApiError && intentosFallidos < 1
-      && (error.status === 0 || (error.status >= 500 && error.status < 600)),
+    retry: reintentarConsulta,
   })
 }

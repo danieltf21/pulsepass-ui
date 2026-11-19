@@ -11,7 +11,7 @@ import CatalogoEventos from './CatalogoEventos'
 
 function mostrarCatalogo(entrada = '/eventos') {
   const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
+    defaultOptions: { queries: { retry: false, retryDelay: 0 } },
   })
 
   const router = createMemoryRouter([

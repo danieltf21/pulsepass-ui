@@ -1,3 +1,5 @@
+import EstadoError from '../components/ui/EstadoError'
+import EstadoVacio from '../components/ui/EstadoVacio'
 import TarjetaSede from '../components/sedes/TarjetaSede'
 import { useSedesActivas } from '../hooks/useSedes'
 
@@ -20,9 +22,7 @@ export default function ListaSedes() {
             </div>
           </div>
         ) : isError ? (
-          <div role="alert" className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
-            <h2 className="text-lg font-semibold text-red-900 dark:text-red-200">No se pudieron cargar las sedes</h2>
-            <p className="mt-2 text-red-800 dark:text-red-200">Inténtalo de nuevo en unos momentos.</p>
+          <EstadoError titulo="No se pudieron cargar las sedes" mensaje="Inténtalo de nuevo en unos momentos.">
             <button
               type="button"
               disabled={isFetching}
@@ -31,11 +31,9 @@ export default function ListaSedes() {
             >
               {isFetching ? 'Reintentando…' : 'Reintentar'}
             </button>
-          </div>
+          </EstadoError>
         ) : sedes.length === 0 ? (
-          <p role="status" className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 text-slate-600 dark:text-slate-400">
-            Aún no hay sedes activas.
-          </p>
+          <EstadoVacio>Aún no hay sedes activas.</EstadoVacio>
         ) : (
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {sedes.map((sede) => (

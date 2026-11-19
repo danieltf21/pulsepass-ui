@@ -1,3 +1,5 @@
+import BotonReintentar from '../components/ui/BotonReintentar'
+import EstadoCarga from '../components/ui/EstadoCarga'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { z } from 'zod'
@@ -49,19 +51,12 @@ export default function DetalleTicket() {
           <p className="mt-4 text-slate-600 dark:text-slate-400">La entrada no existe o no está disponible para tu cuenta.</p>
         </section>
       ) : isPending ? (
-        <p role="status" className="mt-8 text-slate-600 dark:text-slate-400">Cargando entrada…</p>
+        <EstadoCarga className="mt-8">Cargando entrada…</EstadoCarga>
       ) : isError ? (
         <section role="alert" className="mt-8 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6">
           <h1 className="font-titulo text-2xl font-bold">No se pudo cargar la entrada</h1>
           <p className="mt-3 text-red-800 dark:text-red-200">{error instanceof ApiError ? error.message : 'Inténtalo de nuevo.'}</p>
-          <button
-            type="button"
-            disabled={isFetching}
-            onClick={() => void refetch()}
-            className="mt-4 rounded-lg bg-marca-600 px-4 py-3 text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:opacity-60"
-          >
-            {isFetching ? 'Reintentando…' : 'Reintentar'}
-          </button>
+          <BotonReintentar enCurso={isFetching} onReintentar={() => void refetch()} />
         </section>
       ) : (
         <article className="mt-8">
@@ -83,12 +78,12 @@ export default function DetalleTicket() {
                     Copiar
                   </button>
                 </div>
-                {copia?.codigo === ticket.ticketCode && copia.estado === 'copiado' && (
-                  <p role="status" className="mt-2 text-sm text-green-800 dark:text-green-200">Código copiado.</p>
-                )}
-                {copia?.codigo === ticket.ticketCode && copia.estado === 'error' && (
-                  <p role="alert" className="mt-2 text-sm text-red-800 dark:text-red-200">No se pudo copiar. Selecciona el código y cópialo manualmente.</p>
-                )}
+                <p aria-live="polite" aria-atomic="true" className="mt-2 text-sm text-green-800 empty:mt-0 dark:text-green-200">
+                  {copia?.codigo === ticket.ticketCode && copia.estado === 'copiado' && 'Código copiado.'}
+                </p>
+                <p aria-live="assertive" aria-atomic="true" className="mt-2 text-sm text-red-800 empty:mt-0 dark:text-red-200">
+                  {copia?.codigo === ticket.ticketCode && copia.estado === 'error' && 'No se pudo copiar. Selecciona el código y cópialo manualmente.'}
+                </p>
               </dd>
             </div>
             <div>

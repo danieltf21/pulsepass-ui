@@ -11,7 +11,7 @@ import RutaPorRol from './RutaPorRol'
 
 function sesionConRol(rol: Rol): Sesion {
   return {
-    estado: 'autenticada', accessToken: 'token-prueba', expiraEn: Date.now() + 60000,
+    estado: 'autenticada', accessToken: 'token-prueba', expiraEn: 1_800_000_060_000,
     usuario: { id: 2, username: 'operador', email: 'operador@example.com', roles: [rol] },
   }
 }

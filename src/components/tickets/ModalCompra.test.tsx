@@ -28,7 +28,7 @@ function mostrarCompra() {
   render(
     <QueryClientProvider client={cliente}>
       <AuthContext.Provider value={{
-        sesion: { estado: 'autenticada', usuario, accessToken: 'token-prueba', expiraEn: Date.now() + 60000 },
+        sesion: { estado: 'autenticada', usuario, accessToken: 'token-prueba', expiraEn: 1_800_000_060_000 },
         iniciarSesion: async () => {}, cerrarSesion: () => {},
       }}>
         <ModalCompra abierto eventCode={ticket.eventCode} nombreEvento={ticket.eventName}
@@ -138,7 +138,7 @@ describe('ModalCompra', () => {
     const vista = render(
       <QueryClientProvider client={cliente}>
         <AuthContext.Provider value={{
-          sesion: { estado: 'autenticada', usuario, accessToken: 'token-prueba', expiraEn: Date.now() + 60000 },
+          sesion: { estado: 'autenticada', usuario, accessToken: 'token-prueba', expiraEn: 1_800_000_060_000 },
           iniciarSesion: async () => {}, cerrarSesion: () => {},
         }}>
           <RouterProvider router={router} />
