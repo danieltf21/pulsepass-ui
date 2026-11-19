@@ -80,7 +80,7 @@ describe('Menú y acceso STAFF', () => {
     expect(boton).toHaveAttribute('aria-expanded', 'true')
     expect(navegacion).not.toHaveClass('hidden')
     await usuario.tab()
-    expect(screen.getByRole('link', { name: 'Inicio' })).toHaveFocus()
+    expect(screen.getByRole('link', { name: 'Eventos' })).toHaveFocus()
     await usuario.keyboard('{Escape}')
     expect(boton).toHaveFocus()
     expect(boton).toHaveAttribute('aria-expanded', 'false')
@@ -89,10 +89,14 @@ describe('Menú y acceso STAFF', () => {
 
   it('cierra el menú al elegir un enlace incluso hacia la página actual', async () => {
     const usuario = userEvent.setup()
-    mostrarLayout(sesionConRol('ADMIN'))
+    mostrarLayout(sesionConRol('ADMIN'), RUTAS.adminEventos)
     await usuario.click(screen.getByRole('button', { name: 'Abrir menú' }))
-    await usuario.click(screen.getByRole('link', { name: 'Inicio' }))
+    await usuario.click(screen.getByRole('link', { name: 'Administrar eventos' }))
     expect(screen.getByRole('button', { name: 'Abrir menú' })).toHaveAttribute('aria-expanded', 'false')
+
+    expect(screen.queryByRole('link', { name: 'Inicio' })).not.toBeInTheDocument()
+    await usuario.click(screen.getByRole('link', { name: 'PulsePass' }))
+    expect(await screen.findByRole('heading', { name: 'Página inicial' })).toBeInTheDocument()
 
     await usuario.click(screen.getByRole('button', { name: 'Abrir menú' }))
     await usuario.click(screen.getByRole('link', { name: 'Administrar eventos' }))
@@ -131,9 +135,13 @@ describe('Menú y acceso STAFF', () => {
     expect(screen.getByRole('link', { name: 'Tickets pagados' })).toHaveAttribute('aria-current', 'page')
   })
 
-  it('oculta los enlaces de operación a USER', () => {
+  it('muestra Mis tickets solo en el menú de cuenta de USER y oculta los enlaces de operación', async () => {
+    const usuario = userEvent.setup()
     mostrarLayout(sesionConRol('USER'))
-    expect(screen.getByRole('link', { name: 'Mis tickets' })).toBeInTheDocument()
+    await usuario.click(screen.getByText('operador', { exact: true }))
+    const enlace = screen.getByRole('link', { name: 'Mis tickets' })
+    expect(enlace.closest('details')).toHaveAttribute('open')
+    expect(enlace).toHaveAttribute('href', RUTAS.misTickets)
     expect(screen.queryByRole('link', { name: 'Validar ingreso' })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Tickets pagados' })).not.toBeInTheDocument()
   })

@@ -23,7 +23,7 @@ export default function DetalleArtista() {
   }
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <Link
         to={RUTAS.artistas}
         className="rounded text-marca-700 dark:text-indigo-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
@@ -77,6 +77,6 @@ export default function DetalleArtista() {
           </section>
         </>
       )}
-    </main>
+    </div>
   )
 }

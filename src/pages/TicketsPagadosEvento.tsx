@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { ApiError } from '../api/http'
 import type { Ticket, TipoTicket } from '../api/tickets.tipos'
+import Badge from '../components/ui/Badge'
+import EstadoCarga from '../components/ui/EstadoCarga'
 import PrecioCOP from '../components/ui/PrecioCOP'
 import Tabla, { type ColumnaTabla } from '../components/ui/Tabla'
 import { useMarcarTicketUsado, useTicketsPagadosPorEvento } from '../hooks/useTickets'
@@ -63,12 +65,12 @@ export default function TicketsPagadosEvento() {
     { id: 'tipo', titulo: 'Tipo', renderizar: (ticket) => tipos[ticket.type] },
     { id: 'titular', titulo: 'Titular', renderizar: (ticket) => <span className="break-all">{ticket.userEmail}</span> },
     { id: 'precio', titulo: 'Precio', renderizar: (ticket) => <PrecioCOP valor={ticket.price} /> },
-    { id: 'estado', titulo: 'Estado', renderizar: () => 'Pagado' },
+    { id: 'estado', titulo: 'Estado', renderizar: () => <Badge variante="PAID">Pagado</Badge> },
     { id: 'accion', titulo: 'Acción', renderizar: (ticket) => <UsarTicket ticket={ticket} onUsado={(usado) => setUltimoIngreso({ evento: codigo, ticket: usado })} /> },
   ]
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Tickets pagados{codigo && <> · <span className="break-all font-mono">{codigo}</span></>}</h1>
       <form noValidate onSubmit={handleSubmit(({ eventCode: nuevoCodigo }) => {
         setFocus('eventCode')
@@ -86,7 +88,7 @@ export default function TicketsPagadosEvento() {
       {ultimoIngreso?.evento === codigo && <p role="status" aria-live="off" className="mt-6 rounded-lg bg-green-50 dark:bg-green-950 p-4 text-green-900 dark:text-green-200">Ingreso registrado para <span className="break-all font-mono">{ultimoIngreso.ticket}</span>.</p>}
       <section aria-label="Tickets pagados por evento" aria-busy={consulta.isFetching} className="mt-8">
         {!codigo ? <p className="text-slate-600 dark:text-slate-400">Introduce un código de evento válido para consultar sus entradas pagadas.</p>
-          : consulta.isPending ? <p role="status">Cargando entradas pagadas…</p>
+          : consulta.isPending ? <EstadoCarga>Cargando entradas pagadas…</EstadoCarga>
           : consulta.isError ? (
             <div role="alert" className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6 text-red-900 dark:text-red-200">
               <h2 className="text-xl font-semibold">{consulta.error instanceof ApiError && consulta.error.status === 403 ? 'Sin permisos' : consulta.error instanceof ApiError && consulta.error.status === 404 ? 'Evento no encontrado' : 'No se pudieron cargar las entradas pagadas'}</h2>
@@ -101,6 +103,6 @@ export default function TicketsPagadosEvento() {
             </>
           )}
       </section>
-    </main>
+    </div>
   )
 }

@@ -6,7 +6,7 @@ export default function SelectorTema() {
   const tema = useSyncExternalStore(suscribirTema, obtenerTema)
   return (
     <label className="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
-      Tema
+      <span>Tema</span>
       <Selector
         value={tema}
         onChange={(evento) => {

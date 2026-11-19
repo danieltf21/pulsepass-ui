@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { createMemoryRouter } from 'react-router'
@@ -66,7 +66,9 @@ describe('Mi cuenta', () => {
     expect(screen.getByText('Andrea')).toBeInTheDocument()
     expect(screen.getByText('andrea@example.com')).toBeInTheDocument()
     expect(screen.getByText('Asistente')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Mi cuenta' })).toHaveAttribute('aria-current', 'page')
+    const navegacion = within(screen.getByRole('navigation', { name: 'Navegación principal' }))
+    await userEvent.click(navegacion.getByText('andrea', { exact: true }))
+    expect(navegacion.getByRole('link', { name: 'Mi cuenta' })).toHaveAttribute('aria-current', 'page')
     expect(correo).toBe(usuario.email)
     expect(autorizacion).toBe(`Bearer ${token}`)
   })

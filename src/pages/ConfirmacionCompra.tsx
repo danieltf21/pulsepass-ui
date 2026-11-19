@@ -1,3 +1,4 @@
+import Badge from '../components/ui/Badge'
 import BotonReintentar from '../components/ui/BotonReintentar'
 import EstadoCarga from '../components/ui/EstadoCarga'
 import { Link, useParams } from 'react-router'
@@ -25,7 +26,7 @@ export default function ConfirmacionCompra() {
     || (error instanceof ApiError && (error.status === 403 || error.status === 404))
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       {noDisponible ? (
         <section>
           <h1 className="font-titulo text-3xl font-bold">Ticket no disponible</h1>
@@ -65,7 +66,7 @@ export default function ConfirmacionCompra() {
             </div>
             <div>
               <dt className="font-medium text-slate-700 dark:text-slate-300">Estado</dt>
-              <dd className="mt-1 text-slate-600 dark:text-slate-400">{estados[ticket.status]}</dd>
+              <dd className="mt-1"><Badge variante={ticket.status}>{estados[ticket.status]}</Badge></dd>
             </div>
             <div>
               <dt className="font-medium text-slate-700 dark:text-slate-300">Fecha de compra</dt>
@@ -88,6 +89,6 @@ export default function ConfirmacionCompra() {
           </div>
         </>
       )}
-    </main>
+    </div>
   )
 }

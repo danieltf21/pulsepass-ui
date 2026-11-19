@@ -38,9 +38,9 @@ export default function Layout() {
       </a>
       <Navbar />
 
-      <div id="contenido" tabIndex={-1} className="flex-1">
+      <main id="contenido" tabIndex={-1} className="flex-1">
         <Outlet />
-      </div>
+      </main>
 
       <footer className="border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
         <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-slate-600 dark:text-slate-400 sm:px-6">

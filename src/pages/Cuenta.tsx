@@ -2,6 +2,7 @@ import BotonReintentar from '../components/ui/BotonReintentar'
 import EstadoCarga from '../components/ui/EstadoCarga'
 import EstadoError from '../components/ui/EstadoError'
 import Selector from '../components/ui/Selector'
+import SelectorTema from '../components/ui/SelectorTema'
 import { useState } from 'react'
 import { Navigate } from 'react-router'
 import type { Rol } from '../api/auth.tipos'
@@ -27,7 +28,7 @@ export default function Cuenta() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Mi cuenta</h1>
       <p className="mt-3 text-slate-600 dark:text-slate-400">Consulta tus datos de usuario.</p>
       <div className="mt-6">
@@ -83,6 +84,10 @@ export default function Cuenta() {
           </dl>
         )}
       </section>
-    </main>
+      <section aria-labelledby="titulo-apariencia" className="mt-8 rounded-xl border border-slate-200 bg-white p-6 sm:p-8 dark:border-slate-700 dark:bg-slate-900">
+        <h2 id="titulo-apariencia" className="mb-4 font-titulo text-xl font-semibold">Apariencia</h2>
+        <SelectorTema />
+      </section>
+    </div>
   )
 }
