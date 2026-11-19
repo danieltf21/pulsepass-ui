@@ -8,8 +8,8 @@ export default function ErrorPagina() {
   }, [])
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-950 px-4 py-16 font-cuerpo text-slate-900 dark:text-slate-100 sm:px-6">
-      <div className="mx-auto max-w-3xl text-center">
+    <main id="contenido" className="min-h-screen bg-slate-50 dark:bg-slate-950 px-4 py-16 font-cuerpo text-slate-900 dark:text-slate-100 sm:px-6">
+      <div className="mx-auto max-w-3xl rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm sm:p-10 dark:border-slate-700 dark:bg-slate-900">
         <h1 className="font-titulo text-3xl font-bold">No se pudo mostrar la página</h1>
         <p role="alert" className="mt-4 text-slate-600 dark:text-slate-400">
           Ocurrió un error inesperado. Puedes intentar recargar la página o volver al inicio.

@@ -22,7 +22,7 @@ export default function DetalleSede() {
   }
 
   return (
-    <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
       <Link
         to={RUTAS.sedes}
         className="rounded text-marca-700 dark:text-indigo-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
@@ -43,7 +43,7 @@ export default function DetalleSede() {
       ) : (
         <article className="mt-8 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm sm:p-8">
           <h1 className="font-titulo text-3xl font-bold">{sede.name}</h1>
-          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">{sede.code}</p>
+          <p className="mt-2 font-mono text-sm wrap-anywhere text-slate-600 dark:text-slate-400">{sede.code}</p>
           <dl className="mt-6 grid gap-6 sm:grid-cols-2">
             <div>
               <dt className="font-medium text-slate-700 dark:text-slate-300">Ciudad</dt>
@@ -64,6 +64,6 @@ export default function DetalleSede() {
           </dl>
         </article>
       )}
-    </main>
+    </div>
   )
 }

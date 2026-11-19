@@ -1,3 +1,4 @@
+import Badge from '../components/ui/Badge'
 import EstadoCarga from '../components/ui/EstadoCarga'
 import { useState } from 'react'
 import { Link } from 'react-router'
@@ -25,7 +26,7 @@ export default function MisTickets() {
   const ticketsVisibles = tickets?.filter((ticket) => filtro === 'TODOS' || ticket.status === filtro) ?? []
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Mis tickets</h1>
       <p className="mt-3 text-slate-600 dark:text-slate-400">Consulta las entradas que has comprado en PulsePass.</p>
 
@@ -76,7 +77,7 @@ export default function MisTickets() {
                   </div>
                   <div>
                     <dt className="font-medium">Estado</dt>
-                    <dd className="mt-1 text-slate-600 dark:text-slate-400">{estados[ticket.status]}</dd>
+                    <dd className="mt-1"><Badge variante={ticket.status}>{estados[ticket.status]}</Badge></dd>
                   </div>
                   <div>
                     <dt className="font-medium">Precio</dt>
@@ -134,6 +135,6 @@ export default function MisTickets() {
           }}
         />
       )}
-    </main>
+    </div>
   )
 }

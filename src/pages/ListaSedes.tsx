@@ -7,7 +7,7 @@ export default function ListaSedes() {
   const { data: sedes, isPending, isError, isFetching, refetch } = useSedesActivas()
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Sedes</h1>
       <p className="mt-3 text-slate-600 dark:text-slate-400">Conoce los lugares donde se viven los eventos de PulsePass.</p>
 
@@ -42,6 +42,6 @@ export default function ListaSedes() {
           </ul>
         )}
       </section>
-    </main>
+    </div>
   )
 }

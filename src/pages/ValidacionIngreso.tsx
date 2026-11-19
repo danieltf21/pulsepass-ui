@@ -1,3 +1,5 @@
+import EstadoCarga from '../components/ui/EstadoCarga'
+import Badge from '../components/ui/Badge'
 import { useEffect, useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -60,7 +62,7 @@ export default function ValidacionIngreso() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Validación de ingreso</h1>
       <form noValidate onSubmit={(event) => { void handleSubmit(buscar)(event) }} className="mt-8">
         <label htmlFor="codigo-ticket" className="block font-medium">Código de ticket</label>
@@ -89,7 +91,7 @@ export default function ValidacionIngreso() {
       {codigo && (
         <section aria-label="Resultado de la búsqueda" aria-busy={consulta.isFetching} className="mt-8">
           {consulta.isPending ? (
-            <p role="status">Buscando ticket…</p>
+            <EstadoCarga>Buscando ticket…</EstadoCarga>
           ) : consulta.isError ? (
             <div role="alert" className="rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950 p-6 text-red-900 dark:text-red-200">
               <h2 className="text-xl font-semibold">{mensajeError(consulta.error)}</h2>
@@ -99,7 +101,7 @@ export default function ValidacionIngreso() {
             <article className="rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 p-6 shadow-sm">
               <h2 className="font-titulo text-2xl font-bold">{consulta.data.eventName}</h2>
               <p className="mt-3 break-all font-mono">{consulta.data.ticketCode}</p>
-              <p className="mt-4 text-lg font-semibold">{estados[consulta.data.status]}</p>
+              <Badge as="p" className="mt-4" variante={consulta.data.status}>{estados[consulta.data.status]}</Badge>
               <p className="mt-2">{tipos[consulta.data.type]}</p>
               <p className="mt-2 break-all">Titular: {consulta.data.userEmail}</p>
               {consulta.data.status === 'PAID' && (
@@ -122,6 +124,6 @@ export default function ValidacionIngreso() {
           {mensajeError(ingreso.error)}
         </p>
       )}
-    </main>
+    </div>
   )
 }

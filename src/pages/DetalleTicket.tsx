@@ -1,3 +1,4 @@
+import Badge from '../components/ui/Badge'
 import BotonReintentar from '../components/ui/BotonReintentar'
 import EstadoCarga from '../components/ui/EstadoCarga'
 import { useState } from 'react'
@@ -40,7 +41,7 @@ export default function DetalleTicket() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <Link to={RUTAS.misTickets} className="rounded text-marca-700 dark:text-indigo-300 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
         Volver a Mis tickets
       </Link>
@@ -88,7 +89,7 @@ export default function DetalleTicket() {
             </div>
             <div>
               <dt className="font-medium">Estado</dt>
-              <dd className="mt-1 text-slate-600 dark:text-slate-400">{estados[ticket.status]}</dd>
+              <dd className="mt-1"><Badge variante={ticket.status}>{estados[ticket.status]}</Badge></dd>
             </div>
             <div>
               <dt className="font-medium">Tipo de entrada</dt>
@@ -138,6 +139,6 @@ export default function DetalleTicket() {
           }}
         />
       )}
-    </main>
+    </div>
   )
 }

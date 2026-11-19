@@ -8,6 +8,7 @@ import { RUTAS } from '../lib/rutas'
 import { useAuth } from '../hooks/useAuth'
 import ModalCompra from '../components/tickets/ModalCompra'
 import DatosEvento from '../components/eventos/DatosEvento'
+import PanelCategoriaEvento from '../components/eventos/PanelCategoriaEvento'
 
 const parametrosSchema = z.object({ eventCode: z.string().trim().min(1).max(50) })
 
@@ -25,10 +26,10 @@ export default function DetalleEvento() {
   const compraHabilitada = evento?.status === 'PUBLISHED' && sesion.estado !== 'cargando' && !sinRolComprador
 
   return (
-    <main className={compraHabilitada
+    <div className={compraHabilitada
       ? 'px-4 pt-10 pb-[calc(7rem+env(safe-area-inset-bottom))] md:px-6 md:pb-10'
       : 'px-4 py-10 sm:px-6'}>
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-6xl">
         <Link to={RUTAS.eventos} className="rounded text-marca-700 dark:text-indigo-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
           Volver al catálogo
         </Link>
@@ -56,12 +57,38 @@ export default function DetalleEvento() {
             </button>
           </section>
         ) : (
-          <article className="mt-8 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 shadow-sm sm:p-8">
-            <DatosEvento evento={evento} />
+          <div className="mt-6 grid items-start gap-5 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+            <article className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 dark:border-slate-700 dark:bg-slate-900">
+              <PanelCategoriaEvento categoria={evento.category} className="-mx-4 -mt-4 mb-5 h-40 rounded-t-xl sm:-mx-6 sm:-mt-6 sm:h-52" />
+              <DatosEvento evento={evento} />
 
+              <section aria-labelledby="titulo-artistas" className="mt-8 border-t border-slate-200 dark:border-slate-700 pt-6">
+                <h2 id="titulo-artistas" className="font-titulo text-xl font-bold">Artistas</h2>
+                {evento.artists.length === 0 ? (
+                  <p className="mt-3 text-slate-600 dark:text-slate-400">Aún no hay artistas anunciados.</p>
+                ) : (
+                  <ul className="mt-4 grid gap-4 sm:grid-cols-2">
+                    {evento.artists.map((artista) => (
+                      <li key={artista.id} className="rounded-lg bg-slate-50 dark:bg-slate-950 p-4">
+                        <h3 className="font-semibold">
+                          <Link
+                            to={RUTAS.artista(artista.id)}
+                            className="rounded text-marca-700 dark:text-indigo-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
+                          >
+                            {artista.stageName}
+                          </Link>
+                        </h3>
+                        {artista.genre && <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{artista.genre}</p>}
+                        {artista.country && <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{artista.country}</p>}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            </article>
             <div className={compraHabilitada
-              ? 'fixed inset-x-0 bottom-0 z-10 border-t border-slate-200 bg-white px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-lg dark:border-slate-700 dark:bg-slate-900 md:static md:mt-8 md:border-0 md:bg-transparent md:p-0 md:shadow-none md:dark:bg-transparent'
-              : 'mt-8'}>
+              ? 'fixed inset-x-0 bottom-0 z-10 border-t border-slate-200 bg-white px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-lg dark:border-slate-700 dark:bg-slate-900 md:static md:rounded-xl md:border md:p-4 md:shadow-sm'
+              : 'rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900'}>
               <button
                 type="button"
                 disabled={!compraHabilitada}
@@ -74,7 +101,7 @@ export default function DetalleEvento() {
                     setCompraAbierta(true)
                   }
                 }}
-                className="min-h-11 w-full rounded-lg bg-marca-600 px-5 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:cursor-not-allowed disabled:opacity-60 md:w-auto"
+                className="min-h-11 w-full rounded-lg bg-marca-600 px-5 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Comprar entrada
               </button>
@@ -97,33 +124,9 @@ export default function DetalleEvento() {
                 }}
               />
             )}
-
-            <section aria-labelledby="titulo-artistas" className="mt-8 border-t border-slate-200 dark:border-slate-700 pt-6">
-              <h2 id="titulo-artistas" className="font-titulo text-xl font-bold">Artistas</h2>
-              {evento.artists.length === 0 ? (
-                <p className="mt-3 text-slate-600 dark:text-slate-400">Aún no hay artistas anunciados.</p>
-              ) : (
-                <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-                  {evento.artists.map((artista) => (
-                    <li key={artista.id} className="rounded-lg bg-slate-50 dark:bg-slate-950 p-4">
-                      <h3 className="font-semibold">
-                        <Link
-                          to={RUTAS.artista(artista.id)}
-                          className="rounded text-marca-700 dark:text-indigo-300 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600"
-                        >
-                          {artista.stageName}
-                        </Link>
-                      </h3>
-                      {artista.genre && <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{artista.genre}</p>}
-                      {artista.country && <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{artista.country}</p>}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </section>
-          </article>
+          </div>
         )}
       </div>
-    </main>
+    </div>
   )
 }

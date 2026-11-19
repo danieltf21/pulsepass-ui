@@ -1,3 +1,4 @@
+import Badge from '../components/ui/Badge'
 import { Link, useNavigate } from 'react-router'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -20,7 +21,7 @@ export default function AdminEventos() {
   })
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="font-titulo text-3xl font-bold">Administración de eventos</h1>
         <Link to={RUTAS.adminCrearEvento} className="rounded-lg bg-marca-600 px-5 py-3 font-medium text-white hover:bg-marca-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
@@ -44,7 +45,7 @@ export default function AdminEventos() {
                 <div className="min-w-0">
                   <h3 className="font-semibold">{evento.name}</h3>
                   <p className="mt-1 break-all font-mono text-sm text-slate-600 dark:text-slate-400">{evento.eventCode}</p>
-                  <p className="mt-2 text-sm font-medium text-marca-700 dark:text-indigo-300">{estados[evento.status]}</p>
+                  <Badge as="p" className="mt-2" variante={evento.status}>{estados[evento.status]}</Badge>
                 </div>
                 <Link to={RUTAS.administrarEvento(evento.eventCode)} aria-label={`Gestionar evento ${evento.eventCode}`} className="rounded-lg border border-marca-600 px-4 py-3 text-marca-700 dark:text-indigo-300 hover:bg-marca-50 dark:hover:bg-indigo-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">Gestionar</Link>
               </li>
@@ -52,6 +53,6 @@ export default function AdminEventos() {
           </ul>
         )}
       </section>
-    </main>
+    </div>
   )
 }

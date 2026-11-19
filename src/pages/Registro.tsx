@@ -47,37 +47,39 @@ export default function Registro() {
   }
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
-      <h1 className="font-titulo text-3xl font-bold">Crear cuenta</h1>
-      <p className="mt-3 text-slate-600 dark:text-slate-400">Regístrate en PulsePass para gestionar tus entradas.</p>
-      <form noValidate onSubmit={handleSubmit(enviar)} aria-busy={isSubmitting} className="mt-6 space-y-5">
-        <div className="grid gap-5 sm:grid-cols-2">
-          {campos.map((campo) => (
-            <Campo
-              key={campo.nombre}
-              id={`registro-${campo.nombre}`}
-              etiqueta={campo.etiqueta}
-              type={campo.tipo}
-              autoComplete={campo.completar}
-              error={errors[campo.nombre]}
-              ayuda={campo.nombre === 'password' ? 'Mínimo 12 caracteres y máximo 72 bytes en UTF-8.' : undefined}
-              {...register(campo.nombre)}
-            />
-          ))}
-        </div>
-        {errors.root && <p role="alert" aria-live="off" className="rounded-lg bg-red-50 dark:bg-red-950 p-4 text-red-800 dark:text-red-200">{errors.root.message}</p>}
-        <Boton
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full font-medium disabled:cursor-wait"
-        >
-          {isSubmitting ? 'Creando cuenta…' : 'Crear cuenta'}
-        </Boton>
-      </form>
-      <p className="mt-6 text-sm text-slate-600 dark:text-slate-400">
-        ¿Ya tienes cuenta?{' '}
-        <Link to={RUTAS.login} className="rounded text-marca-700 dark:text-indigo-300 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">Iniciar sesión</Link>
-      </p>
-    </main>
+    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+      <section aria-labelledby="titulo-autenticacion" className="mx-auto max-w-2xl rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-8 dark:border-slate-700 dark:bg-slate-900">
+        <h1 id="titulo-autenticacion" className="font-titulo text-3xl font-bold">Crear cuenta</h1>
+        <p className="mt-3 text-slate-600 dark:text-slate-400">Regístrate en PulsePass para gestionar tus entradas.</p>
+        <form noValidate onSubmit={handleSubmit(enviar)} aria-busy={isSubmitting} className="mt-6 space-y-5">
+          <div className="grid gap-5 sm:grid-cols-2">
+            {campos.map((campo) => (
+              <Campo
+                key={campo.nombre}
+                id={`registro-${campo.nombre}`}
+                etiqueta={campo.etiqueta}
+                type={campo.tipo}
+                autoComplete={campo.completar}
+                error={errors[campo.nombre]}
+                ayuda={campo.nombre === 'password' ? 'Mínimo 12 caracteres y máximo 72 bytes en UTF-8.' : undefined}
+                {...register(campo.nombre)}
+              />
+            ))}
+          </div>
+          {errors.root && <p role="alert" aria-live="off" className="rounded-lg bg-red-50 dark:bg-red-950 p-4 text-red-800 dark:text-red-200">{errors.root.message}</p>}
+          <Boton
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full font-medium disabled:cursor-wait"
+          >
+            {isSubmitting ? 'Creando cuenta…' : 'Crear cuenta'}
+          </Boton>
+        </form>
+        <p className="mt-6 text-sm text-slate-600 dark:text-slate-400">
+          ¿Ya tienes cuenta?{' '}
+          <Link to={RUTAS.login} className="rounded text-marca-700 dark:text-indigo-300 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">Iniciar sesión</Link>
+        </p>
+      </section>
+    </div>
   )
 }

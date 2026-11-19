@@ -76,6 +76,24 @@ async function enviarLogin() {
 }
 
 describe('Login y sesión', () => {
+  it('muestra y vuelve a ocultar la contraseña sin enviarla', async () => {
+    const persona = userEvent.setup()
+    mostrarLogin()
+    const campo = await screen.findByLabelText('Contraseña')
+    const mostrar = screen.getByRole('button', { name: 'Mostrar contraseña' })
+
+    expect(campo).toHaveAttribute('type', 'password')
+    expect(mostrar).toHaveAttribute('type', 'button')
+    await persona.type(campo, 'contraseña-de-prueba')
+    await persona.click(mostrar)
+    expect(campo).toHaveAttribute('type', 'text')
+    expect(campo).toHaveValue('contraseña-de-prueba')
+
+    await persona.click(screen.getByRole('button', { name: 'Ocultar contraseña' }))
+    expect(campo).toHaveAttribute('type', 'password')
+    expect(campo).toHaveValue('contraseña-de-prueba')
+  })
+
   it('autentica con Bearer en me y vuelve a la ruta de origen', async () => {
     mostrarLogin()
     await enviarLogin()

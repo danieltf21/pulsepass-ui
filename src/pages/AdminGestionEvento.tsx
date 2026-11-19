@@ -59,7 +59,7 @@ export default function AdminGestionEvento() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <Link to={RUTAS.adminEventos} className="rounded text-marca-700 dark:text-indigo-300 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marca-600">
         Volver a eventos
       </Link>
@@ -83,12 +83,12 @@ export default function AdminGestionEvento() {
           )}
           <h1 className="font-titulo text-3xl font-bold">{consulta.data.name}</h1>
           <p className="mt-2 break-all font-mono text-slate-600 dark:text-slate-400">{consulta.data.eventCode}</p>
-          <Badge as="p" variante="marca" className="mt-4 inline-block font-semibold">{etiquetasEstadoEvento[consulta.data.status]}</Badge>
+          <Badge as="p" variante={consulta.data.status} className="mt-4">{etiquetasEstadoEvento[consulta.data.status]}</Badge>
           <dl className="mt-6 grid gap-6 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 sm:grid-cols-2">
             <div><dt className="font-medium">Categoría</dt><dd className="mt-1 text-slate-600 dark:text-slate-400">{etiquetasCategoria[consulta.data.category]}</dd></div>
             <div><dt className="font-medium">Fecha y hora</dt><dd className="mt-1 text-slate-600 dark:text-slate-400"><time dateTime={consulta.data.eventDate}>{formatearFecha(consulta.data.eventDate)}</time></dd></div>
             <div><dt className="font-medium">Edad mínima</dt><dd className="mt-1 text-slate-600 dark:text-slate-400">{consulta.data.minimumAge} años</dd></div>
-            <div><dt className="font-medium">Sede</dt><dd className="mt-1 text-slate-600 dark:text-slate-400">{consulta.data.venueName} ({consulta.data.venueCode})</dd></div>
+            <div><dt className="font-medium">Sede</dt><dd className="mt-1 text-slate-600 dark:text-slate-400">{consulta.data.venueName} (<span className="font-mono wrap-anywhere">{consulta.data.venueCode}</span>)</dd></div>
           </dl>
           <p className="mt-6 whitespace-pre-line text-slate-600 dark:text-slate-400">{consulta.data.description?.trim() || 'Este evento aún no tiene descripción.'}</p>
           <section aria-labelledby="publicacion-evento" className="mt-8 border-t border-slate-200 dark:border-slate-700 pt-6">
@@ -133,6 +133,6 @@ export default function AdminGestionEvento() {
           </div>
         </Modal>
       )}
-    </main>
+    </div>
   )
 }

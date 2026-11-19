@@ -50,7 +50,7 @@ export default function CatalogoEventos() {
   }
 
   return (
-      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         <h1 className="font-titulo text-3xl font-bold">Cartelera de eventos</h1>
         <p className="mt-3 text-slate-600 dark:text-slate-400">Descubre tu próxima experiencia.</p>
 
@@ -119,6 +119,6 @@ export default function CatalogoEventos() {
             </ul>
           )}
         </section>
-      </main>
+      </div>
   )
 }

@@ -8,13 +8,16 @@ interface TarjetaArtistaProps {
 }
 
 export default function TarjetaArtista({ artista }: TarjetaArtistaProps) {
+  const iniciales = artista.stageName.trim().split(/\s+/).slice(0, 2)
+    .map((palabra) => Array.from(palabra)[0]).join('').toLocaleUpperCase('es-CO')
+
   return (
     <Tarjeta className="flex flex-col">
       <div
         aria-hidden="true"
         className="flex h-16 w-16 items-center justify-center rounded-full bg-marca-50 dark:bg-indigo-950 text-2xl font-bold text-marca-700 dark:text-indigo-300"
       >
-        {Array.from(artista.stageName.trim())[0]?.toLocaleUpperCase('es-CO') ?? '♪'}
+        {iniciales}
       </div>
       <h2 className="mt-4 font-titulo text-xl font-bold text-slate-900 dark:text-slate-100">{artista.stageName}</h2>
       <dl className="mt-4 space-y-3 text-sm">

@@ -19,7 +19,7 @@ export default function ListaArtistas() {
     && busqueda.error instanceof ApiError && busqueda.error.status === 404
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <h1 className="font-titulo text-3xl font-bold">Artistas</h1>
       <p className="mt-3 text-slate-600 dark:text-slate-400">Conoce a los artistas de PulsePass.</p>
       <BuscadorArtista onBuscar={setNombreBuscado} onLimpiar={() => setNombreBuscado('')} />
@@ -60,6 +60,6 @@ export default function ListaArtistas() {
           </ul>
         )}
       </section>
-    </main>
+    </div>
   )
 }
