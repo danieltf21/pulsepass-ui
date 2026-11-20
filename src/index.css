@@ -1,4 +1,11 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root { color-scheme: light; background: #f8fafc; color: #0f172a; }
+  :root.dark { color-scheme: dark; background: #020617; color: #f1f5f9; }
+  body { margin: 0; }
+}
 
 @theme {
   --color-marca-50: #eef2ff;
@@ -8,4 +15,10 @@
   --color-acento-500: #f43f5e;
   --font-titulo: "Poppins", ui-sans-serif, system-ui, sans-serif;
   --font-cuerpo: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer utilities {
+  .dark .focus-visible\:outline-marca-600:focus-visible {
+    outline-color: var(--color-indigo-300);
+  }
 }
